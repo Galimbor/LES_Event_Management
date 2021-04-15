@@ -9,10 +9,13 @@ class Campo(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     conteudo = models.CharField(db_column='Conteudo', max_length=255)  # Field name made lowercase.
     obrigatorio = models.TextField(db_column='Obrigatorio')  # Field name made lowercase. This field type is a guess.
-    tipocampoid = models.ForeignKey('Tipocampo', models.DO_NOTHING, db_column='TipoCampoID')  # Field name made lowercase.
-    templateformularioid = models.IntegerField(db_column='TemplateFormularioID', blank=True, null=True)  # Field name made lowercase.
+    tipocampoid = models.ForeignKey('Tipocampo', models.DO_NOTHING,
+                                    db_column='TipoCampoID')  # Field name made lowercase.
+    templateformularioid = models.IntegerField(db_column='TemplateFormularioID', blank=True,
+                                               null=True)  # Field name made lowercase.
     formularioid = models.IntegerField(db_column='FormularioId', blank=True, null=True)  # Field name made lowercase.
-    respostapossivelid = models.ForeignKey('Respostaspossiveis', models.DO_NOTHING, db_column='RespostaPossivelId', blank=True, null=True)  # Field name made lowercase.
+    respostapossivelid = models.ForeignKey('Respostaspossiveis', models.DO_NOTHING, db_column='RespostaPossivelId',
+                                           blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -21,7 +24,8 @@ class Campo(models.Model):
 
 class CampoFormulario(models.Model):
     campoid = models.OneToOneField(Campo, models.DO_NOTHING, db_column='CampoID')  # Field name made lowercase.
-    formularioid = models.OneToOneField('Formulario', models.DO_NOTHING, db_column='FormularioId')  # Field name made lowercase.
+    formularioid = models.OneToOneField('Formulario', models.DO_NOTHING,
+                                        db_column='FormularioId')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -53,6 +57,7 @@ class GcpFormulario(models.Model):
         managed = False
         db_table = 'GCP_Formulario'
         unique_together = (('gcpid', 'formularioid'),)
+
 
 #
 # class Resposta(models.Model):
@@ -100,7 +105,6 @@ class Tipoformulario(models.Model):
     class Meta:
         managed = False
         db_table = 'TipoFormulario'
-
 
 
 class Respostaspossiveis(models.Model):
