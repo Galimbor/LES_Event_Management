@@ -40,8 +40,8 @@ def user_check(request, user_profile = None):
                 return {'exists': True, 'firstProfile': profile.objects.filter(utilizador_ptr_id = request.user.id).first()}
         return {'exists': False, 
                 'render': render(request=request,
-                            template_name='mensagem.html',
-                            context={
+                                 template_name='mensagem.html',
+                                 context={
                                 'tipo':'error',
                                 'm':'Não tem permissões para aceder a esta página!'
                             })
@@ -116,7 +116,7 @@ def escolher_perfil(request):
         u=""
     utilizadores = ["Participante",
                     "Professor Universitário", "Coordenador", "Colaborador","Administrador"]
-    return render(request=request, template_name='utilizadores/escolher_perfil.html', context={"utilizadores": utilizadores,'u': u})
+    return render(request=request, template_name='utilizadores/escolher_perfil.html', context={"utilizadores": utilizadores, 'u': u})
 
 
 
@@ -667,8 +667,8 @@ def alterar_utilizador_admin(request,id):
     else:
 
         return render(request=request,
-                  template_name="utilizadores/alterar_utilizador_admin.html",
-                  context={"form": utilizador_form, 'perfil': perfil,'u': admin,'registo' : tipo,'msg': msg,'id':id})
+                      template_name="utilizadores/alterar_utilizador_admin.html",
+                      context={"form": utilizador_form, 'perfil': perfil,'u': admin,'registo' : tipo,'msg': msg,'id':id})
 
 
 
@@ -768,8 +768,8 @@ def alterar_utilizador(request):
     else:
 
         return render(request=request,
-                  template_name="utilizadores/alterar_utilizador.html",
-                  context={"form": utilizador_form, 'perfil': perfil,'u': u,'registo' : tipo,'username':user.username,'msg': msg})
+                      template_name="utilizadores/alterar_utilizador.html",
+                      context={"form": utilizador_form, 'perfil': perfil,'u': u,'registo' : tipo,'username':user.username,'msg': msg})
 
 
 
@@ -793,7 +793,7 @@ def home(request):
     else:
         u=""
     
-    return render(request, "inicio.html",context={ 'u': u})
+    return render(request, "inicio.html", context={'u': u})
 
 
 
@@ -921,7 +921,7 @@ def mensagem(request, id, *args, **kwargs):
     if id == 400 or id == 500:
         continuar = "off" 
     return render(request=request,
-        template_name="mensagem.html", context={'m': m, 'tipo': tipo ,'u': u, 'continuar': continuar,})
+                  template_name="mensagem.html", context={'m': m, 'tipo': tipo , 'u': u, 'continuar': continuar, })
 
 
 
@@ -955,7 +955,7 @@ def mudar_perfil_escolha_admin(request,id):
 
     utilizadores = ["Participante",
                     "Professor Universitário", "Coordenador", "Colaborador","Administrador"]
-    return render(request=request, template_name='utilizadores/mudar_perfil_escolha_admin.html', context={"utilizadores": utilizadores,'u': u,'id':id ,'x':x})
+    return render(request=request, template_name='utilizadores/mudar_perfil_escolha_admin.html', context={"utilizadores": utilizadores, 'u': u, 'id':id , 'x':x})
 
 
 
@@ -997,7 +997,7 @@ def mudar_perfil_escolha(request):
 
     utilizadores = ["Participante",
                     "Professor Universitário", "Coordenador", "Colaborador","Administrador"]
-    return render(request=request, template_name='utilizadores/mudar_perfil_escolha.html', context={"utilizadores": utilizadores,'u': u,'id':id ,'x':x})
+    return render(request=request, template_name='utilizadores/mudar_perfil_escolha.html', context={"utilizadores": utilizadores, 'u': u, 'id':id , 'x':x})
 
 
 
@@ -1123,8 +1123,8 @@ def mudar_perfil_admin(request,tipo,id):
     else:
         username=utilizador_object.username
         return render(request=request,
-                  template_name="utilizadores/mudar_perfil_admin.html",
-                  context={"form": form, 'perfil': perfil,'u': u,'registo' : tipo,'user':utilizador_object,'msg': msg,'gabinete':gabinete,'username':username})
+                      template_name="utilizadores/mudar_perfil_admin.html",
+                      context={"form": form, 'perfil': perfil,'u': u,'registo' : tipo,'user':utilizador_object,'msg': msg,'gabinete':gabinete,'username':username})
 
 
 
@@ -1264,6 +1264,6 @@ def mudar_perfil(request,tipo):
     else:
         username=utilizador_object.username
         return render(request=request,
-                  template_name="utilizadores/mudar_perfil.html",
-                  context={"form": form, 'perfil': perfil,'u': u,'registo' : tipo,'user':utilizador_object,'msg': msg,'gabinete':gabinete,'username':username})
+                      template_name="utilizadores/mudar_perfil.html",
+                      context={"form": form, 'perfil': perfil,'u': u,'registo' : tipo,'user':utilizador_object,'msg': msg,'gabinete':gabinete,'username':username})
 

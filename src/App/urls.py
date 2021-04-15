@@ -17,10 +17,11 @@ from django.contrib import admin
 
 from django.urls import include, path
 
-
+from Utilizadores.views import test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Evento/', include('Evento.urls')),
+    path('myapp/', test),
 
 ]

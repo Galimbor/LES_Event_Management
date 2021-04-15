@@ -11,7 +11,7 @@ from .views import logout_action
 from .views import mensagem
 from .views import alterar_password
 
-from . import views
+from Utilizadores.utilizadores_old import views
 
 app_name = 'utilizadores'
 
