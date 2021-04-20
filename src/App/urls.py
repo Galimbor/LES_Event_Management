@@ -16,11 +16,16 @@ Including another URLconf
 from django.contrib import admin
 
 from django.urls import include, path
-
+from GestorTemplates.views import home
+from Utilizadores.views import test
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Evento/', include('Evento.urls')),
+    path('', home, name='home'),
+    path('Evento/', include('Evento.urls', namespace='Evento')),
+    path('myapp/', test),
+    path('GestorTemplates/', include('GestorTemplates.urls')),
+
 
 ]

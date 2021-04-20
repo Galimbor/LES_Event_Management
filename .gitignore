@@ -123,3 +123,10 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+<<<<<<< HEAD
+=======
+
+#Settings for django
+src/App/settings.py
+src/App/__init__.py
+>>>>>>> 35c813dc8464771973300b692f7b88fb8a551d81

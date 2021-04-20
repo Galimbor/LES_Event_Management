@@ -1,0 +1,40 @@
+
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Criar Evento</h1>
+
+        <form class="box" id="form" method="post">
+            {% csrf_token %}
+            {{ form }}       
+        </form>
+
+        <button class="button is-medium is-success has-text-centered" id="submit-form">
+            <span class="icon">
+              <i class="fas fa-save"></i>
+            </span>
+            <span>Guardar</span>
+        </button>
+     
+    </div>
+  </div>
+ 
+</div>
+
+<script>
+    $('input').addClass('input');
+    $('#submit-form').click(function(){
+        $('#form').submit();
+    })
+
+</script>
+{% endblock content%}
+

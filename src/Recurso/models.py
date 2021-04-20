@@ -6,8 +6,6 @@ from Neglected.models import Timedate
 from Utilizadores.models import Servicostecnicos
 
 
-
-
 class Unidadeorganica(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
@@ -28,7 +26,6 @@ class Universidade(models.Model):
     class Meta:
         managed = False
         db_table = 'Universidade'
-
 
 
 class Empresa(models.Model):
@@ -64,7 +61,6 @@ class Recurso(models.Model):
     class Meta:
         managed = False
         db_table = 'Recurso'
-
 
 
 class Servico(models.Model):
@@ -126,6 +122,7 @@ class Edificio(models.Model):
         managed = False
         db_table = 'Edificio'
 
+
 class Sala(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.IntegerField(db_column='Nome')  # Field name made lowercase.
@@ -136,7 +133,6 @@ class Sala(models.Model):
     class Meta:
         managed = False
         db_table = 'Sala'
-
 
 
 class Equipamento(models.Model):
@@ -156,7 +152,6 @@ class Equipamento(models.Model):
     class Meta:
         managed = False
         db_table = 'Equipamento'
-
 
 
 class Tipoespaco(models.Model):
@@ -194,4 +189,3 @@ class Tipodeequipamento(models.Model):
     class Meta:
         managed = False
         db_table = 'TipodeEquipamento'
-

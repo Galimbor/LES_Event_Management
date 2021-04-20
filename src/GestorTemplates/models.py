@@ -31,7 +31,7 @@ class CampoFormulario(models.Model):
 class Formulario(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     visibilidade = models.CharField(db_column='Visibilidade', max_length=255)  # Field name made lowercase.
-    templateformularioid = models.IntegerField(db_column='TemplateFormularioID')  # Field name made lowercase.
+    # templateformularioid = models.IntegerField(db_column='TemplateFormularioID')  # Field name made lowercase.
     tipoeventoid = models.ForeignKey('Tipoevento', models.DO_NOTHING,
                                      db_column='TipoEventoID')  # Field name made lowercase.
     tipoformularioid = models.ForeignKey('Tipoformulario', models.DO_NOTHING,
