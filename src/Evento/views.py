@@ -10,7 +10,7 @@ def home_view(request):
 
 
 def eventos(request):
-   return render(request, 'eventos.html')
+   return render(request, 'Evento/eventos.html')
 
 def create_event(request):
-   return render(request, 'criar_evento.html')
+   return render(request, 'Evento/criar_evento.html')
