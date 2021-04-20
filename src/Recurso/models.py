@@ -51,12 +51,8 @@ class Recurso(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
     fonte = models.CharField(db_column='Fonte', max_length=255)  # Field name made lowercase.
-    estado = models.IntegerField(db_column='Estado')  # Field name made lowercase.
     empresaid = models.ForeignKey(Empresa, models.DO_NOTHING, db_column='EmpresaID', blank=True,
                                   null=True)  # Field name made lowercase.
-    servicostecnicosid = models.ForeignKey(Servicostecnicos, models.DO_NOTHING,
-                                           db_column='ServicosTecnicosid')  # Field name made lowercase.
-    horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
 
     class Meta:
         managed = False

@@ -14,9 +14,11 @@ class Inscricao(models.Model):
     profissao = models.CharField(db_column='Profissao', max_length=255, blank=True,
                                  null=True)  # Field name made lowercase.
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
-    userid = models.ForeignKey(User, models.DO_NOTHING, db_column='UserId')  # Field name made lowercase.
+    userid = models.ForeignKey(User, models.DO_NOTHING, db_column='UserId', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Inscricao'
+
+
 

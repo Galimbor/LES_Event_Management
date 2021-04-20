@@ -5,5 +5,5 @@ app_name = 'Inscricao'
 
 urlpatterns = [
 
-    path('create/', create_inscricao, name='create_inscricao'),
+    path('create/<int:eventoid>/', create_inscricao, name='create_inscricao'),
 ]

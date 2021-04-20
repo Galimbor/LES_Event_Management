@@ -10,6 +10,15 @@
       <div class="column">
         <h1 class="title">Eventos</h1>
       </div>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
       <a class="button is-success" href="">
         <span class="icon">
           <i class="fas fa-plus"></i>
@@ -45,7 +54,7 @@
             </div>
           </div>
           <footer class="card-footer">
-            <a href="{% url 'Inscricao:create_inscricao' %}" class="card-footer-item">Inscrever</a>
+            <a href="{% url 'Inscricao:create_inscricao'   eventoid=obj.id  %}" class="card-footer-item">Inscrever</a>
           </footer>
         </div>
       </div>

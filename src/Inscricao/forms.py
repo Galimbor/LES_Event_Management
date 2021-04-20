@@ -22,6 +22,7 @@ class InscricaoForm(forms.ModelForm):
     telemovel = forms.IntegerField(widget=forms.TextInput)
     idade = forms.IntegerField(widget=forms.TextInput)
 
+
     # associated the form with fields belonging to the model
     class Meta:
         model = Inscricao
@@ -49,16 +50,10 @@ class InscricaoForm(forms.ModelForm):
         else:
             return telemovel
 
-# # a django form that's not linked to any model
-# class RawProductForm(forms.Form):
-#     title = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "introduce ur title"}))
-#     description = forms.CharField(widget=forms.Textarea(
-#         attrs={
-#             "class": "new-class two",
-#             "id": "my-id-for-text-are",
-#             "rows": 20,
-#             "cols": 50,
-#             "placeholder": "introduce ur description",
-#         })
-#     )
-#     price = forms.DecimalField()
+    # def clean_eventoid(self):
+    #     data = datetime.now()
+    #     return data
+
+    # def clean_userid(self):
+    #     data = datetime.now()
+    #     return data
