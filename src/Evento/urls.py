@@ -7,5 +7,5 @@ urlpatterns = [
     path('', home_view, name='homeview'),
     path('all/', eventos, name='eventos'),
     path('new/', create_event, name='create-event'),
-    path('new2/', create_event2, name='create-event2'),
+    path('new2/<int:event_id>', create_event2, name='create-event2'),
 ]

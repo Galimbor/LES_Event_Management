@@ -24,7 +24,8 @@ def eventos(request):
     return render(request, 'Evento/eventos.html', context)
 
 
-def create_event2(request):
+def create_event2(request, event_id):
+    print(event_id)
     return render(request, 'Evento/criar_evento2.html')
 
 
