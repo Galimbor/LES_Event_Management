@@ -1,7 +1,7 @@
 from django.db import models
 
-
 # Create your models here.
+
 
 
 class Admin(models.Model):
@@ -14,10 +14,14 @@ class Admin(models.Model):
         db_table = 'Admin'
 
 
+
+
 class Gcp(models.Model):
     class Meta:
         managed = False
         db_table = 'GCP'
+
+
 
 
 class ProponenteExterno(models.Model):
@@ -41,10 +45,13 @@ class ProponenteInterno(models.Model):
         db_table = 'Proponente interno'
 
 
+
+
 class Servicostecnicos(models.Model):
     class Meta:
         managed = False
         db_table = 'ServicosTecnicos'
+
 
 
 class User(models.Model):
@@ -63,18 +70,16 @@ class User(models.Model):
     contribuinte = models.IntegerField(blank=True, null=True)
     datanascimento = models.DateTimeField(db_column='dataNascimento', blank=True,
                                           null=True)  # Field name made lowercase.
-    adminid = models.ForeignKey(Admin, models.DO_NOTHING, db_column='AdminId', blank=True,
-                                null=True)  # Field name made lowercase.
-    gcpid = models.ForeignKey(Gcp, models.DO_NOTHING, db_column='GCPid', blank=True)  # Field name made lowercase.
+    adminid = models.ForeignKey(Admin, models.DO_NOTHING, db_column='AdminId', blank=True, null=True)  # Field name made lowercase.
+    gcpid = models.ForeignKey(Gcp, models.DO_NOTHING, db_column='GCPid', blank=True, null=True)  # Field name made lowercase.
     proponente_externoid = models.ForeignKey(ProponenteExterno, models.DO_NOTHING,
-                                             db_column='Proponente Externoid',
-                                             blank=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+                                             db_column='Proponente Externoid', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     proponente_internoid = models.ForeignKey(ProponenteInterno, models.DO_NOTHING,
-                                             db_column='Proponente internoID',
-                                             blank=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+                                             db_column='Proponente internoID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     servicostecnicosid = models.ForeignKey(Servicostecnicos, models.DO_NOTHING,
-                                           db_column='ServicosTecnicosid', blank=True)  # Field name made lowercase.
+                                           db_column='ServicosTecnicosid', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'User'
+
