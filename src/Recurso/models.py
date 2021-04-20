@@ -51,13 +51,8 @@ class Recurso(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
     fonte = models.CharField(db_column='Fonte', max_length=255)  # Field name made lowercase.
-    estado = models.IntegerField(db_column='Estado')  # Field name made lowercase.
     empresaid = models.ForeignKey(Empresa, models.DO_NOTHING, db_column='EmpresaID', blank=True,
                                   null=True)  # Field name made lowercase.
-    servicostecnicosid = models.ForeignKey(Servicostecnicos, models.DO_NOTHING,
-                                           db_column='ServicosTecnicosid', blank=True)  # Field name made lowercase.
-    horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
-
     class Meta:
         managed = False
         db_table = 'Recurso'
@@ -189,3 +184,13 @@ class Tipodeequipamento(models.Model):
     class Meta:
         managed = False
         db_table = 'TipodeEquipamento'
+
+
+class TimedateRecurso(models.Model):
+    timedateid = models.OneToOneField(Timedate, models.DO_NOTHING, db_column='TimeDateID', primary_key=True)  # Field name made lowercase.
+    recursoid = models.ForeignKey(Recurso, models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TimeDate_Recurso'
+        unique_together = (('timedateid', 'recursoid'),)

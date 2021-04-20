@@ -9,9 +9,9 @@
   <div class="section">
     <div class="columns">
       <div class="column">
-        <h1 class="title">Os Meus Recursos</h1>
+        <h1 class="title">Recursos</h1>
       </div>
-      <a class="button is-success" href="{% url 'create-recurso' %}">
+      <a class="button is-success" href="{% url 'Recurso:create-recurso' %}">
         <span class="icon">
           <i class="fas fa-plus"></i>
         </span>
@@ -42,7 +42,7 @@
           </div>
           <footer class="card-footer">
             <a href="#" class="card-footer-item">Edit</a>
-            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'delete-recurso' obj.pk %}">Delete</a>
+            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'delete-form' obj.pk %}">Delete</a>
           </footer>
         </div>
       </div>
