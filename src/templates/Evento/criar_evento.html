@@ -1,0 +1,55 @@
+
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Criar Evento</h1>
+
+        <form class="box" id="form" method="post">
+            {% csrf_token %}
+
+            <div class="form-group-c">
+              <label for="">Nome</label> 
+              {{ form.nome }}  
+            </div>
+            
+            <div class="form-group-c">
+              <label for="">Descrição Geral</label> 
+              {{ form.descricaogeral }}  
+            </div>
+
+            <div class="form-group-c">
+              <label for="">N. Máximo de Participantes</label>
+              {{ form.maxparticipantes }} 
+            </div>
+
+            <div class="form-group-c">
+              <label for="date-i">Date Initial</label> 
+              <input type="text" name="date-i" id="date-i" value="2020-02-02">
+
+              <label for="time-i">Time Initial</label> 
+              <input type="text" name="time-i" id="time-i" value="10:10:02">
+            </div>
+
+            <div class="form-group-c">
+              <label for="date-f">Date Final</label> 
+              <input type="text" name="date-f" id="date-f" value="2020-02-02">
+              <label for="time-f">Time Final</label> 
+              <input type="text" name="time-f" id="time-f" value="11:11:11">
+            </div>
+
+            <input type='Submit' value='Save'>    
+        </form>    
+    </div>
+  </div>
+ 
+</div>
+{% endblock content%}
+

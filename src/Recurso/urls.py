@@ -7,3 +7,4 @@ urlpatterns = [
     path('new', RecursoCreate.as_view(), name='create-recurso'),
     path('delete/<int:pk>', RecursoDelete.as_view(), name='delete-recurso'),
 ]
+
