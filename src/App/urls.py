@@ -26,6 +26,6 @@ urlpatterns = [
     path('Evento/', include('Evento.urls')),
     path('myapp/', test),
     path('GestorTemplates/', include('GestorTemplates.urls')),
-
+    path('Inscricao/', include('Inscricao.urls')),
 
 ]
