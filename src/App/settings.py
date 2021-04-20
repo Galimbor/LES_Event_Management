@@ -94,6 +94,17 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'evento',
+        'USER': 'admin',
+        'PASSWORD': 'aajr1234',
+        'HOST': 'aws-les.c69fdgq1clf9.us-east-2.rds.amazonaws.com',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    },
+'local': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'evento',
         'USER': 'root',
         'PASSWORD': '12345678',
         'HOST': '',

@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 
 
-
 from Neglected.models import Timedate
 from Utilizadores.models import ProponenteInterno, ProponenteExterno
+
 
 class Tipoevento(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -40,22 +40,18 @@ class Evento(models.Model):
                                      null=True)  # Field name made lowercase.
     certificadoid = models.ForeignKey(Templatecertificado, models.DO_NOTHING,
                                       db_column='CertificadoID', blank=True,
-                                     null=True)  # Field name made lowercase.
+                                      null=True)  # Field name made lowercase.
     proponente_internoid = models.ForeignKey(ProponenteInterno, models.DO_NOTHING,
                                              db_column='Proponente internoID', blank=True,
-                                     null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+                                             null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     proponente_externoid = models.ForeignKey(ProponenteExterno, models.DO_NOTHING,
                                              db_column='Proponente ExternoID', blank=True,
-                                     null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+                                             null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Evento'
-
-
-
-
 
 
 class Logistica(models.Model):

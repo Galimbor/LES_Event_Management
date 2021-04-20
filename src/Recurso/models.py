@@ -55,7 +55,7 @@ class Recurso(models.Model):
     empresaid = models.ForeignKey(Empresa, models.DO_NOTHING, db_column='EmpresaID', blank=True,
                                   null=True)  # Field name made lowercase.
     servicostecnicosid = models.ForeignKey(Servicostecnicos, models.DO_NOTHING,
-                                           db_column='ServicosTecnicosid',blank=True)  # Field name made lowercase.
+                                           db_column='ServicosTecnicosid', blank=True)  # Field name made lowercase.
     horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
 
     class Meta:

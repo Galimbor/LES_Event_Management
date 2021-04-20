@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 
 from django.urls import include, path
-from GestorTemplates.views import home
+from Recurso.views import home
 from Utilizadores.views import test
-
+# from Recurso.views import create_recurso
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,6 @@ urlpatterns = [
     path('Evento/', include('Evento.urls')),
     path('myapp/', test),
     path('GestorTemplates/', include('GestorTemplates.urls')),
-
+    path('Recurso/', include('Recurso.urls')),
 
 ]
