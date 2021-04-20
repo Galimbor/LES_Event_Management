@@ -14,27 +14,12 @@
 
         <form class="box" id="form" method="post">
             {% csrf_token %}
-            {{ form }}       
-        </form>
-
-        <button class="button is-medium is-success has-text-centered" id="submit-form">
-            <span class="icon">
-              <i class="fas fa-save"></i>
-            </span>
-            <span>Guardar</span>
-        </button>
-     
+            {{ form.as_p }}   
+            <input type='Submit' value='Save'>    
+        </form>    
     </div>
   </div>
  
 </div>
-
-<script>
-    $('input').addClass('input');
-    $('#submit-form').click(function(){
-        $('#form').submit();
-    })
-
-</script>
 {% endblock content%}
 
