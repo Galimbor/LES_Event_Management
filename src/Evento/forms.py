@@ -8,5 +8,6 @@ class EventoForm(forms.ModelForm):
         fields = [
             'nome',
             'descricaogeral',
-            'maxparticipantes'
+            'maxparticipantes',
+            'horario'
         ]
