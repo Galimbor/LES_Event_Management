@@ -1460,6 +1460,16 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   padding: 1.25rem;
 }
 
+.box .form-group-c {
+  display: block;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group-c label{
+  display: block;
+}
+
 a.box:hover, a.box:focus {
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px #3273dc;
 }

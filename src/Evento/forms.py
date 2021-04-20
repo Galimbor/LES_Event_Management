@@ -9,5 +9,5 @@ class EventoForm(forms.ModelForm):
             'nome',
             'descricaogeral',
             'maxparticipantes',
-            'horario'
+            'estado'
         ]

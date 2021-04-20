@@ -35,7 +35,7 @@ class Evento(models.Model):
     maxparticipantes = models.IntegerField(db_column='MaxParticipantes')  # Field name made lowercase.
     estado = models.CharField(db_column='Estado', max_length=255, blank=True, null=True)  # Field name made lowercase.
     visibilidade = models.CharField(db_column='Visibilidade', max_length=255, blank=True,
-                                    null=True)  # Field name made lowercase.
+                                    null=True, default='Público')  # Field name made lowercase.
     tipoeventoid = models.ForeignKey(Tipoevento, models.DO_NOTHING, db_column='TipoEventoID', blank=True,
                                      null=True)  # Field name made lowercase.
     certificadoid = models.ForeignKey(Templatecertificado, models.DO_NOTHING,
