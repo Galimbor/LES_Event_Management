@@ -15,7 +15,6 @@ app_name = 'Recurso'
 urlpatterns = [
     path('', home_view, name='homeview'),
     path('all/', recursos, name='recursos'),
-    path('success/', recurso_success , name='recurso_success'),
+    path('success/', recurso_success, name='recurso-success'),
     path('new/', create_recurso, name='create-recurso'),
 ]
-
