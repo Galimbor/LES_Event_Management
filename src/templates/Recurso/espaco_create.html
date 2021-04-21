@@ -1,0 +1,39 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Criar Espaço{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Criar Espaço</h1>
+
+                    <form class="box" id="form" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group-c">
+                            <label for="">Capacidade</label>
+                            {{ form.capacidade }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Mobilidade</label>
+                            {{ form.mobilidade }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Recurso</label>
+                            {{ form.recursoid }}
+                        </div>
+
+                        <input type='Submit' value='Save'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

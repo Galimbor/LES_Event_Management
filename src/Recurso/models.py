@@ -72,7 +72,7 @@ class Servico(models.Model):
         return self.nome
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-    reservada = models.TextField(db_column='Reservada')  # Field name made lowercase. This field type is a guess.
+    reservada = models.BooleanField(db_column='Reservada')  # Field name made lowercase. This field type is a guess.
     recursoid = models.ForeignKey(Recurso, models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
     unidadeorganicaid = models.ForeignKey('Unidadeorganica', models.DO_NOTHING, db_column='UnidadeOrganicaID',
                                           blank=True, null=True)  # Field name made lowercase.
@@ -84,7 +84,7 @@ class Servico(models.Model):
 class Espaco(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     capacidade = models.IntegerField(db_column='Capacidade')  # Field name made lowercase.
-    mobilidade = models.IntegerField(db_column='Mobilidade')  # Field name made lowercase.
+    mobilidade = models.BooleanField(db_column='Mobilidade')  # Field name made lowercase.
     recursoid = models.ForeignKey('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
     class Meta:
         managed = False
@@ -152,11 +152,11 @@ class Equipamento(models.Model):
     nome = models.CharField(db_column='Nome', unique=True, max_length=255)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=255, blank=True,
                                  null=True)  # Field name made lowercase.
-    reservado = models.IntegerField(db_column='Reservado', blank=True, null=True)  # Field name made lowercase.
+    reservado = models.BooleanField(db_column='Reservado', blank=True, null=True)  # Field name made lowercase.
     recursoid = models.ForeignKey('Recurso', models.DO_NOTHING,
                                   db_column='RecursoID')  # Field name made lowercase.
     unidadeorganicaid = models.ForeignKey('Unidadeorganica', models.DO_NOTHING,
-                                          db_column='UnidadeOrganicaID')  # Field name made lowercase.
+                                          db_column='UnidadeOrganicaID', blank=True, null=True)  # Field name made lowercase.
     espacoid = models.ForeignKey('Espaco', models.DO_NOTHING, db_column='Espacoid', blank=True,
                                  null=True)  # Field name made lowercase.
     class Meta:

@@ -72,10 +72,12 @@ def equipamento_create(request):
     form = EquipamentoForm(request.POST or None)
     if form.is_valid():
         # Evento data
-        nome = request.POST.get("nome")
-        fonte = request.POST.get("fonte")
-        recurso = Recurso(nome=nome, fonte=fonte)
-        recurso.save()
+        # nome = request.POST.get("nome")
+        # descricao = request.POST.get("descricao")
+        # reservado = request.POST.get("reservado")
+        #
+        # recurso = Equipamento(nome=nome, descricao=descricao, reservado=reservado, )
+        form.save()
         return redirect('Recurso:equipamentos')
     context = {
         'form': form
@@ -101,11 +103,12 @@ def equipamento_delete(request, my_id):
 def espaco_create(request):
     form = EspacoForm(request.POST or None)
     if form.is_valid():
-        # Evento data
-        nome = request.POST.get("nome")
-        fonte = request.POST.get("fonte")
-        recurso = Recurso(nome=nome, fonte=fonte)
-        recurso.save()
+        # # Evento data
+        # nome = request.POST.get("nome")
+        # fonte = request.POST.get("fonte")
+        # recurso = Recurso(nome=nome, fonte=fonte)
+        # recurso.save()
+        form.save()
         return redirect('Recurso:espacos')
     context = {
         'form': form
@@ -130,11 +133,12 @@ def espaco_delete(request, my_id):
 def servico_create(request):
     form = ServicoForm(request.POST or None)
     if form.is_valid():
-        # Evento data
-        nome = request.POST.get("nome")
-        fonte = request.POST.get("fonte")
-        recurso = Recurso(nome=nome, fonte=fonte)
-        recurso.save()
+        # # Evento data
+        # nome = request.POST.get("nome")
+        # fonte = request.POST.get("fonte")
+        # recurso = Recurso(nome=nome, fonte=fonte)
+        # recurso.save()
+        form.save()
         return redirect('Recurso:servicos')
     context = {
         'form': form
