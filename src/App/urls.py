@@ -16,17 +16,14 @@ Including another URLconf
 from django.contrib import admin
 
 from django.urls import include, path
-from Recurso.views import home_view
 from Utilizadores.views import test
 from django.http import HttpResponse
+
 # from Recurso.views import create_recurso
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),
     path('Evento/', include('Evento.urls')),
-    path('myapp/', test),
     path('GestorTemplates/', include('GestorTemplates.urls')),
     path('Recurso/', include('Recurso.urls')),
-
 ]
