@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     # Custom
 
     'Evento',
-    'GestorTemplates',
+    'GestorTemplates.apps.GestortemplatesConfig',
     'Inscricao',
     'Notificacao',
     'Recurso',
