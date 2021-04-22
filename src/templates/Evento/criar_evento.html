@@ -1,57 +1,69 @@
-
 {% extends 'app.html' %}
 
 
 {% block title %}- Página Inicial{% endblock title %}
 
 {% block content %}
-{% load static %}
+    {% load static %}
 
 
-<div>
-  <div class="section">
-    <div class="columns">
-      <div class="column is-is-four-fifths">
-        <h1 class="title">Criar Evento</h1>
+    <div>
+    <div class="section">
+        <div class="columns">
+            <div class="column is-is-four-fifths">
+                <h1 class="title">Criar Evento</h1>
 
-        <form class="box" id="form" method="post">
-            {% csrf_token %}
-            {{form.media}}
-            <div class="form-group-c">
-              <label for="">Nome</label> 
-              {{ form.nome }}  
+                <form class="box" id="form" method="post">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <div class="form-group-c">
+                        <label for="">Nome</label>
+                        {{ form.nome }}
+                    </div>
+
+                    <div class="form-group-c">
+                        <label for="">Descrição Geral</label>
+                        {{ form.descricaogeral }}
+                    </div>
+
+                    <div class="form-group-c">
+                        <label for="">N. Máximo de Participantes</label>
+                        {{ form.maxparticipantes }}
+                    </div>
+
+                    <div class="form-group-c">
+                        <label for="sim">Deseja a validação dos inscritos?</label>
+                        <div class="radio-label">
+                            <label for="sim">Sim</label>
+                            <input type="radio" id="sim" name="radio" value="sim"><br>
+                        </div>
+
+                        <div class="radio-label">
+                            <label for="sim">Nao</label>
+                            <input type="radio" id="nao" name="radio" value="nao">
+                        </div>
+                    </div>
+
+                    <div class="form-group-c">
+                        <label for="date-i">Date Initial</label>
+                        {{ form.data_i }}
+
+                        <label for="time-i">Time Initial</label>
+                        {{ form.hora_i }}
+                    </div>
+
+                    <div class="form-group-c">
+                        <label for="date-f">Date Final</label>
+                        {{ form.data_f }}
+                        <label for="time-f">Time Final</label>
+                        {{ form.hora_f }}
+                    </div>
+
+                    <input type='Submit' value='Save'>
+                </form>
             </div>
-            
-            <div class="form-group-c">
-              <label for="">Descrição Geral</label> 
-              {{ form.descricaogeral }}  
-            </div>
+        </div>
 
-            <div class="form-group-c">
-              <label for="">N. Máximo de Participantes</label>
-              {{ form.maxparticipantes }} 
-            </div>
-
-            <div class="form-group-c">
-              <label for="date-i">Date Initial</label> 
-              {{ form.data_i }} 
-
-              <label for="time-i">Time Initial</label> 
-              {{ form.hora_i }} 
-            </div>
-
-            <div class="form-group-c">
-              <label for="date-f">Date Final</label> 
-              {{ form.data_f }} 
-              <label for="time-f">Time Final</label> 
-              {{ form.hora_f }}
-            </div>
-
-            <input type='Submit' value='Save'>    
-        </form>    
     </div>
-  </div>
- 
-</div>
-{% endblock content%}
+{% endblock content %}
 
