@@ -1,0 +1,68 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">Gerir - {{ evento.nome }}</h1>
+                </div>
+
+            </div>
+            <div class="columns is-multiline">
+                <div class="column is-3">
+                    {# //Inscricoes Rescursos Logistica#}
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="#">
+                                    Inscrições
+                                </a>
+                            </p>
+                        </header>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="#">
+                                    Recursos
+                                </a>
+                            </p>
+                        </header>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="#">
+                                    Editar Evento
+                                </a>
+                            </p>
+                        </header>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="#">
+                                    Editar Logistica
+                                </a>
+                            </p>
+                        </header>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+{% endblock content %}

@@ -17,7 +17,6 @@ from django.contrib import admin
 
 from django.urls import include, path
 from GestorTemplates.views import home
-from Utilizadores.views import test
 
 from django.views.i18n import JavaScriptCatalog
 
@@ -26,7 +25,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('jsi18n', JavaScriptCatalog.as_view(), name='js-catlog'),
     path('Evento/', include('Evento.urls', namespace='Evento')),
-    path('myapp/', test),
+    path('Utilizadores/', include('Utilizadores.urls', namespace='Utilizadores')),
     path('GestorTemplates/', include('GestorTemplates.urls')),
 
 

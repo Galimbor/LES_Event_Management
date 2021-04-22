@@ -27,6 +27,18 @@ def eventos(request):
     return render(request, 'Evento/eventos.html', context)
 
 
+def meus_eventos(request):
+    #  events = Evento.objects.all().filter(estado='aceite')
+    events = Evento.objects.all()  # temporary
+    logistica = Logistica.objects.all()
+
+    context = {
+        'eventos': events,
+        'logistica': logistica
+    }
+    return render(request, 'Evento/meus_eventos.html', context)
+
+
 def create_event2(request, event_id):
     evento = Evento.objects.get(id=event_id)
     form = LogisticaForm(request.POST or None)
@@ -77,6 +89,13 @@ def create_event2(request, event_id):
         'form': form
     }
     return render(request, 'Evento/criar_evento2.html', context)
+
+
+def gerir(request, event_id):
+    context = {
+        'evento': Evento.objects.get(id=event_id)
+    }
+    return render(request, 'Evento/gerir.html', context)
 
 
 def create_event(request):
