@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Recurso, Espaco, Equipamento, Servico
+from .models import Recurso, Espaco, Equipamento, Servico, Empresa, Edificio, Unidadeorganica, Universidade
 
 
 class RecursoForm(forms.ModelForm):
@@ -10,6 +10,7 @@ class RecursoForm(forms.ModelForm):
             'nome',
             'fonte',
             'empresaid',
+
         ]
 
 
@@ -17,9 +18,11 @@ class EspacoForm(forms.ModelForm):
     class Meta:
         model = Espaco
         fields = [
+            'nome',
+            'tipo',
             'capacidade',
             'mobilidade',
-            'recursoid'
+            'edificioid'
         ]
 
 
@@ -29,10 +32,8 @@ class EquipamentoForm(forms.ModelForm):
         fields = [
             'nome',
             'descricao',
-            'reservado',
-            'recursoid',
             'unidadeorganicaid',
-            'espacoid'
+            'espacoid',
         ]
 
 
@@ -41,7 +42,49 @@ class ServicoForm(forms.ModelForm):
         model = Servico
         fields = [
             'nome',
-            'reservada',
-            'recursoid',
+            'descricao',
             'unidadeorganicaid',
+        ]
+
+
+class EmpresaForm(forms.ModelForm):
+    class Meta:
+        model = Empresa
+        fields = [
+            'nome',
+            'descricao',
+            'email',
+            'telefone',
+            'cidade',
+            'endereco',
+            'codigopostal',
+            'faturacao'
+        ]
+
+
+class EdificioForm(forms.ModelForm):
+    class Meta:
+        model = Edificio
+        fields = [
+            'nome',
+            'localizacao',
+            'campusid'
+        ]
+
+
+class UnidadeOrganicaForm(forms.ModelForm):
+    class Meta:
+        model = Unidadeorganica
+        fields = [
+            'nome',
+            'universidadeid'
+        ]
+
+
+class UniversidadeForm(forms.ModelForm):
+    class Meta:
+        model = Universidade
+        fields = [
+            'nome',
+            'localizacao'
         ]

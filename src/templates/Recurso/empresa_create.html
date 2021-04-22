@@ -1,7 +1,7 @@
 {% extends 'app.html' %}
 
 
-{% block title %}- Criar Equipamento{% endblock title %}
+{% block title %}- Criar Empresa{% endblock title %}
 
 {% block content %}
     {% load static %}
@@ -9,7 +9,7 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Equipamento</h1>
+                    <h1 class="title">Criar Empresa</h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
@@ -26,19 +26,34 @@
 
 
                         <div class="form-group-c">
-                            <label for="">Empresa
-                                {{ form2.empresaid }}
+                            <label for="">Email
+                                {{ form.email }}
                             </label>
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Unidade Orgnânica</label>
-                            {{ form.unidadeorganicaid }}
+                            <label for="">Telefone</label>
+                            {{ form.telefone }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Espaço</label>
-                            {{ form.espacoid }}
+                            <label for="">Cidade</label>
+                            {{ form.cidade }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Endereço</label>
+                            {{ form.endereco }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Código Postal</label>
+                            {{ form.codigopostal }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Faturação</label>
+                            {{ form.faturacao }}
                         </div>
 
                         <input type='Submit' value='Save'>

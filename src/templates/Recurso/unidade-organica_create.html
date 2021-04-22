@@ -1,7 +1,7 @@
 {% extends 'app.html' %}
 
 
-{% block title %}- Criar Serviço{% endblock title %}
+{% block title %}- Criar Unidade Orgânica{% endblock title %}
 
 {% block content %}
     {% load static %}
@@ -9,7 +9,7 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Serviço</h1>
+                    <h1 class="title">Criar Unidade Orgânica</h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
@@ -18,19 +18,28 @@
                             <label for="">Nome</label>
                             {{ form.nome }}
                         </div>
+
                         <div class="form-group-c">
                             <label for="">Descrição</label>
                             {{ form.descricao }}
                         </div>
+
+
                         <div class="form-group-c">
-                            <label for="">Empresa</label>
-                            {{ form2.empresaid }}
+                            <label for="">Empresa
+                                {{ form2.empresaid }}
+                            </label>
                         </div>
+
                         <div class="form-group-c">
-                            <label for="">Unidade Orgânica</label>
+                            <label for="">Unidade Orgnânica</label>
                             {{ form.unidadeorganicaid }}
                         </div>
 
+                        <div class="form-group-c">
+                            <label for="">Espaço</label>
+                            {{ form.espacoid }}
+                        </div>
 
                         <input type='Submit' value='Save'>
                     </form>
