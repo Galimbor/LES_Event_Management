@@ -317,14 +317,36 @@
                 </div>
 
 
-                <a href="{% url 'Utilizadores:registar' %}">
-                    <div type="button" class="button">
-              <span class="icon is-small">
-                <i class="mdi mdi-login-variant"></i>
-              </span>
-                        <span>Registar</span>
-                    </div>
-                </a>
+
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'Utilizadores:logout' %}">
+                        <div type="button" class="button">
+                      <span class="icon is-small">
+                        <i class="mdi mdi-login-variant"></i>
+                      </span>
+                            <span>Sair</span>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="{% url 'Utilizadores:registar' %}">
+                        <div type="button" class="button">
+                      <span class="icon is-small">
+                        <i class="mdi mdi-login-variant"></i>
+                      </span>
+                            <span>Registar</span>
+                        </div>
+                    </a>
+                    <a href="{% url 'Utilizadores:login' %}">
+                        <div type="button" class="button">
+                  <span class="icon is-small">
+                    <i class="mdi mdi-login-variant"></i>
+                  </span>
+                            <span>Entrar</span>
+                        </div>
+                    </a>
+                {% endif %}
+
 
             </div>
         </div>

@@ -11,8 +11,36 @@
                     <h1 class="title">Registar</h1>
                     <form class="box" id="form" name="form" method="post">
                         {% csrf_token %}
+                        {{form.media}}
                         <div class="form-group-c">
-                            <label>Nome
+                            <label>Primeiro Nome
+                                <input type="text" name="primeiro-nome">
+                            </label>
+                        </div>
+                        <div class="form-group-c">
+                            <label>Ultimo Nome
+                                <input type="text" name="ultimo-nome">
+                            </label>
+                        </div>
+                        <div class="form-group-c">
+                            <label>Morada
+                                <input type="text" name="morada">
+                            </label>
+                        </div>
+                        <div class="form-group-c">
+                            <label>Contribuinte
+                                <input type="text" name="contribuinte">
+                            </label>
+                        </div>
+                        <div class="form-group-c">
+                            <label>Data de Nascimento
+                                {{ form.data }}
+                            </label>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="form-group-c">
+                            <label>Username
                                 {{ form.username }}
                             </label>
                         </div>
@@ -25,30 +53,39 @@
                             <label>Password
                                 {{ form.password1 }}
                             </label>
+                            <br>
                             <label>Password2
                                 {{ form.password2 }}
                             </label>
                         </div>
-
+                        <div class="form-group-c">
+                            <label for="usuario">Tipo de Usuario:</label>
+                            <select id="usuario" name="usuario" size="3">
+                                <option value="gcp">GCP</option>
+                                <option value="interno">Proponente Interno</option>
+                                <option value="externo">Proponente Externo</option>
+                                <option value="servicos">Servicos Tecnicos</option>
+                            </select>
+                        </div>
                         <input type='Submit' value='Save'>
                     </form>
                 </div>
             </div>
 
             {% if form.errors %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <div class="alert alert-danger">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-    {% endfor %}
-{% endif %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
 
         </div>
     </div>
