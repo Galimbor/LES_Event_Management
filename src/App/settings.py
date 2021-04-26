@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'Notificacao',
     'Recurso',
     'Utilizadores',
-    'Neglected'
+    'Neglected',
+    'Feedback',
 
 ]
 
@@ -93,11 +94,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'evento',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'Evento',
+        'USER': 'admin',
+        'PASSWORD': 'aajr1234',
+        'HOST': 'les.ckmlghnivky9.eu-west-2.rds.amazonaws.com',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }

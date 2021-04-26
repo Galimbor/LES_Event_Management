@@ -44,6 +44,9 @@
                 <p> Estado do evento :  {{ obj.estado }}</p>
                 <br>
                 <br>
+                <p> Número atual de participantes :  {{ obj.inscritos }}</p>
+                <br>
+                <br>
                 <p> Número máximo de participantes : {{ obj.maxparticipantes }}</p>
                 <br>
                 <br>
@@ -54,7 +57,7 @@
             </div>
           </div>
           <footer class="card-footer">
-            <a href="{% url 'Inscricao:create_inscricao'   eventoid=obj.id  %}" class="card-footer-item">Inscrever</a>
+              <a href="{% url 'Inscricao:prop_list_inscricao'   eventoid=obj.id  %}" class="card-footer-item">Gerir inscrições do evento</a>
           </footer>
         </div>
       </div>

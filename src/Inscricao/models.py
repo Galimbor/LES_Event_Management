@@ -15,6 +15,9 @@ class Inscricao(models.Model):
                                  null=True)  # Field name made lowercase.
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
     userid = models.ForeignKey(User, models.DO_NOTHING, db_column='UserId', blank=True, null=True)  # Field name made lowercase.
+    estado = models.CharField(db_column='Estado', max_length=255)  # Field name made lowercase.
+    num_inscricao = models.IntegerField(db_column='Num_Inscricao')  # Field name made lowercase.
+    checkin = models.BooleanField(db_column='check_in')
 
     class Meta:
         managed = False

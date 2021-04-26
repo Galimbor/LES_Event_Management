@@ -5,5 +5,5 @@ app_name = 'Evento'
 
 urlpatterns = [
 
-    path('all/', eventos, name='list_eventos'),
+    path('', eventos, name='list_eventos'),
 ]

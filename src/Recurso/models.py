@@ -74,6 +74,7 @@ class Servico(models.Model):
 
 
 class Espaco(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     capacidade = models.IntegerField(db_column='Capacidade')  # Field name made lowercase.
     mobilidade = models.IntegerField(db_column='Mobilidade')  # Field name made lowercase.
     recursoid = models.ForeignKey('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
@@ -85,6 +86,7 @@ class Espaco(models.Model):
 
 
 class EventoRecurso(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     eventoid = models.OneToOneField(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
     recursoid = models.OneToOneField('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
 
@@ -121,7 +123,7 @@ class Edificio(models.Model):
 
 class Sala(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.IntegerField(db_column='Nome')  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
     espacoid = models.ForeignKey(Espaco, models.DO_NOTHING, db_column='Espacoid')  # Field name made lowercase.
     edificioid = models.ForeignKey(Edificio, models.DO_NOTHING, db_column='EdificioID', blank=True,
                                    null=True)  # Field name made lowercase.
@@ -151,7 +153,8 @@ class Equipamento(models.Model):
 
 
 class Tipoespaco(models.Model):
-    nome = models.IntegerField(unique=True)
+    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
     quantidade = models.IntegerField(blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
@@ -163,7 +166,8 @@ class Tipoespaco(models.Model):
 
 
 class Tiposervico(models.Model):
-    nome = models.IntegerField(unique=True)
+    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
     quantidade = models.IntegerField(blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
@@ -176,7 +180,7 @@ class Tiposervico(models.Model):
 
 class Tipodeequipamento(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.IntegerField(unique=True)
+    nome = models.CharField(db_column='Nome', max_length=255, blank=True, null=True)  # Field name made lowercase.
     quantidade = models.IntegerField(blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
@@ -185,3 +189,14 @@ class Tipodeequipamento(models.Model):
     class Meta:
         managed = False
         db_table = 'TipodeEquipamento'
+
+
+class TimedateRecurso(models.Model):
+    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
+    timedateid = models.OneToOneField(Timedate, models.DO_NOTHING, db_column='TimeDateID')  # Field name made lowercase.
+    recursoid = models.OneToOneField(Recurso, models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TimeDate_Recurso'
+        unique_together = (('timedateid', 'recursoid'),)

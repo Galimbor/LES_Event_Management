@@ -5,9 +5,6 @@ from .models import  Evento
 # Create your views here.
 
 
-def home_view(*arg, **kwargs):
-    return HttpResponse('<h1> Hello from MArs </h1>')
-
 
 def eventos(request):
 
@@ -17,4 +14,6 @@ def eventos(request):
         'eventos' : events,
     }
 
-    return render(request, 'evento/eventos.html', context)
+    return render(request, 'evento/participante/eventos.html', context)
+
+

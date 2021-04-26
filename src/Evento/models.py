@@ -49,6 +49,10 @@ class Evento(models.Model):
                                      null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
 
+    inscritos = models.IntegerField(db_column='Num_Participantes')  # Field name made lowercase.
+    val_inscritos = models.IntegerField(db_column='Validacao_Inscritos')  # Field name made lowercase.
+
+
     class Meta:
         managed = False
         db_table = 'Evento'
@@ -59,7 +63,8 @@ class Evento(models.Model):
 
 
 class Logistica(models.Model):
-    nome = models.IntegerField(db_column='Nome', blank=True, null=True)  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
 
     class Meta:

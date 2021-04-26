@@ -1,7 +1,7 @@
 from django import forms
 from .models import Inscricao
 from django.core.validators import EmailValidator
-
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 class InscricaoForm(forms.ModelForm):
     # # these two attributes above are used to override the ones directly retrieved from the model
@@ -57,3 +57,52 @@ class InscricaoForm(forms.ModelForm):
     # def clean_userid(self):
     #     data = datetime.now()
     #     return data
+
+
+
+
+
+
+STATE_CHOICES= [
+    ('Pendente', 'Pendente'),
+    ('Confirmado', 'Confirmado'),
+    ('Rejeitado', 'Rejeitado'),
+    ]
+
+
+class InscricaoUpdateForm(forms.ModelForm):
+
+    estado = forms.CharField(widget=forms.Select(choices=STATE_CHOICES))
+
+
+    # associated the form with fields belonging to the model
+    class Meta:
+        model = Inscricao
+        fields = [
+            'estado'
+        ]
+
+
+CHECKIN_CHOICES= [
+    (1, 'Vou ao evento'),
+    (0, 'Não vou ao evento'),
+    ]
+
+class InscricaoCheckinUpdateForm(forms.ModelForm):
+
+
+    checkin = forms.BooleanField(widget=forms.Select(choices=BLANK_CHOICE_DASH + CHECKIN_CHOICES) )
+
+
+    # associated the form with fields belonging to the model
+    class Meta:
+        model = Inscricao
+        fields = [
+            'checkin'
+        ]
+
+
+    def clean_checkin(self):
+        checkin = self.cleaned_data.get("checkin")
+        print(checkin)
+        return False

@@ -27,5 +27,6 @@ urlpatterns = [
     path('myapp/', test),
     path('GestorTemplates/', include('GestorTemplates.urls')),
     path('Inscricao/', include('Inscricao.urls')),
+    path('Feedback/', include('Feedback.urls')),
 
 ]

@@ -20,6 +20,17 @@
         Formulários
       </a>
 
+      <a href="{% url 'Evento:list_eventos' %}" class="navbar-item">
+        Eventos
+      </a>
+
+      <a href="{% url 'Inscricao:part_list_inscricao' %}" class="navbar-item">
+        As minhas Inscrições
+      </a>
+      <a href="{% url 'Inscricao:prop_gerir_inscricoes' %}" class="navbar-item">
+        Gerir inscrições dos seus eventos
+      </a>
+
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">
           Configurações
