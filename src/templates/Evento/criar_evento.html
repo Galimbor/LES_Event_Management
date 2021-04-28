@@ -38,13 +38,18 @@
                                 <label for="">{{ campo.campoid.conteudo }}</label>
                                 <input name="{{ campo.campoid.id }}" type="date">
                             </div>
+                        {% elif campo.campoid.tipocampoid.id == 8 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="time">
+                            </div>
                         {% elif campo.campoid.tipocampoid.id == 2 %}
                             <div class="form-group-c">
                                 <label for="">{{ campo.campoid.conteudo }}</label>
                                 <div class="radio-label">
                                     {% for escolha in campo.campoid.respostas %}
                                         <label for="tipo">{{ escolha }}</label>
-                                        <input type="radio" id="tipo" name="radio" value="{{ escolha }}">
+                                        <input type="radio" id="tipo" name="{{ campo.campoid.id }}" value="{{ escolha }}">
                                         <br>
                                     {% endfor %}
                                 </div>

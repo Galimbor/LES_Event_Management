@@ -106,6 +106,29 @@ def create_event(request, type_id):
                 pergunta.campoid.tipocampoid.nome == 'Dropdown':
             pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
 
+    if request.method == 'POST':
+        nome = request.POST.get("10")
+        desc = request.POST.get("11")
+        num_p = request.POST.get("12")
+        val = request.POST.get("13")
+        data_i = request.POST.get("14")
+        data_f = request.POST.get("15")
+        hora_i = request.POST.get("16")
+        hora_f = request.POST.get("17")
+
+        if val == 'Sim':
+            val = 1
+        else:
+            val = 0
+
+        horario = Timedate(datainicial=data_i, datafinal=data_f, horainicial=hora_i, horafinal=hora_f)
+        horario.save()
+        evento = Evento(nome=nome, descricaogeral=desc, maxparticipantes=num_p, val_inscritos=val, horario=horario,
+                        inscritos=0, estado="Pendente")
+        evento.save()
+
+        # Redirect to eventos page
+        return redirect('Evento:eventos')
 
     context = {
         'campos': perguntas
