@@ -16,15 +16,17 @@ Including another URLconf
 from django.contrib import admin
 
 from django.urls import include, path
-from Utilizadores.views import test
-from django.http import HttpResponse
+from GestorTemplates.views import home
+from django.views.i18n import JavaScriptCatalog
 
-from Recurso.views import home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view),
-    path('Evento/', include('Evento.urls')),
+    path('', home, name='home'),
+    path('jsi18n', JavaScriptCatalog.as_view(), name='js-catlog'),
+    path('Evento/', include('Evento.urls', namespace='Evento')),
+    path('Utilizadores/', include('Utilizadores.urls', namespace='Utilizadores')),
     path('GestorTemplates/', include('GestorTemplates.urls')),
     path('Recurso/', include('Recurso.urls')),
+
 ]

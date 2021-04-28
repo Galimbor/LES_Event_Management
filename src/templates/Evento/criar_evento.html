@@ -1,55 +1,68 @@
-
 {% extends 'app.html' %}
 
 
 {% block title %}- Página Inicial{% endblock title %}
 
 {% block content %}
-{% load static %}
-<div>
-  <div class="section">
-    <div class="columns">
-      <div class="column is-is-four-fifths">
-        <h1 class="title">Criar Evento</h1>
+    {% load static %}
 
-        <form class="box" id="form" method="post">
-            {% csrf_token %}
 
-            <div class="form-group-c">
-              <label for="">Nome</label> 
-              {{ form.nome }}  
+    <div class="section">
+        <div class="columns">
+            <div class="column is-is-four-fifths">
+                <h1 class="title">Criar Evento</h1>
+                {{ type }}
+                <form class="box" id="form" method="post">
+                    {% csrf_token %}
+                    {{ form.media }}
+
+                    {% for campo in campos %}
+
+                        {% if campo.campoid.tipocampoid.id == 1 %}
+                            <div class="form-group-c">
+                                <label for="nome">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="text">
+                            </div>
+                        {% elif campo.campoid.tipocampoid.id == 4 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <textarea name="{{ campo.campoid.id }}" cols="30" rows="10"></textarea>
+                            </div>
+                        {% elif campo.campoid.tipocampoid.id == 6 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="number">
+                            </div>
+                        {% elif campo.campoid.tipocampoid.id == 7 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="date">
+                            </div>
+                        {% elif campo.campoid.tipocampoid.id == 8 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="time">
+                            </div>
+                        {% elif campo.campoid.tipocampoid.id == 2 %}
+                            <div class="form-group-c">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <div class="radio-label">
+                                    {% for escolha in campo.campoid.respostas %}
+                                        <label for="tipo">{{ escolha }}</label>
+                                        <input type="radio" id="tipo" name="{{ campo.campoid.id }}" value="{{ escolha }}">
+                                        <br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <input type='Submit' value='Save'>
+                </form>
             </div>
-            
-            <div class="form-group-c">
-              <label for="">Descrição Geral</label> 
-              {{ form.descricaogeral }}  
-            </div>
+        </div>
 
-            <div class="form-group-c">
-              <label for="">N. Máximo de Participantes</label>
-              {{ form.maxparticipantes }} 
-            </div>
-
-            <div class="form-group-c">
-              <label for="date-i">Date Initial</label> 
-              <input type="text" name="date-i" id="date-i" value="2020-02-02">
-
-              <label for="time-i">Time Initial</label> 
-              <input type="text" name="time-i" id="time-i" value="10:10:02">
-            </div>
-
-            <div class="form-group-c">
-              <label for="date-f">Date Final</label> 
-              <input type="text" name="date-f" id="date-f" value="2020-02-02">
-              <label for="time-f">Time Final</label> 
-              <input type="text" name="time-f" id="time-f" value="11:11:11">
-            </div>
-
-            <input type='Submit' value='Save'>    
-        </form>    
     </div>
-  </div>
- 
-</div>
-{% endblock content%}
+{% endblock content %}
 

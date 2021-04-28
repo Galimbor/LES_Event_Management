@@ -8,8 +8,15 @@
         <div class="section">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Eventos</h1>
+                    <h1 class="title">Meus Eventos</h1>
                 </div>
+                <a class="button is-success"
+                   href="{% url 'Evento:select_type' %}">
+        <span class="icon">
+          <i class="fas fa-plus"></i>
+        </span>
+                    <span>Novo Evento</span>
+                </a>
 
             </div>
             <div class="columns is-multiline">
@@ -18,7 +25,9 @@
                         <div class="card" style="min-height: 10px;">
                             <header class="card-header">
                                 <p class="card-header-title">
-                                    {{ obj.nome }}
+                                    <a href="#">
+                                         {{ obj.nome }}
+                                    </a>
                                 </p>
                             </header>
                             <div class="card-content">
@@ -26,37 +35,46 @@
                                     <strong>Descrição: </strong>{{ obj.descricaogeral }}
                                     <br>
                                     <br>
-                                    <p><strong>Estado do evento: </strong> {{ obj.estado }}</p>
+                                    <p> <strong>Estado do evento: </strong> {{ obj.estado }}</p>
                                     <br>
                                     <br>
-                                    <p><strong>Número máximo de participantes: </strong> {{ obj.maxparticipantes }}</p>
+                                    <p> <strong>Número máximo de participantes: </strong> {{ obj.maxparticipantes }}</p>
                                     <br>
                                     <br>
 
-                                    <time datetime="2016-1-1"><strong>Data Inicial: </strong>
+                                    <time datetime="2016-1-1"> <strong>Data Inicial: </strong>
                                         {{ obj.horario.datainicial }}
                                         {{ obj.horario.horainicial }}  </time>
                                     <br>
-                                    <time datetime="2016-1-1"><strong>Data Final: </strong>
+                                    <time datetime="2016-1-1"> <strong>Data Final: </strong>
                                         {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
                                     <br>
                                     <br>
-                                    {% if obj.estado == 'Logistica Pendente' %}
+                                    {% if obj.estado == 'Logistica Pendente'  %}
                                         <strong>Logisticas:</strong>
                                         {% for obj_l in logistica %}
 
                                             {% if obj_l.eventoid == obj %}
                                                 <br>
-                                                - {{ obj_l.nome }}
+                                                 - {{ obj_l.nome }}
                                                 <br>
                                             {% endif %}
                                         {% endfor %}
-
+                                    {% endif %}
+                                    {% if obj.estado == 'Validado'  %}
+                                        <a href="{% url 'Evento:create-event2' event_id=obj.id %}">
+                                             Adicionar Logistica
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>
-                            <footer class="card-footer">
-                            </footer>
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    <a href="{% url 'Evento:gerir' event_id=obj.id %}">
+                                         Gerir
+                                    </a>
+                                </p>
+                            </header>
                         </div>
                     </div>
                 {% endfor %}

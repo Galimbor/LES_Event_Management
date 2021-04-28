@@ -19,11 +19,19 @@
             <a href="{% url 'form-list' %}" class="navbar-item">
                 Formulários
             </a>
-
-            <a href="{% url 'Evento:eventos' %}" class="navbar-item">
-                Todos os eventos
-            </a>
-
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Eventos
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="{% url 'Evento:eventos' %}" class="navbar-item">
+                        Todos Eventos
+                    </a>
+                    <a href="{% url 'Evento:meus-eventos' %}" class="navbar-item">
+                        Meus Eventos
+                    </a>
+                </div>
+            </div>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Recursos
@@ -38,22 +46,6 @@
                     <a href="{% url 'Recurso:unidades-organicas' %}" class="navbar-item">Unidades Orgânicas</a>
                     <a href="{% url 'Recurso:universidades' %}" class="navbar-item">Universidades</a>
                     <a href="{% url 'Recurso:campis' %}" class="navbar-item">Campis</a>
-                </div>
-            </div>
-
-
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                    Configurações
-                </a>
-                <div class="navbar-dropdown">
-                    <a href="#" class="navbar-item">Unidades Organicas</a>
-                    <a href="#" class="navbar-item">Edificios e Espaços</a>
-                    <a href="#" class="navbar-item">Departamentos</a>
-                    <a href="#" class="navbar-item">Cursos</a>
-                    <a href="#" class="navbar-item">Transportes</a>
-                    <a href="#" class="navbar-item">Almoços</a>
-                    <a href="#" class="navbar-item">Temas</a>
                 </div>
             </div>
 
@@ -325,17 +317,33 @@
                 </div>
 
 
-                <a href="#">
-                    <div type="button" class="button">
-              <span class="icon is-small">
-                <i class="mdi mdi-login-variant"></i>
-              </span>
-                        <span>Entrar</span>
-                    </div>
-                </a>
-
-            </div>
-        </div>
+       {% if user.is_authenticated %}
+                    <a href="{% url 'Utilizadores:logout' %}">
+                        <div type="button" class="button">
+                      <span class="icon is-small">
+                        <i class="mdi mdi-login-variant"></i>
+                      </span>
+                            <span>Sair</span>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="{% url 'Utilizadores:registar' %}">
+                        <div type="button" class="button">
+                      <span class="icon is-small">
+                        <i class="mdi mdi-login-variant"></i>
+                      </span>
+                            <span>Registar</span>
+                        </div>
+                    </a>
+                    <a href="{% url 'Utilizadores:login' %}">
+                        <div type="button" class="button">
+                  <span class="icon is-small">
+                    <i class="mdi mdi-login-variant"></i>
+                  </span>
+                            <span>Entrar</span>
+                        </div>
+                    </a>
+                {% endif %}
 
     </div>
 </nav>
