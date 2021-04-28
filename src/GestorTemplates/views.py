@@ -20,7 +20,7 @@ class FormList(ListView):
 
 class FormCreate(CreateView):
     model = Formulario
-    fields = ['id']
+    fields = ['title']
     template_name = 'GestorTemplates/create_form.html'
     success_url = reverse_lazy('form-list')
 

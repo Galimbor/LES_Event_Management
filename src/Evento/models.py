@@ -31,13 +31,11 @@ class Templatecertificado(models.Model):
 class Evento(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-    inscritos = models.IntegerField(db_column='Num_partipantes')
-    val_inscritos= models.IntegerField(db_column='Validacao_inscritos')
     descricaogeral = models.CharField(db_column='DescricaoGeral', max_length=255)  # Field name made lowercase.
     maxparticipantes = models.IntegerField(db_column='MaxParticipantes')  # Field name made lowercase.
     estado = models.CharField(db_column='Estado', max_length=255, blank=True, null=True)  # Field name made lowercase.
     visibilidade = models.CharField(db_column='Visibilidade', max_length=255, blank=True,
-                                    null=True, default='Público')  # Field name made lowercase.
+                                    null=True)  # Field name made lowercase.
     tipoeventoid = models.ForeignKey(Tipoevento, models.DO_NOTHING, db_column='TipoEventoID', blank=True,
                                      null=True)  # Field name made lowercase.
     certificadoid = models.ForeignKey(Templatecertificado, models.DO_NOTHING,
@@ -61,8 +59,7 @@ class Evento(models.Model):
 
 
 class Logistica(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
+    nome = models.IntegerField(db_column='Nome', blank=True, null=True)  # Field name made lowercase.
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
 
     class Meta:
