@@ -24,7 +24,7 @@ class Campo(models.Model):
 class CampoFormulario(models.Model):
     campoid = models.ForeignKey(Campo, models.DO_NOTHING, db_column='CampoID')  # Field name made lowercase.
     formularioid = models.ForeignKey('Formulario', models.DO_NOTHING,
-                                        db_column='FormularioId')  # Field name made lowercase.
+                                     db_column='FormularioId')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -77,14 +77,12 @@ class Resposta(models.Model):
                                    null=True)  # Field name made lowercase.
     inscricaoid = models.ForeignKey(Inscricao, models.DO_NOTHING, db_column='InscricaoId', blank=True,
                                     null=True)  # Field name made lowercase.
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID', blank=True, null=True)  # Field name made lowercase.
+    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID', blank=True,
+                                 null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Resposta'
-
-
-
 
 
 class Tipocampo(models.Model):
