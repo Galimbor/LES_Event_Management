@@ -22,26 +22,32 @@ def registar(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password1')
-        gcpID = 0
-        internoID = 0
-        serviosID = 0;
-        adminID = 0;
+        gcpID = None
+        internoID = None
+        serviosID = None
+        adminID = None
+        externoID = None
 
         if tipo == 'gcp':
             gcpID = Gcp()
+            gcpID.save()
         elif tipo == 'interno':
             internoID = ProponenteInterno()
+            internoID.save()
         elif tipo == 'externo':
-            externoID = 1
+            externoID = ProponenteExterno()
+            externoID.save()
         elif tipo == 'servicos':
-            serviosID = 1
+            serviosID = Servicostecnicos()
+            serviosID.save()
 
         usuario = Usuario(first_name=primeiro_nome, last_name=ultimo_nome, morada=morada, contribuinte=nif,
                           datanascimento=data, adminid=adminID, gcpid=gcpID, proponente_internoid=internoID,
-                          proponente_externoid=externoID, servicostecnicosid=serviosID)
+                          proponente_externoid=externoID, servicostecnicosid=serviosID, username=username,
+                          password=password, email=email)
         usuario.save()
 
-        user = User.objects.create_user(username=username, email=email, password=password, user_id=usuario)
+        user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
         return redirect('Evento:eventos')
 

@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+
+    <div class="section">
+        <div class="columns">
+            <div class="column is-is-four-fifths">
+                <h1 class="title">Criar Evento - Tipo do Evento</h1>
+
+                <form class="box" id="form" method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group-c">
+                        <label for="sim">Qual tipo de evento?</label>
+                        {% for tipo in tipos %}
+                            <div class="radio-label">
+                                <label for="tipo">{{ tipo.nome }}</label>
+                                <input type="radio" id="tipo" name="radio" value="{{ tipo.id }}">
+                                <br>
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                    <input type='Submit' value='Next'>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+

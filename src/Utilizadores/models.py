@@ -17,8 +17,9 @@ class Admin(models.Model):
 
 
 class Gcp(models.Model):
+    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     class Meta:
-        managed = False
+        managed = True
         db_table = 'GCP'
 
 
@@ -60,7 +61,7 @@ class User(models.Model):
                                 null=True)  # Field name made lowercase.
     last_login = models.DateTimeField(db_column='Last_login', blank=True, null=True)  # Field name made lowercase.
     is_superuser = models.IntegerField(blank=True, null=True)
-    username = models.CharField(max_length=255, blank=True, null=True)
+    username = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
@@ -80,5 +81,5 @@ class User(models.Model):
                                            db_column='ServicosTecnicosid', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'User'

@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from .forms import EventoForm, LogisticaForm
+from .forms import LogisticaForm
 from Neglected.models import Timedate
-from .models import Evento, Logistica
+from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
-from django.urls import reverse
+from GestorTemplates.models import Formulario, CampoFormulario, Campo
 
 
 # Create your views here.
@@ -98,32 +97,30 @@ def gerir(request, event_id):
     return render(request, 'Evento/gerir.html', context)
 
 
-def create_event(request):
-    form = EventoForm(request.POST or None)
-    if form.is_valid():
-        # Date and time data
-        date_i = request.POST.get("data_i")
-        date_f = request.POST.get("data_f")
-        time_i = request.POST.get("hora_i")
-        time_f = request.POST.get("hora_f")
-        # Create TimeDate Obj
-        horario = Timedate(datainicial=date_i, horainicial=time_i,
-                           datafinal=date_f, horafinal=time_f)
-        horario.save()
+def create_event(request, type_id):
+    formulario = Formulario.objects.filter(tipoeventoid=type_id, tipoformularioid=3)
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
 
-        # Evento data
-        nome = request.POST.get("nome")
-        desc = request.POST.get("descricaogeral")
-        max_p = request.POST.get("maxparticipantes")
-        val_insc = 1 if request.POST.get("radio") == 'sim' else 0
-        # Create Evento Obj
-        evento = Evento(nome=nome, descricaogeral=desc, maxparticipantes=max_p,
-                        horario=horario, estado="Pendente", val_inscritos=val_insc, inscritos=0)
-        evento.save()
-        return redirect('Evento:eventos')
-    else:
-        print(form.errors)
+    for pergunta in perguntas:
+        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+                pergunta.campoid.tipocampoid.nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+
+
     context = {
-        'form': form
+        'campos': perguntas
     }
     return render(request, 'Evento/criar_evento.html', context)
+
+
+def select_type(request):
+    tipos = Tipoevento.objects.all()
+
+    if request.method == 'POST':
+        tipo = request.POST['radio']
+        return redirect('Evento:create-event', tipo)
+
+    context = {
+        'tipos': tipos
+    }
+    return render(request, 'Evento/selecionar_tipo.html', context)

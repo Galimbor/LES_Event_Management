@@ -13,7 +13,6 @@ class Campo(models.Model):
     obrigatorio = models.BooleanField(db_column='Obrigatorio')  # Field name made lowercase. This field type is a guess.
     tipocampoid = models.ForeignKey('Tipocampo', models.DO_NOTHING,
                                     db_column='TipoCampoID')  # Field name made lowercase.
-    formularioid = models.IntegerField(db_column='FormularioId', blank=True, null=True)  # Field name made lowercase.
     respostapossivelid = models.ForeignKey('Respostaspossiveis', models.DO_NOTHING, db_column='RespostaPossivelId',
                                            blank=True, null=True)  # Field name made lowercase.
 
