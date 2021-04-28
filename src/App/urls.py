@@ -28,5 +28,7 @@ urlpatterns = [
     path('Utilizadores/', include('Utilizadores.urls', namespace='Utilizadores')),
     path('GestorTemplates/', include('GestorTemplates.urls')),
     path('Recurso/', include('Recurso.urls')),
+    path('Inscricao/', include('Inscricao.urls')),
+    path('Feedback/', include('Feedback.urls')),
 
 ]

@@ -1,0 +1,104 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column">
+        <h1 class="title"> Gerir inscrições do seus eventos </h1>
+      </div>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+    </div>
+    <div class="columns is-multiline">
+      {% for obj in object_list %}
+      <div class="column is-3">
+        <div class="card" style="min-height: 10px;">
+          <header class="card-header">
+            <p class="card-header-title">
+              {{obj.eventoid.nome}}
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              {{ obj.eventoid.descricaogeral }}
+              <br>
+                <br>
+                <p> Inscrito como : {{ obj.nome }}</p>
+                <br>
+                <br>
+                <p> Estado da inscrição : {{ obj.estado }}</p>
+                <br>
+                <br>
+                <p> Participante número : {{ obj.num_inscricao }}</p>
+                <br>
+                <br>
+
+              <time datetime="2016-1-1"> Start-time : {{ obj.eventoid.horario.datainicial }} {{ obj.eventoid.horario.horainicial }}  </time>
+                <br>
+               <time datetime="2016-1-1"> End-time :{{ obj.eventoid.horario.datafinal }} {{ obj.eventoid.horario.horafinal }} </time>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <a href="{% url 'Inscricao:prop_update_inscricao'   id=obj.id  %}" class="card-footer-item">Alterar estado da inscrição</a>
+            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:prop_delete_inscricao' obj.pk %}">Eliminar inscrição</a>
+          </footer>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar esta sua inscrição?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal" >Cancel</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-form-btn').click(function(){
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+  
+    
+  });
+
+  $('.close-modal').click(function(){
+    $('.modal').removeClass('is-active');
+  });
+
+  function deleteForm(id){
+    deleteFormModal.data(id).hide();
+  }
+
+
+
+
+    
+</script>
+{% endblock content%}

@@ -1,0 +1,85 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Feedback para o evento</h1>
+
+        <form class="box" id="form" method="post">
+            {% csrf_token %}
+
+
+            {% for pergunta in form %}
+             <div class="field">
+                {% if pergunta.campoid.tipocampoid.nome == 'Resposta aberta' %}
+                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                        <div class="control">
+                            <input class="text" type="text" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
+                        </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'RadioBox'%}
+
+                        <div class="control">
+                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                        {% for opcao in pergunta.campoid.respostas %}
+                            <label class="radio">
+                                <input type="radio" name="{{ pergunta.campoid.id }}">
+                                {{ opcao }}
+                            </label>
+                        {% endfor %}
+                        </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Dropdown' %}
+                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <div class="select is-small">
+                      <select name="{{ opcao}}" >
+                          {% for opcao in pergunta.campoid.respostas %}
+                            <option name="{{ opcao}}">{{ opcao }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Pergunta aberta longa' %}
+                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                      <div class="control">
+                        <textarea class="textarea " name="{{ pergunta.campoid.id }}" cols="10" placeholder="{{ pergunta.campoid.conteudo}}"></textarea>
+                      </div>
+
+                {% elif pergunta.campoid.tipocampoid.nome == 'Anexo' %}
+                   <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <div class="file">
+                      <label class="file-label">
+                        <input class="file-input" type="file" name="{{ pergunta.campoid.id }}">
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                          </span>
+                          <span class="file-label">
+                            Escolha um ficheiro..
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                {% endif %}
+             </div>
+            {% endfor %}
+
+
+        <div class="field is-grouped">
+          <div class="control">
+              <input class="button is-link" type='Submit' value='Submit'>
+          </div>
+          <div class="control">
+            <button class="button is-link is-light">Cancel</button>
+          </div>
+        </div>
+
+        </form>
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock content%}

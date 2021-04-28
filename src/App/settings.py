@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'Notificacao',
     'Recurso',
     'Utilizadores',
-    'Neglected'
+    'Neglected',
+    'Feedback',
 
 ]
 

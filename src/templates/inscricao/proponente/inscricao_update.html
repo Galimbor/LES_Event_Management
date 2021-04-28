@@ -1,0 +1,54 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Alterar estado da inscrição</h1>
+         <div >
+             <h2 class="subtitle">Dados gerais da inscrição</h2>
+            <div class="form-group-c">
+                <label> Nome completo : {{ inscricao.nome }} </label>
+
+            </div>
+            <div class="form-group-c">
+                <label>Email : {{ inscricao.email }} </label>
+
+            </div>
+            <div class="form-group-c">
+            <label> Idade : {{ inscricao.idade }} </label>
+
+            </div>
+            <div class="form-group-c">
+            <label> Número de telemóvel : {{ inscricao.telemovel }} </label>
+
+            </div>
+            <div class="form-group-c">
+            <label> Profissão : {{ inscricao.profissao }} </label>
+
+            </div>
+         </div>
+          <br>
+          <br>
+          <br>
+        <form class="box" id="form" method="post">
+            <h2 class="subtitle">Estado da inscrição</h2>
+            {% csrf_token %}
+
+            <div class="form-group-c">
+            <label> Estado da inscrição :  </label>
+            {{ form.estado }}
+            </div>
+
+            <input type='Submit' value='Save'>    
+        </form>    
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock content%}

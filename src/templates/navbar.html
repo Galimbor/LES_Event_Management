@@ -32,6 +32,12 @@
                     </a>
                 </div>
             </div>
+            <a href="{% url 'Inscricao:part_list_inscricao' %}" class="navbar-item">
+                As minhas Inscrições
+            </a>
+            <a href="{% url 'Inscricao:prop_gerir_inscricoes' %}" class="navbar-item">
+                Gerir inscrições dos seus eventos
+            </a>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Recursos
@@ -48,7 +54,6 @@
                     <a href="{% url 'Recurso:campis' %}" class="navbar-item">Campis</a>
                 </div>
             </div>
-
         </div>
         <a href="" class="navbar-item">
 
@@ -317,33 +322,17 @@
                 </div>
 
 
-       {% if user.is_authenticated %}
-                    <a href="{% url 'Utilizadores:logout' %}">
-                        <div type="button" class="button">
-                      <span class="icon is-small">
-                        <i class="mdi mdi-login-variant"></i>
-                      </span>
-                            <span>Sair</span>
-                        </div>
-                    </a>
-                {% else %}
-                    <a href="{% url 'Utilizadores:registar' %}">
-                        <div type="button" class="button">
-                      <span class="icon is-small">
-                        <i class="mdi mdi-login-variant"></i>
-                      </span>
-                            <span>Registar</span>
-                        </div>
-                    </a>
-                    <a href="{% url 'Utilizadores:login' %}">
-                        <div type="button" class="button">
-                  <span class="icon is-small">
-                    <i class="mdi mdi-login-variant"></i>
-                  </span>
-                            <span>Entrar</span>
-                        </div>
-                    </a>
-                {% endif %}
+                <a href="#">
+                    <div type="button" class="button">
+              <span class="icon is-small">
+                <i class="mdi mdi-login-variant"></i>
+              </span>
+                        <span>Entrar</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
 
     </div>
 </nav>
