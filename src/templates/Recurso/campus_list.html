@@ -8,9 +8,9 @@
         <div class="section">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Serviços</h1>
+                    <h1 class="title">Campis</h1>
                 </div>
-                <a class="button is-success" href="{% url 'Recurso:servico-create' %}">
+                <a class="button is-success" href="{% url 'Recurso:campus-create' %}">
         <span class="icon">
           <i class="fas fa-plus"></i>
         </span>
@@ -29,17 +29,13 @@
                             </header>
                             <div class="card-content">
                                 <div class="content">
-                                    {{ obj.fonte }}
-                                    {% if obj.fonte == "Externa" %}
-                                        {{ obj.empresaid.nome }}
-                                    {% else %}
-                                    {% endif %}
+                                    {{ obj.descricao }}
                                 </div>
                             </div>
                             <footer class="card-footer">
                                 <a href="#" class="card-footer-item">Editar</a>
                                 <a href="#" class="card-footer-item delete-form-btn"
-                                   data-delete-url="{% url 'Recurso:servico-delete' obj.id %}">Eliminar</a>
+                                   data-delete-url="{% url 'Recurso:campus-delete' obj.id %}">Eliminar</a>
                             </footer>
                         </div>
                     </div>
@@ -52,7 +48,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este servicos?</p>
+                <p class="modal-card-title">Tem a certeza que deseja eliminar este Campus?</p>
                 <button class="close-modal delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">

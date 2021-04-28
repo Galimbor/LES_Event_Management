@@ -19,10 +19,11 @@ from django.urls import include, path
 from Utilizadores.views import test
 from django.http import HttpResponse
 
-# from Recurso.views import create_recurso
+from Recurso.views import home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home_view),
     path('Evento/', include('Evento.urls')),
     path('GestorTemplates/', include('GestorTemplates.urls')),
     path('Recurso/', include('Recurso.urls')),

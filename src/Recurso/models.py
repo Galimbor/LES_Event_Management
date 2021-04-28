@@ -87,8 +87,8 @@ class Campus(models.Model):
 
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-    localizacao = models.CharField(db_column='Localizaçao', max_length=255, blank=True,
-                                   null=True)  # Field name made lowercase.
+    # localizacao = models.CharField(db_column='Localizaçao', max_length=255, blank=True,
+    #                                null=True)  # Field name made lowercase.
     universidadeid = models.ForeignKey('Universidade', models.DO_NOTHING,
                                        db_column='UniversidadeID')  # Field name made lowercase.
 
@@ -151,6 +151,7 @@ class Equipamento(models.Model):
 class Recurso(models.Model):
     def __str__(self):
         return self.nome
+
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
     fonte = models.CharField(db_column='Fonte', max_length=255)  # Field name made lowercase.

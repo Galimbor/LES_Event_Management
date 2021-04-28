@@ -1,7 +1,7 @@
 {% extends 'app.html' %}
 
 
-{% block title %}- Criar Unidade Orgânica{% endblock title %}
+{% block title %}- Criar Universidade{% endblock title %}
 
 {% block content %}
     {% load static %}
@@ -9,7 +9,7 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Unidade Orgânica</h1>
+                    <h1 class="title">Criar Universidade</h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
@@ -20,8 +20,8 @@
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Universidade</label>
-                            {{ form.universidadeid}}
+                            <label for="">Localização</label>
+                            {{ form.localizacao }}
                         </div>
 
                         <input type='Submit' value='Save'>

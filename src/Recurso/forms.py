@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Recurso, Espaco, Equipamento, Servico, Empresa, Edificio, Unidadeorganica, Universidade
+from .models import Recurso, Espaco, Equipamento, Servico, Empresa, Edificio, Unidadeorganica, Universidade, Campus
 
 
 class RecursoForm(forms.ModelForm):
@@ -87,4 +87,13 @@ class UniversidadeForm(forms.ModelForm):
         fields = [
             'nome',
             'localizacao'
+        ]
+
+
+class CampusForm(forms.ModelForm):
+    class Meta:
+        model = Campus
+        fields = [
+            'nome',
+            'universidadeid'
         ]
