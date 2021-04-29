@@ -40,17 +40,20 @@ def CriarInscricao(request, eventoid):
         idade = form.cleaned_data.get('idade')
         telemovel = form.cleaned_data.get('telemovel')
         profissao = form.cleaned_data.get('profissao')
+        checkin = 0
 
         userid = None
 
         inscricao = Inscricao(nome=nome, email=email, idade=idade, telemovel=telemovel, profissao=profissao,
-                              eventoid=eventoid, userid=userid, estado=estado, num_inscricao=num_inscricao)
+                              eventoid=eventoid, userid=userid, estado=estado, num_inscricao=num_inscricao, checkin= checkin)
 
         inscricao.save()
 
         messages.success(request, f'Inscreveu-se com sucesso no evento.')
 
-        return redirect('Evento:list_eventos')
+        return redirect('Evento:eventos')
+    else:
+        print(form.errors)
 
     context = {
         'form': form

@@ -56,6 +56,10 @@
                                 </div>
                             </div>
                             <footer class="card-footer">
+                                <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
+                                   class="card-footer-item">Inscrever</a>
+                                <a href="{% url 'Feedback:create_feedback' eventoid=obj.id %}" class="card-footer-item">Enviar
+                                    feedback</a>
                             </footer>
                         </div>
                     </div>
