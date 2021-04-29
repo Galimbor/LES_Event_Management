@@ -4,6 +4,7 @@ from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
 from GestorTemplates.models import Formulario, CampoFormulario, Campo
+from Utilizadores.models import User
 
 
 # Create your views here.
@@ -15,7 +16,7 @@ def home_view(request):
 
 def eventos(request):
     #  events = Evento.objects.all().filter(estado='aceite')
-    events = Evento.objects.all()  # temporary
+    events = Evento.objects.filter(estado='Aceite')  # temporary
     logistica = Logistica.objects.all()
 
     context = {
@@ -25,10 +26,39 @@ def eventos(request):
 
     return render(request, 'Evento/eventos.html', context)
 
+def eventos_gerir(request):
+    #  events = Evento.objects.all().filter(estado='aceite')
+    events = Evento.objects.all()  # temporary
+    logistica = Logistica.objects.all()
+
+    context = {
+        'eventos': events,
+        'logistica': logistica,
+    }
+
+    return render(request, 'Evento/eventos_gerir.html', context)
+
+
 
 def meus_eventos(request):
     #  events = Evento.objects.all().filter(estado='aceite')
-    events = Evento.objects.all()  # temporary
+    user_django = request.user
+    user = User.objects.filter(email=user_django.email)
+    id_gcp = user[0].gcpid
+    id_prop_i = user[0].proponente_internoid
+    id_ext_i = user[0].proponente_externoid
+    id_servicos = user[0].servicostecnicosid
+    if user[0].gcpid is not None:
+        tipo = 'gcp'
+    elif user[0].proponente_internoid is not None:
+        tipo = 'interno'
+    elif user[0].proponente_externoidid is not None:
+        tipo = 'externo'
+    elif user[0].servicostecnicosid is not None:
+        tipo = 'servicos'
+
+    # TODO: change filter.
+    events = Evento.objects.filter(proponente_externoid=id_ext_i, proponente_internoid=id_prop_i)  # temporary
     logistica = Logistica.objects.all()
 
     context = {
@@ -90,7 +120,6 @@ def create_event2(request, event_id):
     return render(request, 'Evento/criar_evento2.html', context)
 
 
-
 def gerir(request, event_id):
     context = {
         'evento': Evento.objects.get(id=event_id)
@@ -99,6 +128,22 @@ def gerir(request, event_id):
 
 
 def create_event(request, type_id):
+    user_django = request.user
+    user = User.objects.filter(email=user_django.email)
+
+    id_gcp = user[0].gcpid
+    id_prop_i = user[0].proponente_internoid
+    id_ext_i = user[0].proponente_externoid
+    id_servicos = user[0].servicostecnicosid
+    if user[0].gcpid is not None:
+        tipo = 'gcp'
+    elif user[0].proponente_internoid is not None:
+        tipo = 'interno'
+    elif user[0].proponente_externoidid is not None:
+        tipo = 'externo'
+    elif user[0].servicostecnicosid is not None:
+        tipo = 'servicos'
+
     formulario = Formulario.objects.filter(tipoeventoid=type_id, tipoformularioid=3)
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
 
@@ -125,7 +170,7 @@ def create_event(request, type_id):
         horario = Timedate(datainicial=data_i, datafinal=data_f, horainicial=hora_i, horafinal=hora_f)
         horario.save()
         evento = Evento(nome=nome, descricaogeral=desc, maxparticipantes=num_p, val_inscritos=val, horario=horario,
-                        inscritos=0, estado="Pendente")
+                        inscritos=0, estado="Pendente", proponente_internoid=id_prop_i, proponente_externoid=id_ext_i)
         evento.save()
 
         # Redirect to eventos page

@@ -49,7 +49,7 @@ def registar(request):
 
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
-        return redirect('Evento:eventos')
+        return redirect('Utilizadores:login')
 
     context = {
         'form': form
