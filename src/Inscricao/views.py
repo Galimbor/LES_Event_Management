@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-
-from GestorTemplates.models import Tipoformulario, Formulario, CampoFormulario, Resposta
 from .forms import InscricaoForm, InscricaoUpdateForm, InscricaoCheckinUpdateForm
 from Evento.models import Evento
 from .models import Inscricao
@@ -14,79 +12,53 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, D
 #-------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
 
 def CriarInscricao(request, eventoid):
-    evento = Evento.objects.get(id=eventoid)
+    form = InscricaoForm(request.POST or None)
 
-    # Associado à inscrição
-    tipoformulario = Tipoformulario.objects.get(id=1)
+    if form.is_valid():
+        eventoid = Evento.objects.get(id=eventoid)
 
-    formularioInscricao = Formulario.objects.filter(eventoid=evento, tipoformularioid=tipoformulario)
+        num_inscricao = eventoid.inscritos + 1
 
-    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0])
+        eventoid.inscritos = eventoid.inscritos + 1
+        eventoid.save()
 
-    for pergunta in perguntas:
-
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
-
-    if request.method == 'POST':
-
-        #TODO : Aqui deve acontecer alguma validação dos campos submetidos
-
-        num_inscricao = evento.inscritos + 1
-
-        evento.inscritos = evento.inscritos + 1
-        evento.save()
-
-        respostas = []
-
-        inscricao = Inscricao(eventoid=evento)
-        for pergunta in perguntas:
-            perguntaid = pergunta.campoid.id
-            print(perguntaid)
-            resposta = request.POST.get(f"{perguntaid}")
-            print(resposta)
-            if perguntaid == 1 : #NOME
-                inscricao.nome = resposta
-            elif perguntaid == 2 : #IDADE
-                print("im here")
-                inscricao.idade = resposta
-            elif perguntaid == 3 : #EMAIL
-                inscricao.email = resposta
-            elif perguntaid == 4 : #NUMERO TELEMOVEL
-                inscricao.telemovel = resposta
-            elif perguntaid == 5 : #PROFISSAO
-                inscricao.profissao = resposta
-            respostas.append(Resposta(conteudo=resposta, inscricaoid=inscricao,campoid=pergunta.campoid))
-
-
-        if evento.val_inscritos:
+        if eventoid.val_inscritos:
             estado = "Pendente"
         else:
             estado = "Confirmado"
+        # We don't have users implemented yet.
+        # if request.user.is_authenticated:
+        #     userid = request.user
+        # We don't have users yet.
+        # if not Inscricao.objects.filter(userid=userid).filter(eventoid=eventoid):
+        #     if True:
+        #         messages.error(request, f'Já se encontra inscrito no evento.')
+        #         return redirect('Evento:list_eventos')
+
+        nome = form.cleaned_data.get('nome')
+        email = form.cleaned_data.get('email')
+        idade = form.cleaned_data.get('idade')
+        telemovel = form.cleaned_data.get('telemovel')
+        profissao = form.cleaned_data.get('profissao')
+        checkin = 0
 
         userid = None
 
-        inscricao.eventoid = evento
-        inscricao.userid = userid
-        inscricao.estado = estado
-        inscricao.num_inscricao = num_inscricao
-        inscricao.checkin = 0
+        inscricao = Inscricao(nome=nome, email=email, idade=idade, telemovel=telemovel, profissao=profissao,
+                              eventoid=eventoid, userid=userid, estado=estado, num_inscricao=num_inscricao, checkin= checkin)
 
         inscricao.save()
 
-        for resposta in respostas:
-            resposta.save()
+        messages.success(request, f'Inscreveu-se com sucesso no evento.')
 
-        messages.success(request, f'Concluiu a sua inscrição com sucesso!')
-
-        return redirect('Evento:list_eventos')
+        return redirect('Evento:eventos')
+    else:
+        print(form.errors)
 
     context = {
-        'form': perguntas
+        'form': form
     }
     return render(request, 'inscricao/participantes/inscricao_create.html', context)
-
 
 
 class PartConsultarInscricao(ListView):
@@ -130,7 +102,6 @@ def PartInscricaoCheckin(request, id):
 
     if form.is_valid():
 
-        # print(form.cleaned_data.get('checkin'))
 
         inscricao.checkin = form.cleaned_data.get('checkin')
 

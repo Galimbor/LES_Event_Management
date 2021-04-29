@@ -31,6 +31,13 @@ Dependencies
 pip install mysqlclient
 ```
 
+Must add to ``__init__.py``
+```python
+import pymysql
+
+pymysql.install_as_MySQLdb()
+```
+
 Apply database migrations 
 ```python 
 python manage.py migrate

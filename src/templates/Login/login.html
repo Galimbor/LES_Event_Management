@@ -1,0 +1,51 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Log In</h1>
+                    <form class="box" id="form" name="form" method="post">
+                            {{ message }}
+                        {% csrf_token %}
+                        <div class="form-group-c">
+                            <label>Username
+                                <input type="text" name="username">
+                            </label>
+                        </div>
+                        <div class="form-group-c">
+                            <label>Password
+                                <input type="password" name="password">
+                            </label>
+                        </div>
+
+                        <input type='Submit' value='Save'>
+                    </form>
+                </div>
+            </div>
+
+            {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+        </div>
+    </div>
+
+    </div>
+
+{% endblock content %}

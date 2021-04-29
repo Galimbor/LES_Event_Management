@@ -1,0 +1,33 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Criar Edifício{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Criar Edifício</h1>
+
+                    <form class="box" id="form" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group-c">
+                            <label for="">Nome</label>
+                            {{ form.nome }}
+
+                             <div class="form-group-c">
+                            <label for="">Campus</label>
+                            {{ form.campusid }}
+                        </div>
+
+                        <input type='Submit' value='Save'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
