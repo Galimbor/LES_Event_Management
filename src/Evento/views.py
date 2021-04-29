@@ -65,11 +65,11 @@ def create_event2(request, event_id):
             tipo_equipamento.save()
         elif tipo == "servico":
             tipo_servico = Tiposervico(nome=nome, quantidade=quantidade, logisticaid=logistica,
-                                                 horariorequisicao=horario)
+                                       horariorequisicao=horario)
             tipo_servico.save()
         elif tipo == "espaco":
             tipo_espaco = Tipoespaco(nome=nome, quantidade=quantidade, logisticaid=logistica,
-                                                 horariorequisicao=horario)
+                                     horariorequisicao=horario)
             tipo_espaco.save()
         else:
             exit(0)
@@ -88,6 +88,7 @@ def create_event2(request, event_id):
         'form': form
     }
     return render(request, 'Evento/criar_evento2.html', context)
+
 
 
 def gerir(request, event_id):
