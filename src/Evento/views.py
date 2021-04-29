@@ -90,6 +90,7 @@ def create_event2(request, event_id):
     return render(request, 'Evento/criar_evento2.html', context)
 
 
+
 def gerir(request, event_id):
     context = {
         'evento': Evento.objects.get(id=event_id)
