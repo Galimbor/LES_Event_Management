@@ -1,0 +1,130 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column">
+        <h1 class="title">Feedbacks para o meu evento</h1>
+      </div>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+    </div>
+    <div class="columns is-multiline">
+      {% for obj in object_list %}
+      <div class="column is-3">
+        <div class="card" style="min-height: 10px;">
+          <header class="card-header">
+            <p class="card-header-title">
+              {{obj.eventoid.nome}}
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+             Feedback número :  {{ obj.id }}
+              <br>
+                <br>
+                <p> Descrição geral : {{ obj.descricao }}</p>
+            </div>
+          </div>
+          <footer class="card-footer">
+              <a href="{% url 'Feedback:view_feedback' feedbackid=obj.pk %}" class="card-footer-item update-form-btn" >Ver mais</a>
+{#              <a href="{% url 'Inscricao:part_alterar_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Alterar dados</a>#}
+{#            <a href="#" class="card-footer-item update-form-btn" data-update-url="{% url 'Inscricao:part_update_inscricao' obj.pk %}">Fazer o check-in</a>#}
+{#            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:part_delete_inscricao' obj.pk %}">Eliminar inscrição</a>#}
+          </footer>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+ 
+</div>
+
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar esta sua inscrição?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal" >Cancel</button>
+    </footer>
+  </div>
+</div>
+
+{##}
+{#    For the check-in#}
+{#<div class="modal" id="confirm-update-form-modal" data-id="">#}
+{#  <div class="modal-background"></div>#}
+{#  <div class="modal-card">#}
+{#    <header class="modal-card-head">#}
+{#      <p class="modal-card-title">Pretende mesmo fazer o check-in no evento ? </p>#}
+{#      <button class="close-modal delete" aria-label="close"></button>#}
+{#    </header>#}
+{#    <section class="modal-card-body">#}
+{#      <!-- Content ... -->#}
+{#    </section>#}
+{#    <footer class="modal-card-foot">#}
+{#      <a class="button is-danger confirm" href="#">Sim</a>#}
+{#      <button class="button close-modal" >Voltar atrás</button>#}
+{#    </footer>#}
+{#  </div>#}
+{#</div>#}
+
+
+
+
+
+<script>
+
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-form-btn').click(function(){
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+  
+    
+  });
+
+  $('.close-modal').click(function(){
+    $('.modal').removeClass('is-active');
+  });
+
+  function deleteForm(id){
+    deleteFormModal.data(id).hide();
+  }
+
+
+{#  ------------------ For the check-in#}
+{#  var UpdateFormModal = $('#confirm-update-form-modal');#}
+{#  $('.update-form-btn').click(function(){#}
+{#    UpdateFormModal.find('.confirm').attr('href', $(this).data('update-url')); //passes obj id to modal#}
+{#    UpdateFormModal.addClass('is-active'); //shows modal#}
+{##}
+{##}
+{#  });#}
+{##}
+{#  function deleteForm_2(id){#}
+{#    UpdateFormModal.data(id).hide();#}
+{#  }#}
+
+
+    
+</script>
+{% endblock content%}

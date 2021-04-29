@@ -1,0 +1,28 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Feedback número {{ feedback.id }}</h1>
+            {% for pergunta, resposta in QAA %}
+                <article class="message">
+                  <div class="message-header">
+                    <p>{{ pergunta.conteudo }}</p>
+                  </div>
+                  <div class="message-body">
+                    {% if resposta.conteudo|length == 0  %} Answer is empty. {% else %} {{ resposta.conteudo }}  {% endif %}
+                  </div>
+                </article>
+            {% endfor %}
+
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock content%}

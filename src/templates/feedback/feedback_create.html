@@ -25,18 +25,19 @@
                 {% elif pergunta.campoid.tipocampoid.nome == 'RadioBox'%}
 
                         <div class="control">
-                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                        <label class="field" > {{ pergunta.campoid.conteudo }}</label>
                         {% for opcao in pergunta.campoid.respostas %}
-                            <label class="radio">
-                                <input type="radio" name="{{ pergunta.campoid.id }}">
-                                {{ opcao }}
+                            <label class="radio" for="{{ pergunta.campoid.id }}">
+                                <input type="radio" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao }}">
+                                    {{ opcao }}
                             </label>
                         {% endfor %}
                         </div>
                 {% elif pergunta.campoid.tipocampoid.nome == 'Dropdown' %}
-                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <label class="field" for="{{ pergunta.campoid.id }}"> {{ pergunta.campoid.conteudo }}</label>
                     <div class="select is-small">
-                      <select name="{{ opcao}}" >
+                      <select name="{{ pergunta.campoid.id }}" id="{{ pergunta.campoid.id }}" >
+                        <option selected value="">--Please choose an option--</option>
                           {% for opcao in pergunta.campoid.respostas %}
                             <option name="{{ opcao}}">{{ opcao }}</option>
                           {% endfor %}
