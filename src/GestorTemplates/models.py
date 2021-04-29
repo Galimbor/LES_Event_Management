@@ -5,6 +5,7 @@ from django.db import models
 from Evento.models import Evento, Tipoevento
 from Inscricao.models import Inscricao
 from Utilizadores.models import Gcp
+from Feedback.models import Feedback
 
 
 class Campo(models.Model):
@@ -13,7 +14,6 @@ class Campo(models.Model):
     obrigatorio = models.BooleanField(db_column='Obrigatorio')  # Field name made lowercase. This field type is a guess.
     tipocampoid = models.ForeignKey('Tipocampo', models.DO_NOTHING,
                                     db_column='TipoCampoID')  # Field name made lowercase.
-    formularioid = models.IntegerField(db_column='FormularioId', blank=True, null=True)  # Field name made lowercase.
     respostapossivelid = models.ForeignKey('Respostaspossiveis', models.DO_NOTHING, db_column='RespostaPossivelId',
                                            blank=True, null=True)  # Field name made lowercase.
 
@@ -25,7 +25,7 @@ class Campo(models.Model):
 class CampoFormulario(models.Model):
     campoid = models.ForeignKey(Campo, models.DO_NOTHING, db_column='CampoID')  # Field name made lowercase.
     formularioid = models.ForeignKey('Formulario', models.DO_NOTHING,
-                                        db_column='FormularioId')  # Field name made lowercase.
+                                     db_column='FormularioId')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -40,6 +40,8 @@ class Formulario(models.Model):
     tipoformularioid = models.ForeignKey('Tipoformulario', models.DO_NOTHING,
                                          db_column='TipoFormularioID')  # Field name made lowercase.
     gcpid = models.ForeignKey(Gcp, models.DO_NOTHING, db_column='GCPid')  # Field name made lowercase.
+
+    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='eventoID')
 
     class Meta:
         managed = False
@@ -58,17 +60,6 @@ class GcpFormulario(models.Model):
         unique_together = (('gcpid', 'formularioid'),)
 
 
-class Feedback(models.Model):
-    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    descricao = models.CharField(db_column='Descricao', max_length=255, blank=True,
-                                 null=True)  # Field name made lowercase.
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Feedback'
-
-
 class Resposta(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     conteudo = models.CharField(db_column='Conteudo', max_length=255)  # Field name made lowercase.
@@ -78,14 +69,12 @@ class Resposta(models.Model):
                                    null=True)  # Field name made lowercase.
     inscricaoid = models.ForeignKey(Inscricao, models.DO_NOTHING, db_column='InscricaoId', blank=True,
                                     null=True)  # Field name made lowercase.
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID', blank=True, null=True)  # Field name made lowercase.
+    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID', blank=True,
+                                 null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Resposta'
-
-
-
 
 
 class Tipocampo(models.Model):

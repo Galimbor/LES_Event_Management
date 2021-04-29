@@ -1,0 +1,66 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Criar Empresa{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Criar Empresa</h1>
+
+                    <form class="box" id="form" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group-c">
+                            <label for="">Nome</label>
+                            {{ form.nome }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Descrição</label>
+                            {{ form.descricao }}
+                        </div>
+
+
+                        <div class="form-group-c">
+                            <label for="">Email
+                                {{ form.email }}
+                            </label>
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Telefone</label>
+                            {{ form.telefone }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Cidade</label>
+                            {{ form.cidade }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Endereço</label>
+                            {{ form.endereco }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Código Postal</label>
+                            {{ form.codigopostal }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Faturação</label>
+                            {{ form.faturacao }}
+                        </div>
+
+                        <input type='Submit' value='Save'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

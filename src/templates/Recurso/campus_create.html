@@ -1,0 +1,34 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Criar Campus{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Criar Unidade Orgânica</h1>
+
+                    <form class="box" id="form" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group-c">
+                            <label for="">Nome</label>
+                            {{ form.nome }}
+                        </div>
+
+                        <div class="form-group-c">
+                            <label for="">Universidade</label>
+                            {{ form.universidadeid }}
+                        </div>
+
+                        <input type='Submit' value='Save'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

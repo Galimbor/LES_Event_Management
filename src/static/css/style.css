@@ -63,6 +63,7 @@
   vertical-align: top;
   width: 20px;
 }
+
 .modal-close::before, .delete::before, .modal-close::after, .delete::after {
   background-color: white;
   content: "";
@@ -1458,6 +1459,16 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   color: #4a4a4a;
   display: block;
   padding: 1.25rem;
+}
+
+.box .form-group-c {
+  display: block;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group-c label{
+  display: block;
 }
 
 a.box:hover, a.box:focus {
@@ -9340,4 +9351,21 @@ label.panel-block:hover {
   padding: 3rem 1.5rem 6rem;
 }
 
+
+
+/* Jay */
+select {
+  height: auto !important;
+}
+
+.radio-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 5%;
+}
+
+.radio-label label {
+  margin-right: .5rem;
+}
 /*# sourceMappingURL=bulma.css.map */
