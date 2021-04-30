@@ -5,105 +5,106 @@
 
 <head>
 
-  <title>
-    Dia Aberto {% block title %} {% endblock title %}
+    <title>
+        Dia Aberto {% block title %} {% endblock title %}
 
-  </title>
+    </title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
-  <!-- <link rel="stylesheet" href="{% static 'css/mystyle.css' %}"> -->
-  <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
-  <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
-  <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/mystyle.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/logo.png' %}"/>
 
-  <script src="{% url 'js-catlog' %}"></script>
-  <script src="{% static '/admin/js/core.js' %}"></script>
-    
-  {% block load %}
-  {% endblock load %}
+    <script src="{% url 'js-catlog' %}"></script>
+    <script src="{% static '/admin/js/core.js' %}"></script>
 
-  <style>
-    body,
-    html {
-      min-height: 100%;
-      background-size: cover;
-      background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
-    }
+    {% block load %}
+    {% endblock load %}
 
-    * {
-      outline: none;
-    }
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background-size: cover;
+            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+        }
 
-    #app {
-      position: relative;
-      min-height: 100vh;
-      padding-bottom: 5rem
-    }
+        * {
+            outline: none;
+        }
 
-    #top-hero-body {
-      height: 45vh;
-    }
+        #app {
+            position: relative;
+            min-height: 100vh;
+        }
 
-    #page-content {
-      margin: -37vh 5vw 0
-    }
+        #top-hero-body {
+            height: 45vh;
+        }
 
-    #page-content .card {
-      min-height: 70vh
-    }
+        #page-content {
+            margin: -37vh 5vw 0
+        }
 
-    .footer {
-      width: 100%;
-      background-color: #fafafa;
-      padding: 1rem 3rem;
-    }
+        #page-content .card {
+            min-height: 70vh
+        }
 
-    .step-item.is-completed {
-      cursor: pointer;
-    }
+        .footer {
+            width: 100%;
+            background-color: #fff;
+            padding: 1rem 3rem;
+            margin-top: 1.5rem;
+            color: black;
+        }
 
-    .step-item.is-active {
-      cursor: pointer;
-    }
-  </style>
+        .step-item.is-completed {
+            cursor: pointer;
+        }
+
+        .step-item.is-active {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-  <div id="app">
-    {% include 'popup.html'  %}
+<div id="app">
+    {% include 'popup.html' %}
     {% include 'navbar.html' %}
     <div class="hero is-primary is-bold" id="top-hero">
-      <div id="top-hero-body" class="hero-body"></div>
+        <div id="top-hero-body" class="hero-body"></div>
     </div>
     <div id="page-content">
-      <div class="card">
-        <div class="card-content">
-          {% block content %}
-          <!-- include the content here-->
-          {% endblock content %}
+        <div class="card">
+            <div class="card-content">
+                {% block content %}
+                    <!-- include the content here-->
+                {% endblock content %}
+            </div>
         </div>
-      </div>
     </div>
 
     <footer class="footer">
-      <div style="margin: auto; width: max-content">
-        &#169; 2021 Dia Aberto UAlg (Grupos 1 e 6)
-      </div>
+        <div style="margin: auto; width: max-content">
+            &#169; Laboratório de Engenharia de Software - 2021
+        </div>
     </footer>
-  </div>
+</div>
 
-  <script type="text/javascript" src="{% static 'js/fontawesome.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
-  {% block scripts %}
-  {% endblock scripts %}
+<script type="text/javascript" src="{% static 'js/fontawesome.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
+{% block scripts %}
+{% endblock scripts %}
 </body>
 
 </html>

@@ -8,50 +8,28 @@
         <div class="section">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Meus Eventos</h1>
+                    <h1 class="title">Eventos</h1>
                 </div>
-                <a class="button is-success"
-                   href="{% url 'Evento:select_type' %}">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
-        </span>
-                    <span>Novo Evento</span>
-                </a>
 
             </div>
             <div class="columns is-multiline">
                 {% for obj in eventos %}
-                    <div class="column is-half">
+                    <div class="column is-3">
                         <div class="card" style="min-height: 10px;">
-                            <header class="card-header has-text-centered">
-                                <p class="card-header-title is-centered">
+                            <header class="card-header">
+                                <p class="card-header-title">
                                     {{ obj.nome }}
                                 </p>
                             </header>
                             <div class="card-content">
                                 <div class="content">
-                                    <p><strong>Estado:</strong></p>
-                                    <p>{{ obj.estado }}</p>
-                                    <br>
-                                    <p><strong>Data:</strong></p>
-                                    <time datetime="">
-                                        {{ obj.horario.datainicial }}
-                                        {{ obj.horario.horainicial }}  </time>
-                                    -
-                                    <time datetime="">
-                                        {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
-                                    <br>
-                                    <br>
-                                    {% if obj.estado == 'Validado' %}
-                                        <a class="button is-dark" href=
-                                                "{% url 'Evento:create-event2' event_id=obj.id %}">
-                                            Adicionar Logistica
-                                        </a>
-                                    {% else %}
-                                        <br>
-                                    {% endif %}
+                                    <strong>Estado:</strong> {{ obj.estado }}
                                 </div>
                             </div>
+                            <footer class="card-footer">
+                                <a href="{% url 'Evento:gerir' event_id=obj.id %}"
+                                   class="card-footer-item">Gerir</a>
+                            </footer>
                         </div>
                     </div>
                 {% endfor %}

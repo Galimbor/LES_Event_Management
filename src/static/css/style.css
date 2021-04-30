@@ -9368,4 +9368,10 @@ select {
 .radio-label label {
   margin-right: .5rem;
 }
+
+.dark-a {
+  color: rgb(70, 116, 199) !important;
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=bulma.css.map */
