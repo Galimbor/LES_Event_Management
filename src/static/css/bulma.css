@@ -1784,9 +1784,10 @@ a.box:active {
   color: rgba(0, 0, 0, 0.7);
 }
 .button.is-dark {
-  background-color: #363636;
+  background-color: rgb(70, 116, 198) !important;
   border-color: transparent;
   color: #fff;
+  padding: 1.5rem 2rem;
 }
 .button.is-dark:hover, .button.is-dark.is-hovered {
   background-color: #2f2f2f;
@@ -4747,7 +4748,7 @@ a.tag:hover {
 }
 
 .card-header {
-  background-color: transparent;
+  background-color: rgb(70,116,199) !important;
   align-items: stretch;
   box-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.1);
   display: flex;
@@ -4755,10 +4756,11 @@ a.tag:hover {
 
 .card-header-title {
   align-items: center;
-  color: #363636;
+  color: white !important;
   display: flex;
   flex-grow: 1;
   font-weight: 700;
+  font-size: 1.5rem;
   padding: 0.75rem 1rem;
 }
 .card-header-title.is-centered {
@@ -8066,6 +8068,11 @@ label.panel-block:hover {
 .columns.is-multiline {
   flex-wrap: wrap;
 }
+
+.columns.is-space-between {
+  justify-content: space-around;
+}
+
 .columns.is-vcentered {
   align-items: center;
 }
@@ -9974,3 +9981,10 @@ label.panel-block:hover {
 }
 
 /*# sourceMappingURL=bulma.css.map */
+/*
+Custom
+ */
+
+.button .is-dark .spaced {
+  margin-right: auto;
+}
