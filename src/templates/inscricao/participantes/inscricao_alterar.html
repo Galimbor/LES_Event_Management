@@ -12,28 +12,73 @@
         <h1 class="title">Alterar informações gerais da inscrição</h1>
         <form class="box" id="form" method="post">
             {% csrf_token %}
-                      <div class="form-group-c">
-                <label> Nome completo </label>
-                {{ form.nome }}
-            </div>
-            <div class="form-group-c">
-                <label>Email </label>
-                {{ form.email }}
-            </div>
-            <div class="form-group-c">
-            <label> Idade</label>
-            {{ form.idade }}
-            </div>
-            <div class="form-group-c">
-            <label> Número de telemóvel </label>
-            {{ form.telemovel }}
-            </div>
-            <div class="form-group-c">
-            <label> Profissão </label>
-            {{ form.profissao }}
-            </div>
+               {% for pergunta, resposta in QAA %}
+             <div class="field">
+                {% if pergunta.tipocampoid.nome == 'Resposta aberta' %}
+                        <label class="field"> {{ pergunta.conteudo }}</label>
+                        <div class="control">
+                            <input class="text" type="text" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        </div>
+                {% elif pergunta.tipocampoid.nome == 'Resposta Numerica' %}
+                        <label class="field"> {{ pergunta.conteudo }}</label>
+                        <div class="control">
+                            <input class="text" type="number" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        </div>
+                {% elif pergunta.tipocampoid.nome == 'RadioBox'%}
 
-            <input type='Submit' value='Save'>
+                        <div class="control">
+                        <label class="field" > {{ pergunta.conteudo }}</label>
+                        {% for opcao in pergunta.respostas %}
+                            <label class="radio" for="{{ pergunta.id }}">
+                                <input type="radio"  id="{{ pergunta.id }}" name="{{ pergunta.id }}" value="{{ opcao }}" {% if resposta.conteudo == opcao %} checked {% endif %}>
+                                    {{ opcao }}
+                            </label>
+                        {% endfor %}
+                        </div>
+                {% elif pergunta.tipocampoid.nome == 'Dropdown' %}
+                    <label class="field" for="{{ pergunta.id }}"> {{ pergunta.conteudo }}</label>
+                    <div class="select is-small">
+                      <select name="{{ pergunta.id }}" id="{{ pergunta.id }}" >
+{#                        <option selected value="">--Please choose an option--</option>#}
+                          {% for opcao in pergunta.respostas %}
+                            <option name="{{ opcao}}" {% if resposta.conteudo == opcao %} selected {% endif %} >{{ opcao }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                {% elif pergunta.tipocampoid.nome == 'Pergunta aberta longa' %}
+                    <label class="field"> {{ pergunta.conteudo }}</label>
+                      <div class="control">
+                        <textarea class="textarea " name="{{ pergunta.id }}" cols="10"  >{{ resposta.conteudo }}
+                        </textarea>
+                      </div>
+
+                {% elif pergunta.tipocampoid.nome == 'Anexo' %}
+                   <label class="field"> {{ pergunta.conteudo }}</label>
+                    <div class="file">
+                      <label class="file-label">
+                        <input class="file-input" type="file" name="{{ pergunta.id }}">
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                          </span>
+                          <span class="file-label">
+                            Escolha um ficheiro..
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                {% endif %}
+             </div>
+            {% endfor %}
+
+                    <div class="field is-grouped">
+          <div class="control">
+              <input class="button is-link" type='Submit' value='Submit'>
+          </div>
+          <div class="control">
+            <button class="button is-link is-light">Cancel</button>
+          </div>
+        </div>
         </form>
     </div>
   </div>

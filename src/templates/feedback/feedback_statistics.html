@@ -1,0 +1,100 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Estatísticas do feedback</h1>
+        {% for pergunta in perguntas %}
+            <h1 class="subtitle"> {{ pergunta.conteudo }} </h1>
+          <div id="container" style="width: 75%;">
+            <canvas id="{{ pergunta.id }}"></canvas>
+         </div>
+          {% endfor %}
+
+    </div>
+  </div>
+ </div>
+</div>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+    <script>
+
+    const CHART_COLORS = {
+  red: 'rgb(255, 99, 132)',
+  orange: 'rgb(255, 159, 64)',
+  yellow: 'rgb(255, 205, 86)',
+  green: 'rgb(75, 192, 192)',
+  blue: 'rgb(54, 162, 235)',
+  purple: 'rgb(153, 102, 255)',
+  grey: 'rgb(201, 203, 207)'
+};
+
+    let configObj  = {};
+    let i = 0 ;
+
+
+    let functionObj = {};
+
+    let config;
+
+        let k = 0;
+    {% for labels,data,pergunta in QAA %}
+
+    config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ data|safe }},
+         backgroundColor: Object.values(CHART_COLORS),
+          label: 'Population',
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+        responsive: true,
+
+      }
+    };
+
+    configObj[`config${i}`] = config;
+
+
+
+
+    functionObj[`function${i}`]  = function() {
+        let ctx = document.getElementById({{pergunta.id}}).getContext('2d');
+        window.myPie = new Chart(ctx, configObj[`config${k}`]);
+        k++;
+
+    };
+
+    i++;
+
+    {% endfor %}
+
+
+
+
+    window.onload = function() {
+        for(let j = 0; j < i; j++)
+        {
+         let pfunction = functionObj[`function${j}`];
+         pfunction();
+        }
+    };
+
+
+
+    </script>
+
+
+
+
+{% endblock content%}
