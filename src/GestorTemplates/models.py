@@ -13,7 +13,10 @@ caterogias_tipo_formulario = [
     ("2", "Feedback"),
 ]
 
-
+''' Assumo que Tipoformulario funciona como subtipo de evento
+ex.: Seminario (nome do tipoFormulario) é Tipoformulario, categoria = evento
+    inscriçao é TipoFormulario, categoria = inscrição
+'''
 class Tipoformulario(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -33,7 +36,7 @@ class Tipoformulario(models.Model):
         db_table = "TipoFormulario"
 
     def __str__(self):
-        return self.nome
+        return '{}-{}' .format(self.get_categoria_display(), self.nome)
 
 
 class Formulario(models.Model):

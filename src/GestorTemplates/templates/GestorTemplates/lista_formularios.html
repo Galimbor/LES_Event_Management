@@ -41,9 +41,15 @@
                   </span>
                 </p>
               </div>
+              <a class="panel-block is-active" href="{% url 'create-form' 0 %}">
+                <span class="panel-icon ">
+                  <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+                </span>
+                Em branco
+              </a>
               {% for tipo in tiposForm %}
-              <a class="panel-block is-active" href="{% url 'create-form' tipo.id %}" id="subtipo-form{{tipo.id}}"
-                data-subtipo="{{tipo.categoria}}" data-search="{{tipo.nome}}">
+              <a class="panel-block is-active category" href="{% url 'create-form' tipo.id %}" id="subtipo-form{{tipo.tipoformularioid.categoria}}"
+                data-subtipo="{{tipo.tipoformularioid.categoria}}" data-search="{{tipo.nome}}">
                 <span class="panel-icon">
                   <i class="fas fa-book" aria-hidden="true"></i>
                 </span>
@@ -152,7 +158,8 @@
 
 
   function filterCategory(category){
-    var tiposCampo = $('#tipos-formulario .panel-block').not('.search');
+    var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
+
     $('.tipoFormulario').removeClass('is-active');
     if (category.data('id') != 'all'){
       tiposCampo.addClass('is-hidden');
@@ -169,7 +176,7 @@
   $('.search #search-by-name').keyup( function(){
     var active_category = $('.tipoFormulario.is-active');
 
-    var tiposCampo = $('#tipos-formulario .panel-block').not('.search');
+    var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
     var tiposCampoFiltrados1 = tiposCampo;
     //filtrar primeiro outra vez por categoria
     if (active_category.data('id') != 'all'){

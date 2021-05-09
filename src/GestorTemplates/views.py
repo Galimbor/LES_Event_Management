@@ -33,8 +33,9 @@ class FormList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        tiposForm = Tipoformulario.objects.all()
-        context['tiposForm'] = tiposForm
+        # tiposForm = Tipoformulario.objects.all()
+        template = Formulario.objects.filter(is_template = 1)
+        context['tiposForm'] = template
         context['categorias'] = caterogias_tipo_formulario
         return context
 
