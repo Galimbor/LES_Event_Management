@@ -61,10 +61,10 @@ class Formulario(models.Model):
         verbose_name="É Template?",
     )
     tipoeventoid = models.ForeignKey(
-        Tipoevento, models.DO_NOTHING, db_column="TipoEventoID"
-    )  # Field name made lowercase.
+        Tipoevento, models.DO_NOTHING, db_column="TipoEventoID", null=True
+    )  
     tipoformularioid = models.ForeignKey(
-        "Tipoformulario", models.DO_NOTHING, db_column="TipoFormularioID"
+        "Tipoformulario", models.DO_NOTHING, db_column="TipoFormularioID", null=True
     )  # Field name made lowercase.
     gcpid = models.ForeignKey(
         Gcp, models.DO_NOTHING, db_column="GCPid"

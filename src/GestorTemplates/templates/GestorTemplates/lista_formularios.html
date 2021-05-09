@@ -41,19 +41,19 @@
                   </span>
                 </p>
               </div>
-              <a class="panel-block is-active" href="{% url 'create-form' 0 %}">
+              <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
                 <span class="panel-icon ">
                   <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
                 </span>
                 Em branco
               </a>
-              {% for tipo in tiposForm %}
-              <a class="panel-block is-active category" href="{% url 'create-form' tipo.id %}" id="subtipo-form{{tipo.tipoformularioid.categoria}}"
-                data-subtipo="{{tipo.tipoformularioid.categoria}}" data-search="{{tipo.nome}}">
+              {% for templateFormulario in tiposForm %}
+              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.categoria %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
                 <span class="panel-icon">
                   <i class="fas fa-book" aria-hidden="true"></i>
                 </span>
-                {{tipo.nome}}
+                {{templateFormulario.nome}}
               </a>
               {% endfor %}
             </article>
@@ -65,17 +65,6 @@
 
 
 
-
-      <!-- <div class="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          {% for tipo in tiposForm %}
-          <a href="{% url 'create-form' tipo.id %}" class="dropdown-item">
-            {{tipo.nome}}
-          </a>
-          {% endfor %}
-
-        </div>
-      </div> -->
     </div>
 
   </div>
@@ -85,7 +74,7 @@
       <div class="card" style="min-height: 10px;">
         <header class="card-header">
           <p class="card-header-title">
-            {{obj.visibilidade}}
+            {{obj.nome}}
           </p>
           <button class="card-header-icon" aria-label="more options">
             <span class="icon">

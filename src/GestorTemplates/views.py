@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from .models import *
-from Utilizadores.models import User
+from Utilizadores.models import User, Gcp
 from django.core import serializers
 import json
 from django.http import JsonResponse
@@ -59,8 +59,9 @@ class FormCreate(CreateView):
     template_name = 'GestorTemplates/editar_formulario.html'
     success_url = reverse_lazy('form-list')
 
-    def campos_to_json(self):
-        campos = Campo.objects.all()
+    def campos_to_json(self, formID):
+        campoIDs = CampoFormulario.objects.filter(formularioid = formID).values_list('campoid')
+        campos = Campo.objects.filter(id__in=campoIDs)
         for campo in campos:
             if campo.obrigatorio == b'\x01':
                 campo.obrigatorio = True
@@ -72,14 +73,20 @@ class FormCreate(CreateView):
         context = super().get_context_data(**kwargs)
         #templates
         template_form = Formulario.objects.filter(is_template = 1) #search for templates
-        form = template_form.filter(tipoformularioid = self.kwargs['form_type']) # search for the specific template (event, inscricao, ...)
-        
+        formID =  self.kwargs['form_id']
+        if formID:
+            form = template_form.get(id = formID) # search for the specific template (event, inscricao, ...)
+        elif formID != 0 :
+            form = Formulario.objects.create(tipoformularioid = self.kwargs['form_type'])
+        else :
+            gcp = Gcp.objects.get(id = self.request.user.id)
+            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss
         context['tipos_campo'] = Tipocampo.objects.all()
-        context['formulario_json'] = serializers.serialize("json", form)
-        context['campos_json'] = self.campos_to_json()
+        context['formulario_json'] = serializers.serialize("json", [form])
+        context['campos_json'] = self.campos_to_json(form.id)
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
         
-       #empty form TODO
+       #empty form 
 
         return context
 
