@@ -33,8 +33,9 @@ class FormList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        tiposForm = Tipoformulario.objects.all() 
+        tiposForm = Tipoformulario.objects.all()
         context['tiposForm'] = tiposForm
+        context['categorias'] = caterogias_tipo_formulario
         return context
 
     # def get_queryset(self):
@@ -66,15 +67,19 @@ class FormCreate(CreateView):
                 campo.obrigatorio = False
         return serializers.serialize("json",campos)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
-        form = Formulario.objects.first() #TODO select the right form
-       
+        #templates
+        template_form = Formulario.objects.filter(is_template = 1) #search for templates
+        form = template_form.filter(tipoformularioid = self.kwargs['form_type']) # search for the specific template (event, inscricao, ...)
+        
         context['tipos_campo'] = Tipocampo.objects.all()
-        context['formulario_json'] = serializers.serialize("json", [form])
+        context['formulario_json'] = serializers.serialize("json", form)
         context['campos_json'] = self.campos_to_json()
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
         
+       #empty form TODO
+
         return context
 
     def post(self, *args, **kwargs):
