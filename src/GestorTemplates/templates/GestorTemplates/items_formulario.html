@@ -105,25 +105,7 @@
             </div>
         </div>
 
-        <!-- TEMPLATE DE CAMPO: LONG ANSWER-->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="field">
-                <textarea class="textarea" disabled placeholder="Resposta longa"></textarea>
-            </div>
-        </div>
-      
-
-        <!-- TEMPLATE DE CAMPO: OPTIONS FIELD -->
+        <!-- TEMPLATE DE CAMPO: RADIO BOX -->
         <div class="content campo-template">
             <div class="field">
                 
@@ -162,7 +144,7 @@
             </div>
         </div>
 
-         <!-- TEMPLATE DE CAMPO: EMAIL-->
+         <!-- TEMPLATE DE CAMPO: DROPDOWN-->
          <div class="content campo-template">
             <div class="field">
                 
@@ -174,19 +156,117 @@
                 </p>
                 
             </div>
-            <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                    <input class="input" disabled type="email" placeholder="email@ualg.pt">
-                    <span class="icon is-small is-left">
-                      <i class="fas fa-envelope"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                      <i class="fas fa-check"></i>
-                    </span>
-                </p>
+            <div class="control">
+                <div class="select">
+                  <select disabled>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                  </select>
+                </div>
             </div>
         </div>
 
+
+        <!-- TEMPLATE DE CAMPO: LONG ANSWER-->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <textarea class="textarea" disabled placeholder="Resposta longa"></textarea>
+            </div>
+        </div>
+      
+
+         <!-- TEMPLATE DE CAMPO: ANEXO-->
+         <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="file has-name">
+                <label class="file-label">
+                  <input class="file-input" type="file">
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Escolha um ficheiro
+                    </span>
+                  </span>
+                  <span class="file-name">
+                    evento.png
+                  </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- TEMPLATE DE CAMPO: RESPOSTA NUMERICA -->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <input class="input">
+            </div>
+        </div>
+
+        <!-- TEMPLATE DE CAMPO: DATA -->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <input type="date" class="input">
+            </div>
+        </div>
+
+        <!-- TEMPLATE DE CAMPO: HORA -->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <input type="time" class="input">
+            </div>
+        </div>
+
+       
     </div>
     <footer class="card-footer is-hidden">
 

@@ -32,9 +32,34 @@ class CampoFormulario(models.Model):
         db_table = 'Campo_Formulario'
 
 
+
+class Tipoformulario(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TipoFormulario'
+
+    def __str__(self):
+        return self.nome
+
+
 class Formulario(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    visibilidade = models.CharField(db_column='Visibilidade', max_length=255)  # Field name made lowercase.
+    VISIBILIDADE = [
+        ('0', 'Público'),
+        ('1', 'Privado'),
+    ]
+    nome = models.CharField(
+        db_column='Nome', 
+        max_length=255, 
+        default='Sem título')  
+    visibilidade = models.CharField(
+        db_column='Visibilidade', 
+        max_length=255, 
+        choices=VISIBILIDADE, 
+        default='0')  
     tipoeventoid = models.ForeignKey(Tipoevento, models.DO_NOTHING,
                                      db_column='TipoEventoID')  # Field name made lowercase.
     tipoformularioid = models.ForeignKey('Tipoformulario', models.DO_NOTHING,
@@ -46,6 +71,9 @@ class Formulario(models.Model):
     class Meta:
         managed = False
         db_table = 'Formulario'
+    
+    def __str__(self):
+       return self.nome
 
 
 class GcpFormulario(models.Model):
@@ -85,14 +113,6 @@ class Tipocampo(models.Model):
         managed = False
         db_table = 'TipoCampo'
 
-
-class Tipoformulario(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'TipoFormulario'
 
 
 class Respostaspossiveis(models.Model):

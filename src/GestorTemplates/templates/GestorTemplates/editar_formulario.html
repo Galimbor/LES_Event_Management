@@ -1,0 +1,164 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+{% include 'GestorTemplates/items_formulario.html' %}
+
+<!-- *****************************  PAGE CONTENT ***************************** -->
+<div id="gestor-templates-wrapper">
+  
+    <section class="form-menu">
+     
+      <div class="columns is-mobile">
+        <div class="column">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-file-alt"></i>
+            </span>
+            <span class="has-text-weight-bold	formulario__nome">Formulário sem título</span> - <span>Guardado automaticamente</span>
+          </span>
+        </div>
+        <div class="column">
+          <div class="buttons is-pulled-right">
+            <button class="button is-text has-text-grey ver_form_config" data-tooltip="Definições do formulário">
+              <span class="icon">
+                <i class="fas fa-cog fa-lg"></i>
+              </span>
+            </button>
+            <button class="button is-text has-text-grey" onclick="saveForm()" data-tooltip="Guarda alterações">
+              <span class="icon">
+                <i class="fas fa-save fa-lg"></i>
+              </span>
+            </button>
+            
+            <a class="button is-primary" data-tooltip="Coloca o formulário visível">
+              <span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>
+              <span>Publicar</span>
+            </a>
+
+            <div class="dropdown is-hoverable is-right">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <p>Outras opções como fazer cópia, guardar como template, eliminar etc,</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+  
+    <div class="section">
+        <div class="columns">
+            <div class="column main-form is-10  is-offset-1">
+                <div class="tabs is-centered is-medium">
+                    <ul>
+                      <li class="is-active">
+                        <a>
+                          <span class="icon is-small"><i class="fas fa-question" aria-hidden="true"></i></span>
+                          <span>Perguntas</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a>
+                          <span class="icon is-small"><i class="fas fa-table" aria-hidden="true"></i></span>
+                          <span>Respostas</span>
+                        </a>
+                      </li>
+                      
+                    </ul>
+                </div>
+                
+                <form id="form" method="post">
+                    {% csrf_token %}
+                    <div id="form-wrapper" class="block"></div>         
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock content%}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'form_manager.js' %}"></script>
+
+{% csrf_token %}
+<script>
+
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    var formulario_raw = '{{formulario_json | safe}}';
+    //campos must be sorted by index_position
+    var campos_raw = '{{campos_json | safe}}';
+    var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
+    var form = new FormManager(formulario_raw, campos_raw, tiposcampo_raw);
+    form.renderAll();
+
+    function saveForm(){
+      form.saveRemotely()
+    }
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.0/dist/js/bulma-calendar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $('#form').parsley().on('field:validated', function() {
+      var ok = $('.parsley-error').length === 0;
+      $('.bs-callout-info').toggleClass('hidden', !ok);
+      $('.bs-callout-warning').toggleClass('hidden', ok);
+    })
+    .on('form:submit', function() {
+      return false; // Don't submit form for this demo
+    });
+  });
+</script>
+{% endblock %}
+
+{% block page_css%}
+<style>
+    .campos-item {
+      margin-bottom:20px;
+      border-left: 5px solid #ffffff;
+    }
+
+    .campos-item:hover {
+      background-color: #fafafa;
+      cursor: pointer;
+    }
+
+    .campos-item-active {
+      background-color: #fafafa;
+      border-left: 5px solid #0275d8;
+    }
+    .form-header .card-content{
+      padding-bottom: 0px;
+    }
+    .form-header .input{
+      margin-bottom: 5px;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .section{
+            padding: 0rem;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
+{% endblock %}
