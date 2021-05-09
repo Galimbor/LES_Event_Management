@@ -35,8 +35,11 @@ class FormList(ListView):
         context = super().get_context_data(**kwargs)
         # tiposForm = Tipoformulario.objects.all()
         template = Formulario.objects.filter(is_template = 1)
+        categoria = Tipoformulario.objects.all()[:3]
         context['tiposForm'] = template
-        context['categorias'] = caterogias_tipo_formulario
+        # context['categorias'] = caterogias_tipo_formulario
+        context['categorias'] = categoria
+
         return context
 
     # def get_queryset(self):
@@ -74,19 +77,23 @@ class FormCreate(CreateView):
         #templates
         template_form = Formulario.objects.filter(is_template = 1) #search for templates
         formID =  self.kwargs['form_id']
-        if formID:
+        formType = self.kwargs['form_type']
+        #create form based on a selected template
+        if formID and formType:
             form = template_form.get(id = formID) # search for the specific template (event, inscricao, ...)
-        elif formID != 0 :
-            form = Formulario.objects.create(tipoformularioid = self.kwargs['form_type'])
+        #new empty form --> selecting type of form (evento, inscricao, ...)
+        elif formID and not formType:
+            form = Formulario.objects.create(tipoformularioid = formType )
+        # create empty form without selecting type of form 
         else :
             gcp = Gcp.objects.get(id = self.request.user.id)
-            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss
+            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss ##TODO check utilizadores
         context['tipos_campo'] = Tipocampo.objects.all()
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
         
-       #empty form 
+       
 
         return context
 

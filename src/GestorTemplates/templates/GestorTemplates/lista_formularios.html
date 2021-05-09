@@ -28,8 +28,8 @@
             <article class="panel is-primary" id="tipos-formulario">
               <p class="panel-tabs">
                 <a class="tipoFormulario is-active" data-id="all" onclick="filterCategory($(this))">Todos</a>
-                {% for categoria in categorias %}
-                <a class="tipoFormulario" data-id="{{categoria.0}}" onclick="filterCategory($(this))">{{categoria.1}}</a>
+                {% for tipoFormulario in categorias %}
+                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}" onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
                 {% endfor %}
               </p>
 
@@ -41,14 +41,14 @@
                   </span>
                 </p>
               </div>
-              <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
+              <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
                 <span class="panel-icon ">
                   <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
                 </span>
                 Em branco
               </a>
               {% for templateFormulario in tiposForm %}
-              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.categoria %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
                 data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
                 <span class="panel-icon">
                   <i class="fas fa-book" aria-hidden="true"></i>
@@ -147,6 +147,15 @@
 
 
   function filterCategory(category){
+    // <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
+
+    //Alterar empty form creation
+    var url = "{% url 'create-form' 0 0 %}"
+    url = url.slice(0, -1)+ category.data('tipo')
+    console.log(  url )
+    $('.panel-block#empty').attr("href", url)
+
+    //FILTER STUFF
     var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
 
     $('.tipoFormulario').removeClass('is-active');
