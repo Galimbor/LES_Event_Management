@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <footer class="card-footer">
-                               {% if obj.estado == 'Aceite' %} <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
+                               {% if obj.estado == 'Aceite' and obj.showSignup == 1 %} <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
                                    class="card-footer-item">Inscrever</a> {% endif %}
 {#                               {% if obj.estado == 'Terminado' %} <a href="{% url 'Feedback:create_feedback' eventoid=obj.id %}" class="card-footer-item">Enviar#}
 {#                                    feedback</a> {% endif %}#}

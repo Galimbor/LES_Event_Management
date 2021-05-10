@@ -1,10 +1,12 @@
 from django.shortcuts import redirect, render
+
+from Utilizadores.models import User
 from .forms import LogisticaForm
 from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
 from GestorTemplates.models import Formulario, CampoFormulario, Campo
-
+from Inscricao.models import Inscricao
 
 # Create your views here.
 
@@ -16,6 +18,19 @@ def home_view(request):
 def eventos(request):
     #  events = Evento.objects.all().filter(estado='aceite')
     events = Evento.objects.all()  # temporary
+
+
+    if request.user.is_authenticated:
+        for event in events:
+            if Inscricao.objects.filter(userid=get_user(request).id, eventoid=event.id).exists():
+                event.showSignup = False
+            else:
+                event.showSignup = True
+
+    else:
+        for event in events:
+            event.showSignup = True
+
     logistica = Logistica.objects.all()
 
     context = {
@@ -29,6 +44,9 @@ def eventos(request):
 def meus_eventos(request):
     #  events = Evento.objects.all().filter(estado='aceite')
     events = Evento.objects.all()  # temporary
+
+
+
     logistica = Logistica.objects.all()
 
     context = {
@@ -148,3 +166,10 @@ def select_type(request):
         'tipos': tipos
     }
     return render(request, 'Evento/selecionar_tipo.html', context)
+
+
+#---------------HELPER FUNCTIONS----------------------------#
+def get_user(request):
+    user_django = request.user
+    user = User.objects.get(email=user_django.email)
+    return user
