@@ -5,22 +5,59 @@
 
 {% block content %}
 {% load static %}
-<div>
-  <div class="section">
-    <div class="columns">
-      <div class="column is-is-four-fifths">
-        <h1 class="title">Estatísticas do feedback</h1>
-        {% for pergunta in perguntas %}
-            <h1 class="subtitle"> {{ pergunta.conteudo }} </h1>
-          <div id="container" style="width: 75%;">
-            <canvas id="{{ pergunta.id }}"></canvas>
-         </div>
-          {% endfor %}
+<div class="section statistic">
+  <h1 class="title">Estatísticas do feedback</h1>
+  <div class="columns is-multiline">
+    
+    {% for pergunta in perguntas %}
+    {% if forloop.counter0|divisibleby:"4" %}
+    <div class="column stat-item mt-3">
+
+      <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
+        <div id="container" style="width: 20%; color: white !important;">
+          <canvas class="canvas" id="{{ pergunta.id }}"></canvas>
+      </div>
 
     </div>
+    {% else %}
+    <div class="column stat-item mt-3">
+
+      
+      <div id="container" style="width: 20%; color: white !important;">
+          <canvas class="canvas" id="{{ pergunta.id }}"></canvas>
+          </div>
+      <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
+    </div>
+    {% endif %}
+    {% endfor %}
+    
   </div>
- </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 
@@ -59,6 +96,12 @@
       },
       options: {
         responsive: true,
+        legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 14
+                }
+            },
 
       }
     };
