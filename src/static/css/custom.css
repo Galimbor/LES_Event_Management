@@ -95,7 +95,7 @@ pre {
 
 .form-group-c  .label{
     font-weight: bold;
-    border-bottom: rgb(87, 115, 195) 4px solid;
+    color: rgb(87, 115, 195);
     width: 100%;
 
 }
@@ -118,11 +118,10 @@ pre {
 
 .input-clean {
     border: none !important;
-    border-bottom: rgb(87, 115, 195) 1px solid !important;
+    border-bottom: rgb(87, 115, 195) 4px solid !important;
     border-radius: 0px !important;
     color: black;
     width: 100%;
-    margin-top: 1.5rem;
 }
 
 
@@ -134,8 +133,6 @@ pre {
 .is-justify-content-center {
   justify-content: center;
 }
-
-
 
 .mt-5 {
     margin-top: 5rem;
