@@ -18,12 +18,12 @@ def createFeedback(request, eventoid):
 
         return redirect('Evento:eventos')
 
-    user = get_user(request)
+    # user = get_user(request)
 
-    if not Inscricao.objects.filter(eventoid=eventoid,userid=user).exists():
-        messages.error(request, f'Precisa de estar inscrito no evento.')
-
-        return redirect('Evento:eventos')
+    # if not Inscricao.objects.filter(eventoid=eventoid,userid=user).exists():
+    #     messages.error(request, f'Precisa de estar inscrito no evento.')
+    #
+    #     return redirect('Evento:eventos')
 
 
 

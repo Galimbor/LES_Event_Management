@@ -25,6 +25,9 @@ def CriarInscricao(request, eventoid):
     tipoformulario = Tipoformulario.objects.get(id=1)
 
     formularioInscricao = Formulario.objects.filter(eventoid=evento, tipoformularioid=tipoformulario)
+
+    # print(formularioInscricao)
+
     perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0]).exclude(campoid_id=20).exclude(
         campoid_id=21)
 

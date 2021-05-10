@@ -64,7 +64,13 @@
                         </span>
                       </label>
                     </div>
-                {% endif %}
+
+                 {% elif pergunta.campoid.tipocampoid.nome == 'Resposta Numerica' %}
+                            <div class="form-group-c">
+                                <label class="label" for="">{{ pergunta.campoid.conteudo }}</label>
+                                <input class="input-clean input-data" name="{{ pergunta.campoid.id }}" type="number">
+                            </div>
+                 {% endif %}
              </div>
             {% endfor %}
 
