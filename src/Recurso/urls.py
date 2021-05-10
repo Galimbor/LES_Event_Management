@@ -4,7 +4,7 @@ from django.urls import path, include
 from Recurso.views import recursos, recurso_detail, recurso_delete, espacos, empresas, edificios, unidadesorganicas, \
     equipamentos, servicos, servico_create, equipamento_create, espaco_create, equipamento_delete, servico_delete, \
     empresa_create, empresa_delete, edificio_create, edificio_delete, unidadeorganica_delete, unidadeorganica_create, \
-    universidades, universidade_create, universidade_delete, campis, campus_delete, campus_create
+    universidades, universidade_create, universidade_delete, campis, campus_delete, campus_create, espaco_delete
 
 app_name = 'Recurso'
 
@@ -17,6 +17,7 @@ urlpatterns = [
     # ESPAÇO
     path('espaco', espacos, name='espacos'),
     path('espaco/espaco_create/', espaco_create, name='espaco-create'),
+    path('equip/<int:my_id>/delete/', espaco_delete, name='espaco-delete'),
 
     # EQUIPAMENTOS
     path('equip', equipamentos, name='equipamentos'),

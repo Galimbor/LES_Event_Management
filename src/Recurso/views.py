@@ -104,8 +104,8 @@ def espaco_create(request):
     form = EspacoForm(request.POST or None)
     if form.is_valid():
         form.save()
-        recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
-        recurso.save()
+        # recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
+        # recurso.save()
         return redirect('Recurso:espacos')
     context = {
         'form': form
