@@ -47,6 +47,10 @@
                                                 "{% url 'Evento:create-event2' event_id=obj.id %}">
                                             Adicionar Logistica
                                         </a>
+                                        <a class="button is-success" href=
+                                                "{% url 'Evento:submit-logistic' event_id=obj.id %}">
+                                            Submeter Logistica
+                                        </a>
                                     {% else %}
                                         <br>
                                     {% endif %}

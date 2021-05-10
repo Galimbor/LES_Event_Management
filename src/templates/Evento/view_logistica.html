@@ -1,0 +1,66 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">Logistica - {{ evento.nome }}</h1>
+                </div>
+            </div>
+            <h2 class="subtitle">Espaços</h2>
+            <div class="columns is-full display-column">
+                {% for espaco in espacos %}
+                    <div class="item">
+                        <div class="item-description">
+                            {{ espaco.nome }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Equipamentos</h2>
+            <div class="columns is-full display-column">
+                {% for equipamento in equipamentos %}
+                    <div class="item">
+                        <div class="item-description">
+                            {{ equipamento.nome }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                        </div>
+                    </div>
+
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Serviços</h2>
+            <div class="columns is-full display-column">
+
+                {% for servico in servicos %}
+                    <div class="item">
+                        <div class="item-description">
+                            {{ servico.nome }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}

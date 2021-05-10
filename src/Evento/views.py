@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render
-from .forms import LogisticaForm
 from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
@@ -63,62 +62,46 @@ def meus_eventos(request):
     return render(request, 'Evento/meus_eventos.html', context)
 
 
-def create_event2(request, event_id):
+# Give the user the option to choose which type of logistic the user wants to create to the given event.
+def create_logistic(request, event_id):
     evento = Evento.objects.get(id=event_id)
-    form = LogisticaForm(request.POST or None)
-    if form.is_valid():
-        nome = request.POST.get("nome")
-        quantidade = request.POST.get("quantidade")
-        tipo = request.POST.get("logistica")
-
-        # Date and time data
-        date_i = request.POST.get("data_i")
-        date_f = request.POST.get("data_f")
-        time_i = request.POST.get("hora_i")
-        time_f = request.POST.get("hora_f")
-        # Create TimeDate Obj
-        horario = Timedate(datainicial=date_i, horainicial=time_i,
-                           datafinal=date_f, horafinal=time_f)
-        horario.save()
-
-        # Create Logistica and TipoLogistica
-        logistica = Logistica(nome=nome, eventoid=evento)
-        logistica.save()
-        if tipo == "equipamento":
-            tipo_equipamento = Tipodeequipamento(nome=nome, quantidade=quantidade, logisticaid=logistica,
-                                                 horariorequisicao=horario)
-            tipo_equipamento.save()
-        elif tipo == "servico":
-            tipo_servico = Tiposervico(nome=nome, quantidade=quantidade, logisticaid=logistica,
-                                       horariorequisicao=horario)
-            tipo_servico.save()
-        elif tipo == "espaco":
-            tipo_espaco = Tipoespaco(nome=nome, quantidade=quantidade, logisticaid=logistica,
-                                     horariorequisicao=horario)
-            tipo_espaco.save()
-        else:
-            exit(0)
-
-        # Update Evento obj state
-        evento.estado = 'Logistica Pendente'
-        evento.save()
-
-        # Redirect to eventos page
-        return redirect('Evento:eventos')
-
-    else:
-        print("Not Valid!")
     context = {
         'evento': evento,
-        'form': form
     }
-    return render(request, 'Evento/criar_evento2.html', context)
+    return render(request, 'Evento/criar_logistica.html', context)
+
+
+# Equipament Logistic
+def equip_logistic(request, event_id):
+    equip = Tipodeequipamento()
+    render_logistic_form_by_type(request, event_id, equip, 1)
+
+
+# Espaco Logistic
+def espaco_logistic(request, event_id):
+    espaco = Tipoespaco()
+    render_logistic_form_by_type(request, event_id, espaco, 2)
+
+
+# Servico Logistic
+def servico_logistic(request, event_id):
+    servico = Tiposervico()
+    render_logistic_form_by_type(request, event_id, servico, 3)
+
+
+# Submit logistic to the GCP
+def submit_logistic(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    evento.estado = 'Logistica Pendente'
+    evento.save()
+    return redirect('Evento:meus-eventos')
 
 
 # Return page to manage the given event
 def gerir(request, event_id):
     context = {
-        'evento': Evento.objects.get(id=event_id)
+        'evento': Evento.objects.get(id=event_id),
+        'id': event_id
     }
     return render(request, 'Evento/gerir.html', context)
 
@@ -188,10 +171,9 @@ def create_event(request, type_id):
         evento.save()
 
         for resp in respostas:
-            print(resp)
             resp.save()
 
-        resposta_estado = Resposta(conteudo='Validado', campoid_id=22, eventoid=evento)
+        resposta_estado = Resposta(conteudo='Pendente', campoid_id=22, eventoid=evento)
         resposta_estado.save()
         resposta_inscritos = Resposta(conteudo=0, campoid_id=23, eventoid=evento)
         resposta_inscritos.save()
@@ -218,6 +200,42 @@ def select_type(request):
     return render(request, 'Evento/selecionar_tipo.html', context)
 
 
+# View Logisticas
+def view_logisticas(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    logistica = Logistica.objects.get(eventoid=evento)
+    logistica_equipamento = Tipodeequipamento.objects.filter(logisticaid=logistica)
+    logistica_servico = Tiposervico.objects.filter(logisticaid=logistica)
+    logistica_espaco = Tipoespaco.objects.filter(logisticaid=logistica)
+
+    context = {
+        'equipamentos': logistica_equipamento,
+        'servicos': logistica_servico,
+        'espacos': logistica_espaco,
+        'evento': evento,
+    }
+    return render(request, 'Evento/view_logistica.html', context)
+
+
+# View a specific event
+def view_event(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+
+    horario = Timedate.objects.get(id=evento.horario.id)
+
+    context = {
+        'evento': evento,
+        'data_i': horario.datainicial,
+        'data_f': horario.datafinal,
+        'hora_i': horario.horainicial,
+        'hora_f': horario.horafinal,
+    }
+    return render(request, 'Evento/view_evento.html', context)
+
+
+
+
+
 # HELPER FUNCTIONS
 def get_user_type(request):
     user_django = request.user
@@ -239,3 +257,72 @@ def get_user(request):
     user_django = request.user
     user = User.objects.filter(email=user_django.email)
     return user
+
+
+def render_logistic_form_by_type(request, event_id, obj, type_logistic):
+    # Event.
+    evento = Evento.objects.get(id=event_id)
+
+    # Logistic
+    logistic = Logistica.objects.filter(eventoid=evento)
+
+    # Retrieve equip logistic form for the given event.
+    formulario = Formulario.objects.filter(eventoid=event_id, tipoformularioid=4)
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
+
+    # Get multiple choices and bind to the pergunta obj
+    for pergunta in perguntas:
+        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+                pergunta.campoid.tipocampoid.nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+
+    horario = Timedate()
+
+    if request.method == 'POST':
+        get_data_from_form(request, obj, perguntas, horario, logistic[0], evento)
+
+        # Redirect to eventos page
+        return redirect('Evento:meus-eventos')
+
+    context = {
+        'evento': evento,
+        'campos': perguntas
+    }
+    if type_logistic == 1:
+        return render(request, 'Evento/equipamento_logistica.html', context)
+    elif type_logistic == 2:
+        return render(request, 'Evento/espaco_logistica.html', context)
+    elif type_logistic == 3:
+        return render(request, 'Evento/servico_logistica.html', context)
+    else:
+        return render(request, 'Evento/eventos.html', context)
+
+
+def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
+    for pergunta in perguntas:
+        id_p = pergunta.campoid.id
+        if id_p == 11:
+            desc = request.POST.get(f'{id_p}')
+            tipo.nome = desc
+        elif id_p == 14:
+            data_i = request.POST.get(f'{id_p}')
+            horario.datainicial = data_i
+        elif id_p == 15:
+            data_f = request.POST.get(f'{id_p}')
+            horario.datafinal = data_f
+        elif id_p == 16:
+            hora_i = request.POST.get(f'{id_p}')
+            horario.horainicial = hora_i
+        elif id_p == 17:
+            hora_f = request.POST.get(f'{id_p}')
+            horario.horafinal = hora_f
+        elif id_p == 24:
+            quantidade = request.POST.get(f'{id_p}')
+            tipo.quantidade = quantidade
+        resposta = Resposta(conteudo=request.POST.get(f'{id_p}'), campoid=pergunta.campoid, eventoid=evento)
+        resposta.save()
+
+    horario.save()
+    tipo.horariorequisicao = horario
+    tipo.logisticaid = logistica
+    tipo.save()

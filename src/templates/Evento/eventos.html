@@ -15,7 +15,8 @@
             <div class="columns is-multiline">
                 {% for obj in eventos %}
                     <div class="column is-half">
-                        <div class="card" style="min-height: 10px;">
+                        <div class="card pointer" style="min-height: 10px;"  onclick="window.location=
+                                '{% url 'Evento:view-event' event_id=obj.id %}';">
                             <header class="card-header has-text-centered">
                                 <p class="card-header-title is-centered">
                                     {{ obj.nome }}
@@ -24,7 +25,7 @@
                             <div class="card-content">
                                 <div class="content">
                                     <p><strong>Descrição: </strong></p>
-                                    <p>{{ obj.descricaogeral }}</p>
+                                    <p>{{ obj.descricaogeral | truncatechars:255  }}</p>
                                     <br>
                                     <p><strong>Data: </strong></p>
                                     <time datetime="2016-1-1">
