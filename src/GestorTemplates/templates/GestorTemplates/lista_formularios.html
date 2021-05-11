@@ -27,7 +27,7 @@
           <section class="modal-card-body">
             <article class="panel is-primary" id="tipos-formulario">
               <p class="panel-tabs">
-                <a class="tipoFormulario is-active" data-id="all" onclick="filterCategory($(this))">Todos</a>
+                <a class="tipoFormulario is-active" data-id="all"  data-tipo="0" onclick="filterCategory($(this))">Todos</a>
                 {% for tipoFormulario in categorias %}
                 <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}" onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
                 {% endfor %}
