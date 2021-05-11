@@ -9,10 +9,11 @@
 */
 var FormManager = class {
 
-    /** CONSTRUCT OBJECT **/
-    constructor(formularioJson, camposJson, tiposCampoJson, containerDivId = 'form-wrapper') {
+    /** CONSTRUCT OBJECT Updated**/
+    constructor(formularioJson, camposJson, subcamposJson, tiposCampoJson, containerDivId = 'form-wrapper') {
         this.formulario = JSON.parse(formularioJson)[0];
         this.campos = JSON.parse(camposJson);
+        this.subcampos = JSON.parse(subcamposJson);
         this.tiposCampo = JSON.parse(tiposCampoJson);
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
@@ -42,16 +43,20 @@ var FormManager = class {
         return formObj
     }
 
+    isSubcampo(campoObj){
+        return (campoObj && campoObj.fields.campo_relacionado!=null)? true : false;
+    }
+
     /* colapse html campos*/
     colapseCampos(items) {
-        items.find('.card-header, .card-footer').addClass('is-hidden');
+        items.find('.card-header, .campos-config').addClass('is-hidden');
         items.find('input, textarea').not('[disabled]').addClass('is-static');
         items.removeClass('campos-item-active')
     }
 
     /* expand html campos*/
     expandCampos(questionItems) {
-        questionItems.find('.card-header, .card-footer').removeClass('is-hidden');
+        questionItems.find('.card-header, .campos-config').removeClass('is-hidden');
         questionItems.find('input, textarea').not('[disabled]').removeClass('is-static');
         questionItems.addClass('campos-item-active')
     }
@@ -92,11 +97,11 @@ var FormManager = class {
     * Obtem o template HTML do tipo de campo
     * @param {int} campoId
     */
-    getCampoHtml(campoId){
+    getCampoHtml(tipoCampoId){
         var result;
-        var camposHtml = $('.campo-template')
-        this.tiposCampo.forEach(
-            (tipocampo, i ) => (tipocampo.pk == campoId) ? result = camposHtml.eq(i) : null
+        var tiposCamposHtml = $('.campos-template-wrap').find('.campo-template')
+        tiposCamposHtml.each(
+            (i, tipocampo ) => ($(tipocampo).data('id') == tipoCampoId) ? result = $(tipocampo) : null
         )
         return result.clone()
     }
@@ -104,19 +109,23 @@ var FormManager = class {
     setCampoEventListeners(campoHtml){
         var form = this;
 
-        campoHtml.find('.campos-delete-btn').click(function (e) {
-            form.deleteCampo($(this).data('id'));;
+        campoHtml.find('.campos-delete-btn').click(function () {
+            form.deleteCampo($(this).data('id'), $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campos-move-up').click(function (e) {
             e.stopPropagation();
-            form.moveCampo($(this).data('id'), -1);
+            form.moveCampo($(this).data('id'), -1, $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campos-move-down').click(function (e) {
             e.stopPropagation();
-            form.moveCampo($(this).data('id'), 1);
+            form.moveCampo($(this).data('id'), 1, $(this).data('campo-relacionado'));
+        })
+        campoHtml.find('.campos-create').click(function (e) {
+            e.stopPropagation();
+            form.createCampo($(this).data('tipocampoid'), $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campo__conteudo').change(function () {
-            form.updateCampo($(this).data('id'), $(this).val());
+            form.updateCampo($(this).data('id'), $(this).val(), $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campo__obrigatorio').change(function () {
             var campo = form.getCampoById($(this).data('id'));
@@ -126,26 +135,38 @@ var FormManager = class {
             e.stopPropagation();
             form.activateCampo($(this));
         })
-
     }
 
     /*
     * Creates a html element for a campo
     * @param {object} campo
     */
-    createCampoHtml(campoObj) {
+    createCampoHtml(campoObj, isSubcampo=false) {
         var form = this;
         //create element
-        // q = HTML campo item
-        var campoHtml = $('#campo-template-base').clone();
-        campoHtml.removeClass('is-hidden');
-        campoHtml.find('.card-content').html(
+
+        var baseTemplateId = isSubcampo? '#subcampo-template-base': '#campo-template-base';
+        var campoHtml = $(baseTemplateId).clone();
+        campoHtml.find('.campo-content').html(
             this.getCampoHtml(campoObj.fields.tipocampoid)
         );
+        
         //pass data id for action buttons and input fields
         campoHtml.find('a, button, input').addBack().attr(
             'data-id',
             campoObj.pk);
+        //pass data id for action buttons and input fields
+        campoHtml.removeClass('is-hidden');
+        campoHtml.attr('id','campo'+campoObj.pk)
+
+        
+        if(isSubcampo){
+            campoHtml.find('a, button, input').addBack()
+                .attr('data-campo-relacionado',campoObj.fields.campo_relacionado)
+                .attr('data-tipocampoid',campoObj.fields.tipocampoid)
+                .addClass('is-small');
+            campoHtml.find('.subcampos').removeClass('subcampos')
+        }
 
         //fill data
         this.setHtmlData(campoObj, campoHtml);
@@ -166,14 +187,30 @@ var FormManager = class {
     */
     renderCampo(formDivId, campoObj, campoPosicao = null, focus = false) {
         //update positions
+        var form = this;
         if (campoPosicao >= 0)
             campoObj.fields.position_index = campoPosicao;
 
-        var campoHtml = this.createCampoHtml(campoObj);
+        var campoHtml = form.createCampoHtml(campoObj);
         var camposContainer = this.container.find(`#${formDivId} .campos`);
+
+        //render subcampos
+        var subCamposCount=0;
+        self.form.subcampos.forEach(function(subcampo){
+            if(subcampo.fields.campo_relacionado==campoObj.pk){
+                if(!subCamposCount)
+                    campoHtml.find('.subcampos').html('');
+                subcampo.fields.position_index = campoPosicao+(subCamposCount+1)/10;
+                var subCampoHtml = form.createCampoHtml(subcampo, true);
+                campoHtml.find('.subcampos').append(subCampoHtml);
+                subCamposCount++;
+            }
+        })
+
         camposContainer.append(campoHtml);
     }
 
+    //Updated
     renderFormulario(){
         var formDiv = $('#form-template').clone();
         this.container.append(formDiv);
@@ -192,6 +229,8 @@ var FormManager = class {
             $('.formulario__nome').html($(this).val());
         })
         $('.button.ver_form_config').click(e => $('.modal.ver_form_config').addClass('is-active'))
+        $('.button.save-form').click(e => form.saveRemotely())
+
 
     }
 
@@ -211,11 +250,13 @@ var FormManager = class {
     * Selects a campo by id
     * @param {int} campo id/pk .
     */
-    getCampoById(questionId) {
+    getCampoById(questionId, listaCampos=null) {
         var result;
-        this.campos.some(function (q) {
+        var campos = listaCampos? listaCampos: this.campos;
+        campos.some(function (q,i) {
             if (q.pk == questionId) {
                 result = q;
+                result.array_index = i;
                 return true;
             }
         });
@@ -226,12 +267,22 @@ var FormManager = class {
     * Reorders the position of campos and rerenders the form
     * @param {int} campo id/pk to be repositioned.
     */
-    moveCampo(campoId, moveCount) {
-        var campos = this.campos
-        var campoObj = this.getCampoById(campoId);
-        var oldPosition = campoObj.fields.position_index;
+    moveCampo(campoID, moveCount, campoRelacionado=null) {
+        var campos, campoObj;
+        var boundStart, boundEnd;
+        if (campoRelacionado){
+            campoObj = form.getCampoById(campoID, this.subcampos)
+            campos = this.subcampos;
+            boundStart=0, boundEnd=campos.length;
+        }
+        else{
+            campoObj = form.getCampoById(campoID, this.campos)
+            campos = this.campos
+            boundStart=0, boundEnd=campos.length;
+        }
+        var oldPosition = campoObj.array_index;
         var newPosition = oldPosition + moveCount;
-        if (newPosition >= 0 && newPosition < campos.length) {
+        if (newPosition >= boundStart && newPosition < boundEnd) {
             //remove from old position
             campos.splice(oldPosition, 1);
             //insert at new position
@@ -245,10 +296,19 @@ var FormManager = class {
     * Deletes a campo
     * @param {int} campo id/pk.
     */
-    deleteCampo(campoID) {
-        var campo = form.getCampoById(campoID);
-        if (campo) {
-            this.campos.splice(campo.fields.position_index, 1);
+    deleteCampo(campoID, campoRelacionado=null) {
+        var campos, campoObj;
+        if (campoRelacionado){
+            campoObj = form.getCampoById(campoID, this.subcampos)
+            campos = this.subcampos;
+        }
+        else{
+            campoObj = form.getCampoById(campoID, this.campos)
+            campos = this.campos
+        }
+
+        if (campoObj) {
+            campos.splice(campoObj.array_index, 1);
             this.renderAll();
         }
     }
@@ -258,18 +318,25 @@ var FormManager = class {
     * Creates a campo
     * @param {int} campo type pk.
     */
-    createCampo(questionType) {
-        var campos = this.campos
+    createCampo(tipocampo, campoRelacionado=null) {
+        var campos;
+        if (campoRelacionado){
+            campos = this.subcampos;
+        }
+        else{
+            campos = this.campos
+        }
         // TODO it should request the server to create a campo
         // this way it will always be in sync with the database
         var campoObj = {
             "model": "forms_manager.campo",
-            "pk": campos.length + 100,
+            "pk": campos.length*-1,
             "fields": {
                 "conteudo": "",
-                "tipocampoid": questionType,
+                "tipocampoid": tipocampo,
                 "text_field": "asd",
                 "position_index": 1,
+                "campo_relacionado": campoRelacionado,
                 "form": 6
             }
         }
@@ -283,9 +350,17 @@ var FormManager = class {
     * @param {int} campo id/pk.
     * @param {int} campo id/pk.
     */
-    updateCampo(campoId, val) {
-        var campo = this.getCampoById(campoId);
-        campo.fields.conteudo = val;
+    updateCampo(campoID, val, campoRelacionado) {
+        var campos, campoObj;
+        if (campoRelacionado){
+            campoObj = form.getCampoById(campoID, this.subcampos)
+            campos = this.subcampos;
+        }
+        else{
+            campoObj = form.getCampoById(campoID, this.campos)
+            campos = this.campos
+        }
+        campoObj.fields.conteudo = val;
     }
 
     /*

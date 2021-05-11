@@ -8,6 +8,8 @@ from django.core import serializers
 import json
 from django.http import JsonResponse
 
+from django.contrib import messages
+
 # Apenas para demonstração. Esta view não deve estar na app forms_manager
 def home(request):
     return render(request, 'inicio.html')
@@ -55,12 +57,7 @@ class FormList(ListView):
     #     user = get_user(self.request)
     #     return response
 
-
-class FormCreate(CreateView):
-    model = Formulario
-    fields = ['id']
-    template_name = 'GestorTemplates/editar_formulario.html'
-    success_url = reverse_lazy('form-list')
+class FormHandling():
 
     def campos_to_json(self, formID):
         campoIDs = CampoFormulario.objects.filter(formularioid = formID).values_list('campoid')
@@ -71,31 +68,7 @@ class FormCreate(CreateView):
             else:
                 campo.obrigatorio = False
         return serializers.serialize("json",campos)
-
-    def get_context_data(self,  **kwargs):
-        context = super().get_context_data(**kwargs)
-        #templates
-        template_form = Formulario.objects.filter(is_template = 1) #search for templates
-        formID =  self.kwargs['form_id']
-        formType = self.kwargs['form_type']
-        #create form based on a selected template
-        if formID and formType:
-            form = template_form.get(id = formID) # search for the specific template (event, inscricao, ...)
-        #new empty form --> selecting type of form (evento, inscricao, ...)
-        elif formID and not formType:
-            form = Formulario.objects.create(tipoformularioid = formType )
-        # create empty form without selecting type of form 
-        else :
-            gcp = Gcp.objects.get(id = self.request.user.id)
-            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss ##TODO check utilizadores
-        context['tipos_campo'] = Tipocampo.objects.all()
-        context['formulario_json'] = serializers.serialize("json", [form])
-        context['campos_json'] = self.campos_to_json(form.id)
-        context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
-        
-       
-
-        return context
+    
 
     def post(self, *args, **kwargs):
         if self.request.is_ajax():
@@ -104,15 +77,89 @@ class FormCreate(CreateView):
                 return JsonResponse({'status': 200})
         return super().post(*args, **kwargs)
 
+    
+
+
+
+class FormCreate(FormHandling, CreateView):
+    model = Formulario
+    fields = ['id']
+    template_name = 'GestorTemplates/editar_formulario.html'
+    success_url = reverse_lazy('form-list')
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        #templates
+        template_form_queryset = Formulario.objects.filter(is_template = 1) #search for templates
+        template_formID =  self.kwargs['template_form_id']
+        formType = self.kwargs['form_type']
+        #create form based on a selected template
+        if template_formID and formType:
+            form = template_form_queryset.get(id = template_formID) # search for the specific template (event, inscricao, ...)
+            # create new based on the template        TODO missing clone questions as well    
+            # form.pk = None #django create new object by deleting his pk and the clone it
+            # form.save()
+        #new empty form --> selecting type of form (evento, inscricao, ...)
+        elif template_formID and not formType:
+            form = Formulario.objects.create(tipoformularioid = formType )
+        # create empty form without selecting type of form 
+        else :
+            gcp = Gcp.objects.get(id = self.request.user.id)
+            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss ##TODO check utilizadores
+        context['tipos_campo'] = Tipocampo.objects.all()
+        context['formulario_json'] = serializers.serialize("json", [form])
+        context['campos_json'] = self.campos_to_json(form.id)
+        context['subcampos_json'] = self.campos_to_json(form.id)
+        context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
+        return context
+
+
+
+
+class FormUpdate(FormHandling, UpdateView):
+    model = Formulario
+    fields = ['id']
+    template_name = 'GestorTemplates/editar_formulario.html'
+
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = self.get_object()
+        # form = Formulario.objects.get(pk=formID) #returns one object (equivalente ao de cima)
+        
+        #Serialize Form
+        context['tipos_campo'] = Tipocampo.objects.all()
+        context['formulario_json'] = serializers.serialize("json", [form])
+        context['campos_json'] = self.campos_to_json(form.id)
+        context['subcampos_json'] = self.campos_to_json(form.id)
+        context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
+
+        return context
+
+    
+
+
+
+
+
+
+
 class FormDelete(DeleteView):
     model = Formulario
     success_url = reverse_lazy('form-list')
 
     def get(self, request, *args, **kwargs):
+
+        form = self.get_object()
+        # if (form.is_template):
+        #     # messages.add_message(request, messages.WARNING, 'Não pode eliminar formulários que são templates')
+        #     return redirect(reverse_lazy('form-list'))
         return self.post(request, *args, **kwargs)
 
 
-def delete_form(request, pk):
-    if request.user:
-        Formulario.objects.get(pk=pk).delete()
-    return redirect(reverse_lazy('form-list'))
+
+
+# def delete_form(request, pk):
+#     if request.user:
+#         Formulario.objects.get(pk=pk).delete()
+#     return redirect(reverse_lazy('form-list'))

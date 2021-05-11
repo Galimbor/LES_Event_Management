@@ -13,10 +13,12 @@ caterogias_tipo_formulario = [
     ("2", "Feedback"),
 ]
 
-''' Assumo que Tipoformulario funciona como subtipo de evento
+""" Assumo que Tipoformulario funciona como subtipo de evento
 ex.: Seminario (nome do tipoFormulario) é Tipoformulario, categoria = evento
     inscriçao é TipoFormulario, categoria = inscrição
-'''
+"""
+
+
 class Tipoformulario(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -27,16 +29,16 @@ class Tipoformulario(models.Model):
     categoria = models.CharField(
         db_column="Categoria",
         max_length=255,
-        choices= caterogias_tipo_formulario,
+        choices=caterogias_tipo_formulario,
         default="0",
     )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "TipoFormulario"
 
     def __str__(self):
-        return '{}-{}' .format(self.get_categoria_display(), self.nome)
+        return "{} : {}-{}".format(self.id,self.get_categoria_display(), self.nome)
 
 
 class Formulario(models.Model):
@@ -62,7 +64,7 @@ class Formulario(models.Model):
     )
     tipoeventoid = models.ForeignKey(
         Tipoevento, models.DO_NOTHING, db_column="TipoEventoID", null=True
-    )  
+    )
     tipoformularioid = models.ForeignKey(
         "Tipoformulario", models.DO_NOTHING, db_column="TipoFormularioID", null=True
     )  # Field name made lowercase.
@@ -73,7 +75,7 @@ class Formulario(models.Model):
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Formulario"
 
     def __str__(self):
@@ -93,6 +95,7 @@ class Campo(models.Model):
     tipocampoid = models.ForeignKey(
         "Tipocampo", models.DO_NOTHING, db_column="TipoCampoID"
     )  # Field name made lowercase.
+    campo_relacionado = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     respostapossivelid = models.ForeignKey(
         "Respostaspossiveis",
         models.DO_NOTHING,
@@ -101,8 +104,9 @@ class Campo(models.Model):
         null=True,
     )  # Field name made lowercase.
 
+
     class Meta:
-        managed = False
+        managed = True
         db_table = "Campo"
 
     def __str__(self):
@@ -114,26 +118,13 @@ class CampoFormulario(models.Model):
         Campo, models.DO_NOTHING, db_column="CampoID"
     )  # Field name made lowercase.
     formularioid = models.ForeignKey(
-        "Formulario", models.DO_NOTHING, db_column="FormularioId"
+        "Formulario", models.CASCADE, db_column="FormularioId"
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Campo_Formulario"
 
-
-class GcpFormulario(models.Model):
-    gcpid = models.OneToOneField(
-        Gcp, models.DO_NOTHING, db_column="GCPid", primary_key=True
-    )  # Field name made lowercase.
-    formularioid = models.ForeignKey(
-        Formulario, models.DO_NOTHING, db_column="FormularioId"
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = "GCP_Formulario"
-        unique_together = (("gcpid", "formularioid"),)
 
 
 class Resposta(models.Model):
@@ -157,8 +148,11 @@ class Resposta(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Resposta"
+    
+    def __str__(self):
+        return self.conteudo
 
 
 class Tipocampo(models.Model):
@@ -170,7 +164,7 @@ class Tipocampo(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "TipoCampo"
 
 
@@ -183,5 +177,20 @@ class Respostaspossiveis(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "RespostasPossiveis"
+
+
+
+class GcpFormulario(models.Model):
+    gcpid = models.OneToOneField(
+        Gcp, models.DO_NOTHING, db_column="GCPid", primary_key=True
+    )  # Field name made lowercase.
+    formularioid = models.ForeignKey(
+        Formulario, models.DO_NOTHING, db_column="FormularioId"
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = "GCP_Formulario"
+        unique_together = (("gcpid", "formularioid"),)

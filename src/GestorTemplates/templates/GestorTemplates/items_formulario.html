@@ -70,7 +70,7 @@
    
 </div>
 
-<!-- TEMPLATE DE CAMPO: QUESTION BASE-->
+<!-- TEMPLATE DE CAMPO-->
 
 <div class="campos-item is-hidden" id="campo-template-base">
     <header class="card-header is-hidden">
@@ -83,192 +83,8 @@
             </span>
         </a>
     </header>
-    <div class="card-content">
-        <!--  Templates HTML de cada tipo de campo (resposta curta, longa, escolha múltipla, etc).
-            IMPORTANTE: A ordem dos templates deve ser igual a ordem dos tipos de campo definidos na base de dados
-            por exemplo, se o primeiro tipo de campo na base de dados é a resposta curta, 
-            então o primeiro template deve ser resposta curta
-        -->
-
-        <!-- TEMPLATE DE CAMPO: SHORT ANSWER-->
-        <div class="content campo-template">
-            <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <input class="input" disabled placeholder="Resposta curta">
-            </div>
-        </div>
-
-        <!-- TEMPLATE DE CAMPO: RADIO BOX -->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                      <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-            </div>
-            <div class="block columns">
-                <div class="column is-four-fifths">
-                    <div class="field">
-                        <div class="control has-icons-left has-icons-right">
-                            <input class="input is-primary is-static" placeholder="Opção">
-                            <span class="icon is-medium is-left">
-                                <i class="fas fa-dot-circle"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <button class="button">
-                        <span class="icon is-small">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    </button>
-                </div>
-                <div class="column">
-                    <button class="button">
-                        <span class="icon is-small">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-         <!-- TEMPLATE DE CAMPO: DROPDOWN-->
-         <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="control">
-                <div class="select">
-                  <select disabled>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
-                  </select>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- TEMPLATE DE CAMPO: LONG ANSWER-->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="field">
-                <textarea class="textarea" disabled placeholder="Resposta longa"></textarea>
-            </div>
-        </div>
-      
-
-         <!-- TEMPLATE DE CAMPO: ANEXO-->
-         <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="file has-name">
-                <label class="file-label">
-                  <input class="file-input" type="file">
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label">
-                      Escolha um ficheiro
-                    </span>
-                  </span>
-                  <span class="file-name">
-                    evento.png
-                  </span>
-                </label>
-            </div>
-        </div>
-
-        <!-- TEMPLATE DE CAMPO: RESPOSTA NUMERICA -->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="field">
-                <input class="input">
-            </div>
-        </div>
-
-        <!-- TEMPLATE DE CAMPO: DATA -->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="field">
-                <input type="date" class="input">
-            </div>
-        </div>
-
-        <!-- TEMPLATE DE CAMPO: HORA -->
-        <div class="content campo-template">
-            <div class="field">
-                
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
-                  <span class="icon is-left has-text-weight-bold has-text-black">
-                    <span class="campo__position_index"></span>.
-                  </span>
-                </p>
-                
-            </div>
-            <div class="field">
-                <input type="time" class="input">
-            </div>
-        </div>
-
-       
-    </div>
-    <footer class="card-footer is-hidden">
+    <div class="card-content campo-content"></div>
+    <footer class="card-footer campos-config is-hidden">
 
         <a class="card-footer-item">
             <label class="checkbox">
@@ -292,6 +108,124 @@
             </span>
         </a>
     </footer>
+</div>
+
+<!-- TEMPLATE DE SUBCAMPO-->
+<div class="block columns campos-item " id="subcampo-template-base">
+    <div class="column">
+        <div class="campo-content"></div>
+    </div>
+    <div class="column is-one-fifth">
+        <div class="campos-config is-hidden">
+            <button class="button campos-delete-btn">
+                <span class="icon is-small">
+                    <i class="fas fa-trash"></i>
+                </span>
+            </button>
+            <button class="button campos-move-up">
+                <span class="icon is-small">
+                    <i class="fas fa-arrow-up"></i>
+                </span>
+            </button>
+            <button class="button campos-move-down">
+                <span class="icon is-small">
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+            </button>
+            <button class="button campos-create">
+                <span class="icon is-small">
+                    <i class="fas fa-plus"></i>
+                </span>
+            </button>
+            
+        </div>
+    </div>
+   
+</div>
+
+
+<div class="campos-template-wrap is-hidden">
+    <!--  Templates HTML de cada tipo de campo (resposta curta, longa, escolha múltipla, etc).
+        IMPORTANTE: A ordem dos templates deve ser igual a ordem dos tipos de campo definidos na base de dados
+        por exemplo, se o primeiro tipo de campo na base de dados é a resposta curta, 
+        então o primeiro template deve ser resposta curta
+    -->
+
+    <!-- TEMPLATE DE CAMPO: SHORT ANSWER-->
+    <div class="content campo-template" data-id="1">
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+          </div>
+          <div class="field subcampos">
+            <input class="input" disabled placeholder="Resposta curta">
+        </div>
+    </div>
+
+    <!-- TEMPLATE DE CAMPO: LONG ANSWER-->
+    <div class="content campo-template" data-id="2">
+        <div class="field">
+            
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+            
+        </div>
+        <div class="field subcampos">
+            <textarea class="textarea" disabled placeholder="Resposta longa"></textarea>
+        </div>
+    </div>
+  
+
+    <!-- TEMPLATE DE CAMPO: OPTIONS FIELD -->
+    <div class="content campo-template" data-id="3">
+        <div class="field">
+            
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+            
+        </div>
+        <div class="field subcampos">
+        </div>
+      
+    </div>
+
+     <!-- TEMPLATE DE CAMPO: EMAIL-->
+     <div class="content campo-template" data-id="4">
+        <div class="field">
+            
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+            
+        </div>
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+                <input class="input" disabled type="email" placeholder="email@ualg.pt">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fas fa-check"></i>
+                </span>
+            </p>
+        </div>
+    </div>
+
 </div>
 
 <!--FORM CONFIG MODAL-->

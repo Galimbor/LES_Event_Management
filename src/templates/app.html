@@ -24,7 +24,7 @@
 
   <script src="{% url 'js-catlog' %}"></script>
   <script src="{% static '/admin/js/core.js' %}"></script>
-    
+
   {% block load %}
   {% endblock load %}
 
@@ -78,14 +78,37 @@
 
 <body>
   <div id="app">
-    {% include 'popup.html'  %}
+    {% include 'popup.html' %}
     {% include 'navbar.html' %}
+
+
     <div class="hero is-primary is-bold" id="top-hero">
-      <div id="top-hero-body" class="hero-body"></div>
+      <div id="top-hero-body" class="hero-body">
+
+      </div>
     </div>
+
     <div id="page-content">
       <div class="card">
+  
         <div class="card-content">
+
+          {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <article class="message is-{{ message.tags }}">
+              <div class="message-header">
+                <p>Dark</p>
+                <button class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body">
+                {{ message }} 
+              </div>
+            </article>
+            {% endfor %}
+          </ul>
+          {% endif %} 
+
           {% block content %}
           <!-- include the content here-->
           {% endblock content %}
@@ -104,8 +127,15 @@
   <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
+  <script type="text/javascript">
+    $('.messages .delete').click(function(){
+      $(this).closest('.messages').remove()
+    })
+  </script>
   {% block scripts %}
   {% endblock scripts %}
+
 </body>
+
 
 </html>

@@ -90,7 +90,7 @@
           </div>
         </div>
         <footer class="card-footer">
-          <a href="#" class="card-footer-item">Edit</a>
+          <a href="{% url 'edit-form' obj.pk  %}" class="card-footer-item">Editar</a>
           <a href="#" class="card-footer-item delete-form-btn"
             data-delete-url="{% url 'delete-form' obj.pk %}">Delete</a>
         </footer>
@@ -192,8 +192,7 @@
   $('.delete-form-btn').click(function () {
     deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
     deleteFormModal.addClass('is-active'); //shows modal
-
-
+    //todo add warning when deleting templates
   });
 
   $('.close-modal').click(function () {
