@@ -88,15 +88,19 @@ class FormHandling():
                 campo.obrigatorio = False
         return serializers.serialize("json",campos)
     
-
+    
     def post(self, *args, **kwargs):
         if self.request.is_ajax():
             if self.request.method == 'POST':
-                print(json.loads(self.request.body))
-                return JsonResponse({'status': 200})
-        return super().post(*args, **kwargs)
+                objects_dict = json.loads(self.request.body)
+                formulario = objects_dict['formulario'] 
+                f  = Formulario.objects.filter(pk=formulario['pk'])
+                f.update(**formulario['fields'])
+                ##TODO campos, tipo de campos, relacao campoformulario
+                print(f[0].nome)
+        return JsonResponse({'foo': 'bar'})
 
-    
+        return super().post(*args, **kwargs)
 
 
 
