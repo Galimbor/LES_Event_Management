@@ -106,8 +106,8 @@
     //campos must be sorted by index_position
     var campos_raw = '{{campos_json | safe}}';
     var subcampos_raw = '{{subcampos_json | safe}}';
-    var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
-    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw, tiposcampo_raw);
+    // var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
+    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw);
     form.renderAll();
 
 </script>

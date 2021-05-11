@@ -17,8 +17,6 @@ caterogias_tipo_formulario = [
 ex.: Seminario (nome do tipoFormulario) é Tipoformulario, categoria = evento
     inscriçao é TipoFormulario, categoria = inscrição
 """
-
-
 class Tipoformulario(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -82,6 +80,27 @@ class Formulario(models.Model):
         return self.nome
 
 
+class Tipocampo(models.Model):
+    id = models.AutoField(
+        db_column="ID", primary_key=True
+    )  # Field name made lowercase.
+    nome = models.CharField(
+        db_column="Nome", max_length=255
+    )  # Field name made lowercase.
+    template = models.TextField(
+        db_column="Template", default=''
+    )
+
+       
+    def __str__(self):
+        return self.nome
+
+
+    class Meta:
+        managed = True
+        db_table = "TipoCampo"
+
+
 class Campo(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -93,7 +112,7 @@ class Campo(models.Model):
         db_column="Obrigatorio"
     )  # Field name made lowercase. This field type is a guess.
     tipocampoid = models.ForeignKey(
-        "Tipocampo", models.DO_NOTHING, db_column="TipoCampoID"
+        "Tipocampo", models.CASCADE, db_column="TipoCampoID"
     )  # Field name made lowercase.
     campo_relacionado = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     respostapossivelid = models.ForeignKey(
@@ -115,7 +134,7 @@ class Campo(models.Model):
 
 class CampoFormulario(models.Model):
     campoid = models.ForeignKey(
-        Campo, models.DO_NOTHING, db_column="CampoID"
+        Campo, models.CASCADE, db_column="CampoID"
     )  # Field name made lowercase.
     formularioid = models.ForeignKey(
         "Formulario", models.CASCADE, db_column="FormularioId"
@@ -124,6 +143,11 @@ class CampoFormulario(models.Model):
     class Meta:
         managed = True
         db_table = "Campo_Formulario"
+    
+    def __str__(self):
+        return "Form: {} ---- Pergunta: {}".format(self.formularioid,self.campoid)
+
+
 
 
 
@@ -135,7 +159,7 @@ class Resposta(models.Model):
         db_column="Conteudo", max_length=255
     )  # Field name made lowercase.
     campoid = models.ForeignKey(
-        Campo, models.DO_NOTHING, db_column="CampoID", blank=True, null=True
+        Campo, models.SET_NULL, db_column="CampoID", blank=True, null=True
     )  # Field name made lowercase.
     feedbackid = models.ForeignKey(
         Feedback, models.DO_NOTHING, db_column="FeedbackId", blank=True, null=True
@@ -154,18 +178,6 @@ class Resposta(models.Model):
     def __str__(self):
         return self.conteudo
 
-
-class Tipocampo(models.Model):
-    id = models.AutoField(
-        db_column="ID", primary_key=True
-    )  # Field name made lowercase.
-    nome = models.CharField(
-        db_column="Nome", max_length=255
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "TipoCampo"
 
 
 class Respostaspossiveis(models.Model):

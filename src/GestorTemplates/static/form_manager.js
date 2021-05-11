@@ -10,11 +10,10 @@
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
-    constructor(formularioJson, camposJson, subcamposJson, tiposCampoJson, containerDivId = 'form-wrapper') {
+    constructor(formularioJson, camposJson, subcamposJson, containerDivId = 'form-wrapper') {
         this.formulario = JSON.parse(formularioJson)[0];
         this.campos = JSON.parse(camposJson);
         this.subcampos = JSON.parse(subcamposJson);
-        this.tiposCampo = JSON.parse(tiposCampoJson);
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
 
@@ -103,6 +102,7 @@ var FormManager = class {
         tiposCamposHtml.each(
             (i, tipocampo ) => ($(tipocampo).data('id') == tipoCampoId) ? result = $(tipocampo) : null
         )
+        console.log(result)
         return result.clone()
     }
 

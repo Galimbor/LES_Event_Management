@@ -59,9 +59,28 @@ class FormList(ListView):
 
 class FormHandling():
 
-    def campos_to_json(self, formID):
+    #Obtem todos os campos do formulario
+    def get_campos(self, formID):
         campoIDs = CampoFormulario.objects.filter(formularioid = formID).values_list('campoid')
         campos = Campo.objects.filter(id__in=campoIDs)
+        return campos
+
+
+    def campos_to_json(self, formID):
+        todos_campos_form = self.get_campos(formID) #todos os campos incluindo os da escolha multipla
+        campos = todos_campos_form.filter(campo_relacionado = None) #campos parent
+        for campo in campos:
+            if campo.obrigatorio == b'\x01':
+                campo.obrigatorio = True
+            else:
+                campo.obrigatorio = False
+        return serializers.serialize("json",campos)
+
+    
+    def subcampos_to_json(self, formID):
+        todos_campos_form = self.get_campos(formID) #todos os campos incluindo os da escolha multipla
+        campos = todos_campos_form.filter(campo_relacionado__gt = 0) #campos filho (opcoes de escolha ...)
+        printspecial(campos)
         for campo in campos:
             if campo.obrigatorio == b'\x01':
                 campo.obrigatorio = True
@@ -109,7 +128,7 @@ class FormCreate(FormHandling, CreateView):
         context['tipos_campo'] = Tipocampo.objects.all()
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
-        context['subcampos_json'] = self.campos_to_json(form.id)
+        context['subcampos_json'] = self.subcampos_to_json(form.id)
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
         return context
 
@@ -131,7 +150,7 @@ class FormUpdate(FormHandling, UpdateView):
         context['tipos_campo'] = Tipocampo.objects.all()
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
-        context['subcampos_json'] = self.campos_to_json(form.id)
+        context['subcampos_json'] = self.subcampos_to_json(form.id)
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
 
         return context
