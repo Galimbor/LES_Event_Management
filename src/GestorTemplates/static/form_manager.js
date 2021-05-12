@@ -330,7 +330,7 @@ var FormManager = class {
         // this way it will always be in sync with the database
         var campoObj = {
             "model": "forms_manager.campo",
-            "pk": campos.length*-1,
+            "pk": null,
             "fields": {
                 "conteudo": "",
                 "tipocampoid": tipocampo,

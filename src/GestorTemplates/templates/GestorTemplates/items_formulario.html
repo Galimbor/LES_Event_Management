@@ -158,9 +158,27 @@
     -->
 
     {% for tipo_campo in tipos_campo %}
-        {{tipo_campo.template  | safe}}
+    <div class="content campo-template" data-id="{{tipo_campo.id}}">
+        <div class="field">
+            
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+            
+        </div>
+        <div class="field subcampos">
+            {{tipo_campo.template  | safe}}
+        </div>
+      
+    </div>
+       
     {% endfor %}
 
+
+    
 
    
 

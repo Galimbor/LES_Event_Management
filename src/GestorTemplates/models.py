@@ -88,7 +88,7 @@ class Tipocampo(models.Model):
         db_column="Nome", max_length=255
     )  # Field name made lowercase.
     template = models.TextField(
-        db_column="Template", default=''
+        db_column="Template", default='', blank=True
     )
 
        
