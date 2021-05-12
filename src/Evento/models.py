@@ -12,6 +12,9 @@ class Tipoevento(models.Model):
     class Meta:
         managed = False
         db_table = 'TipoEvento'
+        
+    def __str__(self):
+        return self.nome
 
 
 class Templatecertificado(models.Model):

@@ -1,88 +1,235 @@
-
-{% extends 'app.html' %}
-
-
-{% block title %}- Página Inicial{% endblock title %}
-
-{% block content %}
-{% load static %}
-<div>
-  <div class="section">
-    <div class="columns">
-      <div class="column is-is-four-fifths">
-        <h1 class="title">Criar formulário</h1>
-
-        <form class="box" id="form" method="post">
-            {% csrf_token %}
-            {{form }}       
-        </form>
-
-        <button class="button is-medium is-success has-text-centered" id="submit-form">
-            <span class="icon">
-              <i class="fas fa-save"></i>
-            </span>
-            <span>Guardar</span>
-        </button>
-        
-      </div>
-      <div class="">
-        <article class="panel">
-            <p class="panel-heading">
-              Perguntas
+<!-- ******************************  TEMPLATES ****************************** -->
+<!-- FORM CONTAINER TEMPLATE: Wrapps a group o campos; has a menu to ADD CAMPOS-->
+<div id="form-template" class="is-hidden">
+    <div class="form-header campos-item">
+        <header class="card-header is-hidden">
+            <p class="card-header-title tipocampo_nome">
+                Título e descrição do formulário
             </p>
-            <p class="panel-tabs">
-              <a class="is-active">All</a>
-              <a>Public</a>
-              <a>Private</a>
-              <a>Sources</a>
-              <a>Forks</a>
-            </p>
-            <div class="panel-block">
-              <p class="control has-icons-left">
-                <input class="input is-primary" type="text" placeholder="Search">
-                <span class="icon is-left">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-              </p>
-            </div>
-            <a class="panel-block is-active">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-              </span>
-              pergunta curta
-            </a>
-            <a class="panel-block">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-              </span>
-              parágrafo
-            </a>
-            <a class="panel-block">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-              </span>
-              escolha múltipla
-            </a>
-            <a class="panel-block">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-              </span>
-              jgthms.github.io
-            </a>
-          </article>
-      </div>
-     
+        </header>
+        <div class="card-content">
+            <input class="input is-large is-static title formulario__nome" type="text" maxlength="256" required="" placeholder="Formulário sem título">
+            <textarea class="textarea input is-small is-static formulario__descricao" placeholder="Descrição" rows="1"></textarea>
+        </div>
     </div>
-  </div>
- 
+    <div class="campos">
+
+    </div>
+    <div class="columns is-mobile is-centered">
+        <div class="column is-half has-text-centered">
+            <div id="add-campo" class="dropdown is-hoverable is-up">
+                <div class="dropdown-trigger">
+                    <a class="button is-primary is-outlined is-medium" aria-haspopup="true" aria-controls="dropdown-menu2">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>Adicionar</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                    
+                </div>
+                <div class="dropdown-menu has-text-left" id="add-campos" role="menu">
+                    <div class="dropdown-content">
+        
+                        <article class="panel add-campos">
+                            <p class="panel-heading">
+                                Adicionar
+                            </p>
+                            <p class="panel-tabs">
+                                <a>Pergunta</a>
+                                <a>Título</a>
+                                <a>Imagem</a>
+                                <a>Secção</a>
+                            </p>
+                            <div class="panel-block">
+                                <p class="control has-icons-left">
+                                    <input class="input is-primary" type="text" placeholder="Search">
+                                    <span class="icon is-left">
+                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                    </span>
+                                </p>
+                            </div>
+                            {% for tipo_campo in tipos_campo %}
+                            <a class="panel-block" onclick="form.createCampo($(this).data('id'));" data-id={{tipo_campo.pk}}>
+                                <span class="panel-icon">
+                                    <i class="fas fa-book" aria-hidden="true"></i>
+                                </span>
+                                {{tipo_campo.nome}}
+                            </a>
+                            {% endfor %}
+        
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
 </div>
 
-<script>
-    $('input').addClass('input');
-    $('#submit-form').click(function(){
-        $('#form').submit();
-    })
+<!-- TEMPLATE DE CAMPO: QUESTION BASE-->
 
-</script>
-{% endblock content%}
+<div class="campos-item is-hidden" id="campo-template-base">
+    <header class="card-header is-hidden">
+        <p class="card-header-title tipocampo_nome">
+            Pergunta
+        </p>
+        <a class="card-header-icon" aria-label="more options">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </a>
+    </header>
+    <div class="card-content">
+        <!--  Templates HTML de cada tipo de campo (resposta curta, longa, escolha múltipla, etc).
+            IMPORTANTE: A ordem dos templates deve ser igual a ordem dos tipos de campo definidos na base de dados
+            por exemplo, se o primeiro tipo de campo na base de dados é a resposta curta, 
+            então o primeiro template deve ser resposta curta
+        -->
 
+        <!-- TEMPLATE DE CAMPO: SHORT ANSWER-->
+        <div class="content campo-template">
+            <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <input class="input" disabled placeholder="Resposta curta">
+            </div>
+        </div>
+
+        <!-- TEMPLATE DE CAMPO: LONG ANSWER-->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <textarea class="textarea" disabled placeholder="Resposta longa"></textarea>
+            </div>
+        </div>
+      
+
+        <!-- TEMPLATE DE CAMPO: OPTIONS FIELD -->
+        <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                      <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+            </div>
+            <div class="block columns">
+                <div class="column is-four-fifths">
+                    <div class="field">
+                        <div class="control has-icons-left has-icons-right">
+                            <input class="input is-primary is-static" placeholder="Opção">
+                            <span class="icon is-medium is-left">
+                                <i class="fas fa-dot-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <button class="button">
+                        <span class="icon is-small">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="column">
+                    <button class="button">
+                        <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+         <!-- TEMPLATE DE CAMPO: EMAIL-->
+         <div class="content campo-template">
+            <div class="field">
+                
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+                  <span class="icon is-left has-text-weight-bold has-text-black">
+                    <span class="campo__position_index"></span>.
+                  </span>
+                </p>
+                
+            </div>
+            <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                    <input class="input" disabled type="email" placeholder="email@ualg.pt">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-envelope"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i class="fas fa-check"></i>
+                    </span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <footer class="card-footer is-hidden">
+
+        <a class="card-footer-item">
+            <label class="checkbox">
+                <input type="checkbox" class="campo__obrigatorio" name="campo__obrigatorio">
+                Obrigatório
+            </label>
+        </a>
+        <a class="card-footer-item campos-delete-btn">
+            <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+            </span>
+        </a>
+        <a class="card-footer-item campos-move-up">
+            <span class="icon is-small">
+                <i class="fas fa-arrow-up"></i>
+            </span>
+        </a>
+        <a class="card-footer-item campos-move-down">
+            <span class="icon is-small">
+                <i class="fas fa-arrow-down"></i>
+            </span>
+        </a>
+    </footer>
+</div>
+
+<!--FORM CONFIG MODAL-->
+<div id="ver_form_config" class="ver_form_config modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Definições do Formulário</p>
+
+        <button onclick="$('#ver_form_config').removeClass('is-active');" class="delete"></button>
+
+      </header>
+      <section class="modal-card-body">
+        
+      </section><footer class="modal-card-foot">
+        <button class="button is-success">Save changes</button>
+        <button class="button">Cancel</button>
+      </footer>
+
+    </div>
+  </div>
