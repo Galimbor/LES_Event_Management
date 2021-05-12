@@ -17,14 +17,11 @@
   <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
   <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
-  <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="icon" href="{% static 'img/logo.png' %}" />
 
   <script src="{% url 'js-catlog' %}"></script>
-  <script src="{% static '/admin/js/core.js' %}"></script>
-    
+
   {% block load %}
   {% endblock load %}
 
@@ -72,18 +69,43 @@
       cursor: pointer;
     }
   </style>
+  {% block page_css %}
+  {% endblock %}
 </head>
 
 <body>
   <div id="app">
-    {% include 'popup.html'  %}
+    {% include 'popup.html' %}
     {% include 'navbar.html' %}
+
+
     <div class="hero is-primary is-bold" id="top-hero">
-      <div id="top-hero-body" class="hero-body"></div>
+      <div id="top-hero-body" class="hero-body">
+
+      </div>
     </div>
+
     <div id="page-content">
       <div class="card">
+  
         <div class="card-content">
+
+          {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <article class="message is-{{ message.tags }}">
+              <div class="message-header">
+                <p>Dark</p>
+                <button class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body">
+                {{ message }} 
+              </div>
+            </article>
+            {% endfor %}
+          </ul>
+          {% endif %} 
+
           {% block content %}
           <!-- include the content here-->
           {% endblock content %}
@@ -102,8 +124,16 @@
   <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.0/dist/js/bulma-calendar.min.js"></script>
+  <script type="text/javascript">
+    $('.messages .delete').click(function(){
+      $(this).closest('.messages').remove()
+    })
+  </script>
   {% block scripts %}
   {% endblock scripts %}
+
 </body>
+
 
 </html>
