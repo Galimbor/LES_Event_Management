@@ -162,3 +162,10 @@ select {
     text-align: center;
     flex-grow: 2;
   }
+
+  .footer {
+    padding: 3rem;
+    margin-top: 1.5rem;
+    background-color: white;
+    color: grey;
+  }
