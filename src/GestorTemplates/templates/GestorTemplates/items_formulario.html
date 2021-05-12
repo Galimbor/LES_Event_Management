@@ -1,0 +1,205 @@
+<!-- ******************************  TEMPLATES ****************************** -->
+<!-- FORM CONTAINER TEMPLATE: Wrapps a group o campos; has a menu to ADD CAMPOS-->
+<div id="form-template" class="is-hidden">
+    <div class="form-header campos-item">
+        <header class="card-header is-hidden">
+            <p class="card-header-title tipocampo_nome">
+                Título e descrição do formulário
+            </p>
+        </header>
+        <div class="card-content">
+            <input class="input is-large is-static title formulario__nome" type="text" maxlength="256" required="" placeholder="Formulário sem título">
+            <textarea class="textarea input is-small is-static formulario__descricao" placeholder="Descrição" rows="1"></textarea>
+        </div>
+    </div>
+    <div class="campos">
+
+    </div>
+    <div class="columns is-mobile is-centered">
+        <div class="column is-half has-text-centered">
+            <div id="add-campo" class="dropdown is-hoverable is-up">
+                <div class="dropdown-trigger">
+                    <a class="button is-primary is-outlined is-medium" aria-haspopup="true" aria-controls="dropdown-menu2">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>Adicionar</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                    
+                </div>
+                <div class="dropdown-menu has-text-left" id="add-campos" role="menu">
+                    <div class="dropdown-content">
+        
+                        <article class="panel add-campos">
+                            <p class="panel-heading">
+                                Adicionar
+                            </p>
+                            <p class="panel-tabs">
+                                <a>Pergunta</a>
+                                <a>Título</a>
+                                <a>Imagem</a>
+                                <a>Secção</a>
+                            </p>
+                            <div class="panel-block">
+                                <p class="control has-icons-left">
+                                    <input class="input is-primary" type="text" placeholder="Search">
+                                    <span class="icon is-left">
+                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                    </span>
+                                </p>
+                            </div>
+                            {% for tipo_campo in tipos_campo %}
+                            <a class="panel-block" onclick="form.createCampo($(this).data('id'));" data-id={{tipo_campo.pk}}>
+                                <span class="panel-icon">
+                                    <i class="fas fa-book" aria-hidden="true"></i>
+                                </span>
+                                {{tipo_campo.nome}}
+                            </a>
+                            {% endfor %}
+        
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</div>
+
+
+
+
+<!-- TEMPLATE DE CAMPO-->
+
+<div class="campos-item is-hidden" id="campo-template-base">
+    <header class="card-header is-hidden">
+        <p class="card-header-title tipocampo_nome">
+            Pergunta
+        </p>
+        <a class="card-header-icon" aria-label="more options">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </a>
+    </header>
+    <div class="card-content campo-content"></div>
+    <footer class="card-footer campos-config is-hidden">
+
+        <a class="card-footer-item">
+            <label class="checkbox">
+                <input type="checkbox" class="campo__obrigatorio" name="campo__obrigatorio">
+                Obrigatório
+            </label>
+        </a>
+        <a class="card-footer-item campos-delete-btn">
+            <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+            </span>
+        </a>
+        <a class="card-footer-item campos-move-up">
+            <span class="icon is-small">
+                <i class="fas fa-arrow-up"></i>
+            </span>
+        </a>
+        <a class="card-footer-item campos-move-down">
+            <span class="icon is-small">
+                <i class="fas fa-arrow-down"></i>
+            </span>
+        </a>
+    </footer>
+</div>
+
+
+
+<!-- TEMPLATE DE SUBCAMPO-->
+<div class="block columns campos-item " id="subcampo-template-base">
+    <div class="column">
+        <div class="campo-content"></div>
+    </div>
+    <div class="column is-one-fifth">
+        <div class="campos-config is-hidden">
+            <button class="button campos-delete-btn">
+                <span class="icon is-small">
+                    <i class="fas fa-trash"></i>
+                </span>
+            </button>
+            <button class="button campos-move-up">
+                <span class="icon is-small">
+                    <i class="fas fa-arrow-up"></i>
+                </span>
+            </button>
+            <button class="button campos-move-down">
+                <span class="icon is-small">
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+            </button>
+            <button class="button campos-create">
+                <span class="icon is-small">
+                    <i class="fas fa-plus"></i>
+                </span>
+            </button>
+            
+        </div>
+    </div>
+   
+</div>
+
+
+
+<div class="campos-template-wrap is-hidden">
+    <!--  Templates HTML de cada tipo de campo (resposta curta, longa, escolha múltipla, etc).
+        IMPORTANTE: A ordem dos templates deve ser igual a ordem dos tipos de campo definidos na base de dados
+        por exemplo, se o primeiro tipo de campo na base de dados é a resposta curta, 
+        então o primeiro template deve ser resposta curta
+    -->
+
+    {% for tipo_campo in tipos_campo %}
+    <div class="content campo-template" data-id="{{tipo_campo.id}}">
+        <div class="field">
+            
+            <p class="control has-icons-left has-icons-right">
+              <input class="input campo__conteudo is-primary is-static" required placeholder="Pergunta">
+              <span class="icon is-left has-text-weight-bold has-text-black">
+                <span class="campo__position_index"></span>.
+              </span>
+            </p>
+            
+        </div>
+        <div class="field subcampos">
+            {{tipo_campo.template  | safe}}
+        </div>
+      
+    </div>
+       
+    {% endfor %}
+
+
+    
+
+   
+
+</div>
+
+<!--FORM CONFIG MODAL-->
+<div id="ver_form_config" class="ver_form_config modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Definições do Formulário</p>
+
+        <button onclick="$('#ver_form_config').removeClass('is-active');" class="delete"></button>
+
+      </header>
+      <section class="modal-card-body">
+        
+      </section><footer class="modal-card-foot">
+        <button class="button is-success">Save changes</button>
+        <button class="button">Cancel</button>
+      </footer>
+
+    </div>
+  </div>
