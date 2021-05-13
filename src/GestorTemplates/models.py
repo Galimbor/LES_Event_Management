@@ -186,19 +186,6 @@ class Resposta(models.Model):
 
 
 
-class Respostaspossiveis(models.Model):
-    id = models.AutoField(
-        db_column="Id", primary_key=True
-    )  # Field name made lowercase.
-    nome = models.CharField(
-        db_column="Nome", max_length=255
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "RespostasPossiveis"
-
-
 class GcpFormulario(models.Model):
     gcpid = models.OneToOneField(
         Gcp, models.DO_NOTHING, db_column="GCPid", primary_key=True
