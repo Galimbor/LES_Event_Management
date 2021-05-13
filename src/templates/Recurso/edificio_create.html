@@ -15,15 +15,15 @@
                         {% csrf_token %}
 
                         <div class="form-group-c">
-                            <label for="">Nome</label>
+                            <label class="label" for="nome"> Nome: </label>
                             {{ form.nome }}
 
                              <div class="form-group-c">
-                            <label for="">Campus</label>
+                            <label class="label" for="campus"> Campus: </label>
                             {{ form.campusid }}
                         </div>
 
-                        <input type='Submit' value='Save'>
+                        <input class="button is-primary" type='Submit' value='Save'>
                     </form>
                 </div>
             </div>
