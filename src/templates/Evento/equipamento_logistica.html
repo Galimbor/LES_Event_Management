@@ -20,32 +20,33 @@
 
                         {% if campo.campoid.tipocampoid.id == 1 %}
                             <div class="form-group-c">
-                                <label for="nome">{{ campo.campoid.conteudo }}</label>
-                                <input name="{{ campo.campoid.id }}" type="text">
+                                <label class="label" for="nome">{{ campo.campoid.conteudo }}</label>
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 4 %}
                             <div class="form-group-c">
-                                <label for="">{{ campo.campoid.conteudo }}</label>
-                                <textarea name="{{ campo.campoid.id }}" cols="30" rows="10"></textarea>
+                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
+                                <textarea class="input-clean" name="{{ campo.campoid.id }}" cols="30"
+                                          rows="10"></textarea>
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 6 %}
                             <div class="form-group-c">
-                                <label for="">{{ campo.campoid.conteudo }}</label>
-                                <input name="{{ campo.campoid.id }}" type="number">
+                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="number">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 7 %}
                             <div class="form-group-c">
-                                <label for="">{{ campo.campoid.conteudo }}</label>
-                                <input name="{{ campo.campoid.id }}" type="date">
+                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="date">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 8 %}
                             <div class="form-group-c">
-                                <label for="">{{ campo.campoid.conteudo }}</label>
-                                <input name="{{ campo.campoid.id }}" type="time">
+                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="time">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 2 %}
                             <div class="form-group-c">
-                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
                                 <div class="radio-label">
                                     {% for escolha in campo.campoid.respostas %}
                                         <label for="tipo">{{ escolha }}</label>
@@ -58,7 +59,7 @@
 
                     {% endfor %}
 
-                    <input type='Submit' value='Save'>
+                    <input class="button-submit" type='Submit' value='Save'>
                 </form>
             </div>
         </div>

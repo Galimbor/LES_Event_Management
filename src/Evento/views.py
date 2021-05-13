@@ -65,6 +65,11 @@ def meus_eventos(request):
 # Give the user the option to choose which type of logistic the user wants to create to the given event.
 def create_logistic(request, event_id):
     evento = Evento.objects.get(id=event_id)
+    logistica = Logistica.objects.filter(eventoid=evento)
+    if not logistica:
+        new_logista = Logistica(nome=f'logistica-{evento.id}', eventoid=evento)
+        new_logista.save()
+
     context = {
         'evento': evento,
     }
@@ -74,19 +79,19 @@ def create_logistic(request, event_id):
 # Equipament Logistic
 def equip_logistic(request, event_id):
     equip = Tipodeequipamento()
-    render_logistic_form_by_type(request, event_id, equip, 1)
+    return render_logistic_form_by_type(request, event_id, equip, 1)
 
 
 # Espaco Logistic
 def espaco_logistic(request, event_id):
     espaco = Tipoespaco()
-    render_logistic_form_by_type(request, event_id, espaco, 2)
+    return render_logistic_form_by_type(request, event_id, espaco, 2)
 
 
 # Servico Logistic
 def servico_logistic(request, event_id):
     servico = Tiposervico()
-    render_logistic_form_by_type(request, event_id, servico, 3)
+    return render_logistic_form_by_type(request, event_id, servico, 3)
 
 
 # Submit logistic to the GCP
@@ -118,7 +123,7 @@ def create_event(request, type_id):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23))
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
                 pergunta.campoid.tipocampoid.nome == 'Dropdown':
             pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
 
@@ -138,7 +143,7 @@ def create_event(request, type_id):
             elif id == 12:
                 num_p = request.POST.get(f'{id}')
                 evento.maxparticipantes = num_p
-            elif id == 13:
+            elif id == 31:
                 val = request.POST.get(f'{id}')
                 if val == 'Sim':
                     val = 1
@@ -173,7 +178,7 @@ def create_event(request, type_id):
         for resp in respostas:
             resp.save()
 
-        resposta_estado = Resposta(conteudo='Pendente', campoid_id=22, eventoid=evento)
+        resposta_estado = Resposta(conteudo='Pendente', campoid_id=32, eventoid=evento)
         resposta_estado.save()
         resposta_inscritos = Resposta(conteudo=0, campoid_id=23, eventoid=evento)
         resposta_inscritos.save()
@@ -267,12 +272,12 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
     logistic = Logistica.objects.filter(eventoid=evento)
 
     # Retrieve equip logistic form for the given event.
-    formulario = Formulario.objects.filter(eventoid=event_id, tipoformularioid=4)
+    formulario = Formulario.objects.filter(tipoformularioid=4)
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
                 pergunta.campoid.tipocampoid.nome == 'Dropdown':
             pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
 
@@ -283,19 +288,19 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
 
         # Redirect to eventos page
         return redirect('Evento:meus-eventos')
-
-    context = {
-        'evento': evento,
-        'campos': perguntas
-    }
-    if type_logistic == 1:
-        return render(request, 'Evento/equipamento_logistica.html', context)
-    elif type_logistic == 2:
-        return render(request, 'Evento/espaco_logistica.html', context)
-    elif type_logistic == 3:
-        return render(request, 'Evento/servico_logistica.html', context)
     else:
-        return render(request, 'Evento/eventos.html', context)
+        context = {
+            'evento': evento,
+            'campos': perguntas
+        }
+        if type_logistic == 1:
+            return render(request, 'Evento/equipamento_logistica.html', context)
+        elif type_logistic == 2:
+            return render(request, 'Evento/espaco_logistica.html', context)
+        elif type_logistic == 3:
+            return render(request, 'Evento/servico_logistica.html', context)
+        else:
+            return render(request, 'Evento/eventos.html', context)
 
 
 def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
