@@ -9,7 +9,15 @@
     <div class="columns">
       <div class="column">
         <h1 class="title">Feedbacks para o meu evento</h1>
+
       </div>
+                              <a class="button is-success"
+                   href="{% url 'Feedback:view_feedback_statistics' eventoid=request.resolver_match.kwargs.eventoid %}">
+        <span class="icon">
+          <i class="fas "></i>
+        </span>
+                    <span>Ver estatísticas de feedback</span>
+                </a>
 
 {% if messages %}
     <ul class="messages">
@@ -40,9 +48,6 @@
           </div>
           <footer class="card-footer">
               <a href="{% url 'Feedback:view_feedback' feedbackid=obj.pk %}" class="card-footer-item update-form-btn" >Ver mais</a>
-{#              <a href="{% url 'Inscricao:part_alterar_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Alterar dados</a>#}
-{#            <a href="#" class="card-footer-item update-form-btn" data-update-url="{% url 'Inscricao:part_update_inscricao' obj.pk %}">Fazer o check-in</a>#}
-{#            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:part_delete_inscricao' obj.pk %}">Eliminar inscrição</a>#}
           </footer>
         </div>
       </div>

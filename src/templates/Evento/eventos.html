@@ -4,40 +4,56 @@
 
 {% block content %}
     {% load static %}
+
+
+
+
+
     <div>
         <div class="section">
             <div class="columns">
                 <div class="column">
                     <h1 class="title">Eventos</h1>
                 </div>
+            <div class="column">
+{% if messages %}
 
+
+    <article class="message is-success">
+    {% for message in messages %}
+  <div class="message-header">
+    <p>Success</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+    {{ message }}
+  </div>
+       {% endfor %}
+</article>
+
+{% endif %}
+            </div>
             </div>
             <div class="columns is-multiline">
                 {% for obj in eventos %}
-                    <div class="column is-3">
-                        <div class="card" style="min-height: 10px;">
-                            <header class="card-header">
-                                <p class="card-header-title">
+                    <div class="column is-half">
+                        <div class="card pointer" style="min-height: 10px;"  >
+                            <header class="card-header has-text-centered">
+                                <p class="card-header-title is-centered">
                                     {{ obj.nome }}
                                 </p>
                             </header>
                             <div class="card-content">
                                 <div class="content">
-                                    <strong>Descrição: </strong>{{ obj.descricaogeral }}
+                                    <p><strong>Descrição: </strong></p>
+                                    <p>{{ obj.descricaogeral | truncatechars:255  }}</p>
                                     <br>
-                                    <br>
-                                    <p><strong>Estado do evento: </strong> {{ obj.estado }}</p>
-                                    <br>
-                                    <br>
-                                    <p><strong>Número máximo de participantes: </strong> {{ obj.maxparticipantes }}</p>
-                                    <br>
-                                    <br>
-
-                                    <time datetime="2016-1-1"><strong>Data Inicial: </strong>
+                                    <p><strong>Data: </strong></p>
+                                    <time datetime="2016-1-1">
                                         {{ obj.horario.datainicial }}
                                         {{ obj.horario.horainicial }}  </time>
-                                    <br>
-                                    <time datetime="2016-1-1"><strong>Data Final: </strong>
+                                    -
+                                    <time datetime="2016-1-1">
                                         {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
                                     <br>
                                     <br>
@@ -57,8 +73,9 @@
                             </div>
                             <footer class="card-footer">
                                 <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
-                                   class="card-footer-item">Inscrever</a>
-                                <a href="{% url 'Feedback:create_feedback' eventoid=obj.id %}" class="card-footer-item">Enviar
+                                   class="card-footer-item dark-a">Inscrever</a>
+                                <a href="{% url 'Feedback:create_feedback' eventoid=obj.id %}"
+                                   class="card-footer-item dark-a">Enviar
                                     feedback</a>
                             </footer>
                         </div>

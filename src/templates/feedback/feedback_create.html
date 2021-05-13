@@ -16,22 +16,29 @@
 
 
             {% for pergunta in form %}
-             <div class="field">
+               <div class="field">
                 {% if pergunta.campoid.tipocampoid.nome == 'Resposta aberta' %}
                         <label class="field"> {{ pergunta.campoid.conteudo }}</label>
-                        <div class="control">
-                            <input class="text" type="text" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="text" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
                         </div>
-                {% elif pergunta.campoid.tipocampoid.nome == 'RadioBox'%}
+                {% elif pergunta.campoid.tipocampoid.nome == 'Resposta Numérica' %}
+                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="number" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
+                        </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla'%}
 
-                        <div class="control">
-                        <label class="field" > {{ pergunta.campoid.conteudo }}</label>
+                        <div class="form-group-c">
+                        <label class="label" > {{ pergunta.campoid.conteudo }}</label>
+                        <div class="radio-label">
                         {% for opcao in pergunta.campoid.respostas %}
                             <label class="radio" for="{{ pergunta.campoid.id }}">
-                                <input type="radio" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao }}">
+                                <input type="radio" class="" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao }}">
                                     {{ opcao }}
                             </label>
                         {% endfor %}
+                        </div>
                         </div>
                 {% elif pergunta.campoid.tipocampoid.nome == 'Dropdown' %}
                     <label class="field" for="{{ pergunta.campoid.id }}"> {{ pergunta.campoid.conteudo }}</label>
@@ -43,11 +50,11 @@
                           {% endfor %}
                       </select>
                     </div>
-                {% elif pergunta.campoid.tipocampoid.nome == 'Pergunta aberta longa' %}
-                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>
-                      <div class="control">
-                        <textarea class="textarea " name="{{ pergunta.campoid.id }}" cols="10" placeholder="{{ pergunta.campoid.conteudo}}"></textarea>
-                      </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Resposta Longa' %}
+                    <div class="form-group-c">
+                        <label class="label" for="">{{ pergunta.campoid.conteudo }}</label>
+                        <textarea class="input-clean" name="{{ pergunta.campoid.id }}" cols="3  0" placeholder="{{ pergunta.campoid.conteudo}}"></textarea>
+                    </div>
 
                 {% elif pergunta.campoid.tipocampoid.nome == 'Anexo' %}
                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>

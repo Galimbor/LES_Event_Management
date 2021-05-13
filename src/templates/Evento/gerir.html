@@ -18,8 +18,20 @@
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
                             <p class="card-header-title">
-                                <a href="#">
-                                    Inscrições
+                                <a href="{% url 'Inscricao:prop_list_inscricao'   eventoid=evento.id  %}">
+                                   Gerir Inscrições
+                                </a>
+                            </p>
+                        </header>
+                    </div>
+                </div>
+                                <div class="column is-3">
+                    {# //Inscricoes Rescursos Logistica#}
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="{% url 'Feedback:list_feedback'   eventoid=evento.id  %}">
+                                   Gerir Feedback
                                 </a>
                             </p>
                         </header>

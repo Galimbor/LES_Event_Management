@@ -12,52 +12,46 @@
       </div>
 
 {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+
+
+    <article class="message is-success">
+    {% for message in messages %}
+  <div class="message-header">
+    <p>Success</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+    {{ message }}
+  </div>
+       {% endfor %}
+</article>
+
 {% endif %}
 
 
     </div>
     <div class="columns is-multiline">
       {% for obj in object_list %}
-      <div class="column is-3">
-        <div class="card" style="min-height: 10px;">
-          <header class="card-header">
-            <p class="card-header-title">
+      <div class="column is-half">
+        <div class="card pointer" style="min-height: 10px;">
+          <header class="card-header  has-text-centered">
+            <a class="card-header-title is-centered" href="{% url 'Inscricao:consultar_inscricao' inscricaoid=obj.id %}">
               {{obj.eventoid.nome}}
-            </p>
+            </a>
           </header>
           <div class="card-content">
             <div class="content">
-              {{ obj.eventoid.descricaogeral }}
-              <br>
+                <p> <strong> Inscrito como : </strong> {{ obj.nome }} </p>
                 <br>
-                <p> Inscrito como : {{ obj.nome }}</p>
+                <p> <strong> Estado da inscrição :  </strong> {{ obj.estado }} </p>
                 <br>
-                <br>
-                <p> Estado da inscrição : {{ obj.estado }}</p>
-                <br>
-                <br>
-                <p> Participante número : {{ obj.num_inscricao }}</p>
-                <br>
-                <br>
-                <p> Check-in :  {% if obj.checkin  %} Vai ao evento  {% else %} Não vai ao evento {% endif %}</p>
-                <br>
-                <br>
-
-              <time datetime="2016-1-1"> Start-time : {{ obj.eventoid.horario.datainicial }} {{ obj.eventoid.horario.horainicial }}  </time>
-                <br>
-               <time datetime="2016-1-1"> End-time :{{ obj.eventoid.horario.datafinal }} {{ obj.eventoid.horario.horafinal }} </time>
+                <p> <strong> Check-in : </strong>  {% if obj.checkin  %} Check-in confirmado. {% else %} Check-in não confirmado. {% endif %} </p>
             </div>
           </div>
           <footer class="card-footer">
               <a href="{% url 'Inscricao:part_update_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Fazer o check-in</a>
               <a href="{% url 'Inscricao:part_alterar_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Alterar dados</a>
-{#            <a href="#" class="card-footer-item update-form-btn" data-update-url="{% url 'Inscricao:part_update_inscricao' obj.pk %}">Fazer o check-in</a>#}
-            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:part_delete_inscricao' obj.pk %}">Eliminar inscrição</a>
+                <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:part_delete_inscricao' obj.pk %}">Eliminar inscrição</a>
           </footer>
         </div>
       </div>
