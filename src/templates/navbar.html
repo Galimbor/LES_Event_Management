@@ -27,9 +27,22 @@
                     <a href="{% url 'Evento:eventos' %}" class="navbar-item">
                         Todos Eventos
                     </a>
-                    <a href="{% url 'Evento:meus-eventos' %}" class="navbar-item">
-                        Meus Eventos
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'Evento:meus-eventos' %}" class="navbar-item">
+                            Meus Eventos
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'Evento:select_type' %}" class="navbar-item">
+                        Novo Evento
                     </a>
+
+                    {% if user_tipo == 'gcp' %}
+                        <br>
+                        <a href="{% url 'Evento:eventos-gerir' %}" class="navbar-item">
+                            Gerir Eventos
+                        </a>
+                    {% endif %}
+
                 </div>
             </div>
             <a href="{% url 'Inscricao:part_list_inscricao' %}" class="navbar-item">

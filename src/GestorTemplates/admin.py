@@ -1,14 +1,10 @@
-
 from django.contrib import admin
 from django.apps import apps
+
 # Register your models here.
 
 
 from .models import *
-
-from .models import *
-
-# Register your models here.
 
 
 class QuestionInline(admin.TabularInline):
@@ -18,8 +14,6 @@ class QuestionInline(admin.TabularInline):
 
 @admin.register(Formulario)
 class FormAdmin(admin.ModelAdmin):
-
-
     inlines = [
         QuestionInline,
     ]
@@ -35,20 +29,12 @@ class TipoCampoAdmin(admin.ModelAdmin):
             exist = 'yes'
         return exist
 
-@admin.register(Respostaspossiveis)
-class RespostaPossiveisAdmin(admin.ModelAdmin):
-    list_display= ('id', 'nome')
-
-    def get_template(self, obj):
-        exist = 'no'
-        if obj.template:
-            exist = 'yes'
-        return exist
 
 @admin.register(Campo)
 class CampoAdmin(admin.ModelAdmin):
     list_filter = ('tipocampoid',)
-    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado', 'get_obrigatorio', 'respostapossivelid')
+    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado', 'get_obrigatorio')
+
     def get_obrigatorio(self, obj):
         exist = False
         if obj.obrigatorio == b'\x01':
@@ -64,7 +50,7 @@ class CampoFormularioAdmin(admin.ModelAdmin):
 
 models = apps.get_models()
 for model in models:
-
+    if ('GestorTemplates' in str(model)):
         try:
             admin.site.register(model)
         except admin.sites.AlreadyRegistered:

@@ -12,9 +12,6 @@ class Tipoevento(models.Model):
     class Meta:
         managed = False
         db_table = 'TipoEvento'
-        
-    def __str__(self):
-        return self.nome
 
 
 class Templatecertificado(models.Model):
@@ -34,7 +31,7 @@ class Evento(models.Model):
         return self.nome
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-    descricaogeral = models.TextField(db_column='DescricaoGeral', max_length=1800)  # Field name made lowercase.
+    descricaogeral = models.TextField(db_column='DescricaoGeral')  # Field name made lowercase.
     maxparticipantes = models.IntegerField(db_column='MaxParticipantes')  # Field name made lowercase.
     estado = models.CharField(db_column='Estado', max_length=255, blank=True, null=True)  # Field name made lowercase.
     visibilidade = models.CharField(db_column='Visibilidade', max_length=255, blank=True,
@@ -73,3 +70,6 @@ class Logistica(models.Model):
     class Meta:
         managed = False
         db_table = 'Logistica'
+
+    def __str__(self):
+        return self.nome

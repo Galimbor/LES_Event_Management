@@ -6,11 +6,11 @@
 {% block content %}
     {% load static %}
 
-
-    <div class="section">
+<div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
-                 <h1 class="title">Criar Evento <span>[2]</span></h1>
+                <h1 class="title">Recurso Servico</h1>
+                <h2 class="subtitle">{{ evento.nome }}</h2>
                 {{ type }}
                 <form class="box" id="form" method="post">
                     {% csrf_token %}
@@ -20,33 +20,32 @@
 
                         {% if campo.campoid.tipocampoid.id == 1 %}
                             <div class="form-group-c">
-                                <label class="label" for="nome">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text">
+                                <label for="nome">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="text">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 4 %}
                             <div class="form-group-c">
-                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <textarea class="input-clean" name="{{ campo.campoid.id }}" cols="30"
-                                          rows="10"></textarea>
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <textarea name="{{ campo.campoid.id }}" cols="30" rows="10"></textarea>
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 6 %}
                             <div class="form-group-c">
-                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="number">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="number">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 7 %}
                             <div class="form-group-c">
-                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-data" name="{{ campo.campoid.id }}" type="date">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="date">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 8 %}
                             <div class="form-group-c">
-                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-time" name="{{ campo.campoid.id }}" type="time">
+                                <label for="">{{ campo.campoid.conteudo }}</label>
+                                <input name="{{ campo.campoid.id }}" type="time">
                             </div>
-                        {% elif campo.campoid.tipocampoid.id == 12 %}
+                        {% elif campo.campoid.tipocampoid.id == 2 %}
                             <div class="form-group-c">
-                                <label class="label" for="">{{ campo.campoid.conteudo }}</label>
+                                <label for="">{{ campo.campoid.conteudo }}</label>
                                 <div class="radio-label">
                                     {% for escolha in campo.campoid.respostas %}
                                         <label for="tipo">{{ escolha }}</label>
@@ -59,11 +58,11 @@
 
                     {% endfor %}
 
-                    <input class="button-submit" type='Submit' value='Save'>
+                    <input type='Submit' value='Save'>
                 </form>
             </div>
         </div>
 
     </div>
-{% endblock content %}
 
+{% endblock content %}

@@ -12,61 +12,38 @@
                 </div>
 
             </div>
-            <div class="columns is-multiline">
+            <div class="columns is-multiline is-space-between">
                 <div class="column is-3">
                     {# //Inscricoes Rescursos Logistica#}
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="{% url 'Inscricao:prop_list_inscricao'   eventoid=evento.id  %}">
-                                   Gerir Inscrições
-                                </a>
+                            <a class="mx-auto" href="">
+                            <p class="card-header-title is-centered">
+                                    Inscricoes
                             </p>
-                        </header>
-                    </div>
-                </div>
-                                <div class="column is-3">
-                    {# //Inscricoes Rescursos Logistica#}
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="{% url 'Feedback:list_feedback'   eventoid=evento.id  %}">
-                                   Gerir Feedback
-                                </a>
-                            </p>
+                            </a>
                         </header>
                     </div>
                 </div>
                 <div class="column is-3">
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
+                            <a class="mx-auto" href="">
+                            <p class="card-header-title is-centered">
                                     Recursos
-                                </a>
                             </p>
+                            </a>
                         </header>
                     </div>
                 </div>
                 <div class="column is-3">
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
-                                    Editar Evento
-                                </a>
+                            <a class="mx-auto" href="{% url 'Evento:view-logistic' event_id=id %}">
+                            <p class="card-header-title is-centered">
+                                    Logistica
                             </p>
-                        </header>
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
-                                    Editar Logistica
-                                </a>
-                            </p>
+                            </a>
                         </header>
                     </div>
                 </div>
