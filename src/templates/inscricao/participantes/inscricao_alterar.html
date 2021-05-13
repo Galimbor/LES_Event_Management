@@ -14,49 +14,50 @@
             {% csrf_token %}
                {% for pergunta, resposta in QAA %}
              <div class="field">
+
                 {% if pergunta.tipocampoid.nome == 'Resposta aberta' %}
                         <label class="field"> {{ pergunta.conteudo }}</label>
-                        <div class="control">
-                            <input class="text" type="text" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="text" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
                         </div>
-                {% elif pergunta.tipocampoid.nome == 'Resposta Numerica' %}
+                {% elif pergunta.tipocampoid.nome == 'Resposta Numérica' %}
                         <label class="field"> {{ pergunta.conteudo }}</label>
-                        <div class="control">
-                            <input class="text" type="number" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="number" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
                         </div>
-                {% elif pergunta.tipocampoid.nome == 'RadioBox'%}
+                {% elif pergunta.tipocampoid.nome == 'Escolha Múltipla'%}
 
-                        <div class="control">
-                        <label class="field" > {{ pergunta.conteudo }}</label>
+                        <div class="form-group-c">
+                        <label class="label" > {{ pergunta.conteudo }}</label>
+                        <div class="radio-label">
                         {% for opcao in pergunta.respostas %}
                             <label class="radio" for="{{ pergunta.id }}">
-                                <input type="radio"  id="{{ pergunta.id }}" name="{{ pergunta.id }}" value="{{ opcao }}" {% if resposta.conteudo == opcao %} checked {% endif %}>
+                                <input type="radio" class="" id="{{ pergunta.id }}"  name="{{ pergunta.id }}" value="{{ opcao }} {% if resposta.conteudo == opcao %} selected {% endif %}">
                                     {{ opcao }}
                             </label>
                         {% endfor %}
+                        </div>
                         </div>
                 {% elif pergunta.tipocampoid.nome == 'Dropdown' %}
                     <label class="field" for="{{ pergunta.id }}"> {{ pergunta.conteudo }}</label>
                     <div class="select is-small">
                       <select name="{{ pergunta.id }}" id="{{ pergunta.id }}" >
-{#                        <option selected value="">--Please choose an option--</option>#}
-                          {% for opcao in pergunta.respostas %}
+                         {% for opcao in pergunta.respostas %}
                             <option name="{{ opcao}}" {% if resposta.conteudo == opcao %} selected {% endif %} >{{ opcao }}</option>
                           {% endfor %}
                       </select>
                     </div>
-                {% elif pergunta.tipocampoid.nome == 'Pergunta aberta longa' %}
-                    <label class="field"> {{ pergunta.conteudo }}</label>
-                      <div class="control">
-                        <textarea class="textarea " name="{{ pergunta.id }}" cols="10"  >{{ resposta.conteudo }}
-                        </textarea>
-                      </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Resposta Aberta' %}
+                    <div class="form-group-c">
+                        <label class="label" for="">{{ pergunta.conteudo }}</label>
+                        <textarea class="input-clean" name="{{ pergunta.id }}" cols="3  0" placeholder="{{ pergunta.conteudo}}">{{ resposta.conteudo }}</textarea>
+                    </div>
 
-                {% elif pergunta.tipocampoid.nome == 'Anexo' %}
-                   <label class="field"> {{ pergunta.conteudo }}</label>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Anexo' %}
+                   <label class="field"> {{ pergunta.campoid.conteudo }}</label>
                     <div class="file">
                       <label class="file-label">
-                        <input class="file-input" type="file" name="{{ pergunta.id }}">
+                        <input class="file-input" type="file" name="{{ pergunta.campoid.id }}">
                         <span class="file-cta">
                           <span class="file-icon">
                             <i class="fas fa-upload"></i>
@@ -69,15 +70,18 @@
                     </div>
                 {% endif %}
              </div>
+
+
+
             {% endfor %}
 
-                    <div class="field is-grouped">
+        <div class="field is-grouped">
           <div class="control">
               <input class="button is-link" type='Submit' value='Submit'>
           </div>
-          <div class="control">
-            <button class="button is-link is-light">Cancel</button>
-          </div>
+            <div class="control">
+                <a class="button is-link" href="{% url 'Inscricao:part_list_inscricao' %}"> Voltar atrás </a>
+            </div>
         </div>
         </form>
     </div>

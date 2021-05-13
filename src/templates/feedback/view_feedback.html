@@ -5,24 +5,31 @@
 
 {% block content %}
 {% load static %}
-<div>
-  <div class="section">
-    <div class="columns">
-      <div class="column is-is-four-fifths">
-        <h1 class="title">Feedback número {{ feedback.id }}</h1>
-            {% for pergunta, resposta in QAA %}
-                <article class="message">
-                  <div class="message-header">
-                    <p>{{ pergunta.conteudo }}</p>
-                  </div>
-                  <div class="message-body">
-                    {% if resposta.conteudo|length == 0  %} Answer is empty. {% else %} {{ resposta.conteudo }}  {% endif %}
-                  </div>
-                </article>
-            {% endfor %}
 
-    </div>
-  </div>
- </div>
-</div>
+
+  <div>
+            <div class="section">
+                <div class="columns is-align-items-center">
+                    <div class="column is-half is-offset-one-quarter">
+                        <h1 class="title has-text-centered"> Feedback número {{ feedback.id }}</h1>
+                        {% for pergunta, resposta in QAA %}
+                        <div class="event-group">
+                            <span class="span-header">{{ pergunta.conteudo }}</span>
+                                <p class="event-body ">
+                                {% if resposta.conteudo|length == 0  %} A resposta encontra-se vazia.
+                                {% elif pergunta.id == 28 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
+                                {% else %} {{ resposta.conteudo }}  {% endif %}</p>
+                        </div>
+                          {% endfor %}
+                        <div class="column">
+                                                            <div class="control">
+                                    <a class="button is-link" href="{% url 'Feedback:list_feedback' eventoid=27 %}"> Voltar atrás </a>
+                                </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock content%}

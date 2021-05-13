@@ -7,8 +7,9 @@
 {% load static %}
 <div class="section statistic">
   <h1 class="title">Estatísticas do feedback</h1>
+
   <div class="columns is-multiline">
-    
+
     {% for pergunta in perguntas %}
     {% if forloop.counter0|divisibleby:"4" %}
     <div class="column stat-item mt-3">
@@ -28,10 +29,15 @@
           </div>
       <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
     </div>
+
     {% endif %}
     {% endfor %}
+
     
   </div>
+                <div class="control">
+                <a class="button is-link" href="{% url 'Feedback:list_feedback' eventoid=27 %}"> Voltar atrás </a>
+            </div>
 </div>
 
 

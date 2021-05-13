@@ -9,20 +9,29 @@
   <div class="section">
     <div class="columns">
       <div class="column is-is-four-fifths">
-        <h1 class="title">Dados das inscrição</h1>
 
-            {% for resposta in inscricao %}
-                <article class="message">
-                  <div class="message-header">
-                    <p>{{ resposta.campoid.conteudo }}</p>
-                  </div>
-                  <div class="message-body">
-                    {% if resposta.conteudo|length == 0  %} Answer is empty.
-                    {% elif resposta.campoid.id == 20 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
-                    {% else %} {{ resposta.conteudo }}  {% endif %}
-                  </div>
-                </article>
-            {% endfor %}
+                <div>
+            <div class="section">
+                <div class="columns is-align-items-center">
+                    <div class="column">
+                        <div class="img"></div>
+                    </div>
+                    <div class="column">
+                        <h1 class="title has-text-centered"> Dados gerais da inscrição</h1>
+                        {% for resposta in inscricao %}
+                        <div class="event-group">
+                            <span class="span-header">{{ resposta.campoid.conteudo }}</span>
+                                <p class="event-body ">
+                                    {% if resposta.conteudo|length == 0  %}Answer is empty.
+                                {% elif resposta.campoid.id == 28 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
+                                {% else %} {{ resposta.conteudo }}  {% endif %}</p>
+                        </div>
+                          {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
             <div class="control">

@@ -13,10 +13,10 @@ def createFeedback(request, eventoid):
     evento = Evento.objects.get(id=eventoid)
 
 
-    if not request.user.is_authenticated:
-        messages.error(request, f'Por favor autentique-se.')
-
-        return redirect('Evento:eventos')
+    # if not request.user.is_authenticated:
+    #     messages.error(request, f'Por favor autentique-se.')
+    #
+    #     return redirect('Evento:eventos')
 
     # user = get_user(request)
 
@@ -35,7 +35,9 @@ def createFeedback(request, eventoid):
     perguntas = CampoFormulario.objects.filter(formularioid=formularioFeedback[0])
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+
+
+        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
                 pergunta.campoid.tipocampoid.nome == 'Dropdown':
             pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
 
@@ -46,7 +48,7 @@ def createFeedback(request, eventoid):
         for pergunta in perguntas:
             resposta = request.POST.get(f"{pergunta.campoid.id}")
             respostas.append(Resposta(conteudo=resposta, feedbackid=feedback, campoid=pergunta.campoid))
-        feedback.descricao = "Not sure what I'm doing"
+        feedback.descricao = "Feedback"
         feedback.save()
         for resposta in respostas:
             resposta.save()

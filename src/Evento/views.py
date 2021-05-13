@@ -20,16 +20,16 @@ def eventos(request):
     events = Evento.objects.all()  # temporary
 
 
-    if request.user.is_authenticated:
-        for event in events:
-            if Inscricao.objects.filter(userid=get_user(request).id, eventoid=event.id).exists():
-                event.showSignup = False
-            else:
-                event.showSignup = True
-
-    else:
-        for event in events:
-            event.showSignup = True
+    # if request.user.is_authenticated:
+    #     for event in events:
+    #         if Inscricao.objects.filter(userid=get_user(request).id, eventoid=event.id).exists():
+    #             event.showSignup = False
+    #         else:
+    #             event.showSignup = True
+    #
+    # else:
+    for event in events:
+        event.showSignup = True
 
     logistica = Logistica.objects.all()
 

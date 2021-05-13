@@ -9,28 +9,41 @@
   <div class="section">
     <div class="columns">
       <div class="column is-is-four-fifths">
-        <h1 class="title">Check-in da inscrição</h1>
+        <h1 class="title has-text-centered">Check-in da inscrição</h1>
 
-            <h2 class="subtitle">Dados gerais da inscrição</h2>
-            {% for pergunta, resposta in QAA %}
-                <article class="message">
-                  <div class="message-header">
-                    <p>{{ pergunta.conteudo }}</p>
-                  </div>
-                  <div class="message-body">
-                    {% if resposta.conteudo|length == 0  %} Answer is empty.
-                    {% elif pergunta.id == 20 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
-                    {% else %} {{ resposta.conteudo }}  {% endif %}
-                  </div>
-                </article>
-            {% endfor %}
+          <div>
+            <div class="section">
+                <div class="columns is-align-items-center">
+                    <div class="column">
+                        <div class="img"></div>
+                    </div>
+                    <div class="column">
+                        <h1 class="title has-text-centered"> Dados gerais da inscrição</h1>
+                        {% for pergunta, resposta in QAA %}
+                        <div class="event-group">
+                            <span class="span-header">{{ pergunta.conteudo }}</span>
+                                <p class="event-body long-text">
+                                    {% if resposta.conteudo|length == 0  %}Answer is empty.
+                                {% elif pergunta.id == 28 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
+                                {% else %} {{ resposta.conteudo }}  {% endif %}</p>
+                        </div>
+                          {% endfor %}
 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="column ">
             <form class="box" id="form" method="post">
-                <h2 class="subtitle">Check-in no evento</h2>
+                <h1 class="title has-text-centered"> Check-in na inscrição</h1>
                 {% csrf_token %}
-            <div class="field">
+            <div class="field  ">
                 <label class="field" for="{{ checkin.campoid.id }}"> {{ checkin.campoid.conteudo }}</label>
-                    <div class="select is-small">
+                    <div class="select is-small ">
                       <select name="{{ checkin.campoid.id }}" id="{{ checkin.campoid.id }}" >
                           {% for opcao in checkin.respostas %}
                             <option name="{{opcao}}" {% if opcao == "Vou" and checkin.conteudo == "1"  %} selected
@@ -43,6 +56,10 @@
               <input class="button is-link" type='Submit' value='Submit'>
             </div>
             </form>
+        </div>
+                  <div class="control">
+                <a class="button is-link" href="{% url 'Inscricao:part_list_inscricao' %}"> Voltar atrás </a>
+            </div>
 
 
     </div>

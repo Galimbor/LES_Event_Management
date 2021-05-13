@@ -28,8 +28,8 @@ def CriarInscricao(request, eventoid):
 
     # print(formularioInscricao)
 
-    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0]).exclude(campoid_id=20).exclude(
-        campoid_id=21)
+    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0]).exclude(campoid_id=28).exclude(
+        campoid_id=27)
 
     for pergunta in perguntas:
         if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
@@ -77,12 +77,12 @@ def CriarInscricao(request, eventoid):
         inscricao.userid = userid
 
         inscricao.estado = estado
-        respostas.append(Resposta(conteudo=estado, inscricaoid=inscricao, campoid=Campo.objects.get(id=21)))
+        respostas.append(Resposta(conteudo=estado, inscricaoid=inscricao, campoid=Campo.objects.get(id=27)))
 
         inscricao.num_inscricao = num_inscricao
 
         inscricao.checkin = 0
-        respostas.append(Resposta(conteudo=0, inscricaoid=inscricao, campoid=Campo.objects.get(id=20)))
+        respostas.append(Resposta(conteudo=0, inscricaoid=inscricao, campoid=Campo.objects.get(id=28)))
 
         inscricao.save()
 
@@ -140,7 +140,11 @@ def PartInscricaoCancelar(request, inscricaoid):
 
     inscricao.delete()
 
-    return render(request, 'inscricao/participantes/list_inscricao.html')
+    # print("what")
+    messages.success(request, f'Eliminou a sua sucessão com sucesso!')
+
+    return redirect('Inscricao:part_list_inscricao')
+    # return render(request, 'inscricao/participantes/list_inscricao.html')
 
 
 def PartInscricaoCheckin(request, id):
@@ -154,7 +158,7 @@ def PartInscricaoCheckin(request, id):
 
     for resposta in respostas:
         perguntas.append(resposta.campoid)
-        if resposta.campoid.id == 20:
+        if resposta.campoid.id == 28:
             checkin = resposta
             checkin.respostas = resposta.campoid.respostapossivelid.nome.split(",")
 
@@ -163,11 +167,11 @@ def PartInscricaoCheckin(request, id):
     if request.method == "POST":
 
 
-        inscricao.checkin = request.POST.get(f"{20}") == 'Vou' if 1 else 0
+        inscricao.checkin = request.POST.get(f"{28}") == 'Vou' if 1 else 0
 
-        respostadb = Resposta.objects.get(inscricaoid=inscricao,campoid_id=20)
+        respostadb = Resposta.objects.get(inscricaoid=inscricao,campoid_id=28)
 
-        if request.POST.get(f"{20}") == 'Vou' :
+        if request.POST.get(f"{28}") == 'Vou' :
             respostadb.conteudo = "1"
         else:
             respostadb.conteudo = "0"
@@ -193,8 +197,8 @@ def PartAlterarInscricao(request, id):
 
     inscricao = Inscricao.objects.get(id=id)
 
-    respostas = Resposta.objects.filter(inscricaoid=inscricao).exclude(campoid_id=20).exclude(
-        campoid_id=21)
+    respostas = Resposta.objects.filter(inscricaoid=inscricao).exclude(campoid_id=28).exclude(
+        campoid_id=27)
 
     perguntas = []
 
@@ -297,7 +301,7 @@ def PropAlterarEstadoInscricao(request, id):
 
     for resposta in respostas:
         perguntas.append(resposta.campoid)
-        if resposta.campoid.id == 21:
+        if resposta.campoid.id == 27:
             estado = resposta
             estado.respostas = resposta.campoid.respostapossivelid.nome.split(",")
 
@@ -306,15 +310,15 @@ def PropAlterarEstadoInscricao(request, id):
     if request.method == "POST":
 
 
-        inscricao.estado = request.POST.get(f"{21}")
+        inscricao.estado = request.POST.get(f"{27}")
 
 
 
         inscricao.save()
 
-        respostadb = Resposta.objects.get(inscricaoid=inscricao, campoid_id=21)
+        respostadb = Resposta.objects.get(inscricaoid=inscricao, campoid_id=27)
 
-        respostadb.conteudo = request.POST.get(f"{21}")
+        respostadb.conteudo = request.POST.get(f"{27}")
 
         respostadb.save()
 
