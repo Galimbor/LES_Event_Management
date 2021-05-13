@@ -1,0 +1,214 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column">
+        <h1 class="title">Os Meus Formulários</h1>
+      </div>
+      <button class="button is-success" id="openModal-newForm">
+        <span class="icon">
+          <i class="fas fa-plus"></i>
+        </span>
+        <span>Novo</span>
+      </button>
+
+      <div class="modal" id="modal-newForm">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Selecione o tipo de Formulário</p>
+            <button class="close-modal delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+            <article class="panel is-primary" id="tipos-formulario">
+              <p class="panel-tabs">
+                <a class="tipoFormulario is-active" data-id="all"  data-tipo="0" onclick="filterCategory($(this))">Todos</a>
+                {% for tipoFormulario in categorias %}
+                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}" onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
+                {% endfor %}
+              </p>
+
+              <div class="panel-block search">
+                <p class="control has-icons-left">
+                  <input class="input is-primary"  id="search-by-name" type="text" placeholder="Search">
+                  <span class="icon is-left">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                  </span>
+                </p>
+              </div>
+              <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
+                <span class="panel-icon ">
+                  <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+                </span>
+                Em branco
+              </a>
+              {% for templateFormulario in tiposForm %}
+              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
+                <span class="panel-icon">
+                  <i class="fas fa-book" aria-hidden="true"></i>
+                </span>
+                {{templateFormulario.nome}}
+              </a>
+              {% endfor %}
+            </article>
+          </section>
+
+        </div>
+      </div>
+
+
+
+
+    </div>
+
+  </div>
+  <div class="columns is-multiline">
+    {% for obj in object_list %}
+    <div class="column is-3">
+      <div class="card" style="min-height: 10px;">
+        <header class="card-header">
+          <p class="card-header-title">
+            {{obj.nome}}
+          </p>
+          <button class="card-header-icon" aria-label="more options">
+            <span class="icon">
+              <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+          </button>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+            <br>
+            <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+          </div>
+        </div>
+        <footer class="card-footer">
+          <a href="{% url 'edit-form' obj.pk  %}" class="card-footer-item">Editar</a>
+          <a href="#" class="card-footer-item delete-form-btn"
+            data-delete-url="{% url 'delete-form' obj.pk %}">Delete</a>
+        </footer>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</div>
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar este formulário?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal">Cancel</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+
+  $('.dropdown').click(function () {
+    $(this).toggleClass('is-active')
+  });
+
+  // 
+  function filtrarPorAttr(queryset, dataKey, dataValue) {
+    return queryset.filter(
+      (i, obj) => $(obj).data(dataKey) == dataValue ? $(obj) : null
+    );
+  }
+
+  function filtrarValueInAttr(queryset, dataKey, dataValue) {
+    return queryset.filter(
+      (i, obj) => String($(obj).data(dataKey)).toLowerCase().includes(dataValue) ? $(obj) : null
+    );
+  }
+
+  // *************** CREATE FORM ***************
+
+
+  var newFormModal = $('#modal-newForm');
+  $('#openModal-newForm').click(function () {
+    newFormModal.addClass('is-active'); //shows modal
+  });
+
+
+  function filterCategory(category){
+    // <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
+
+    //Alterar empty form creation
+    var url = "{% url 'create-form' 0 0 %}"
+    url = url.slice(0, -1)+ category.data('tipo')
+    console.log(  url )
+    $('.panel-block#empty').attr("href", url)
+
+    //FILTER STUFF
+    var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
+
+    $('.tipoFormulario').removeClass('is-active');
+    if (category.data('id') != 'all'){
+      tiposCampo.addClass('is-hidden');
+      var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id')); 
+      tiposCampoFiltrados.removeClass('is-hidden');
+    }
+    else{
+      tiposCampo.removeClass('is-hidden');
+    }
+    category.addClass('is-active'); 
+  }
+
+// SEARCH BY NAME 
+  $('.search #search-by-name').keyup( function(){
+    var active_category = $('.tipoFormulario.is-active');
+
+    var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
+    var tiposCampoFiltrados1 = tiposCampo;
+    //filtrar primeiro outra vez por categoria
+    if (active_category.data('id') != 'all'){
+     tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id')); 
+    }
+    tiposCampoFiltrados1.addClass('is-hidden');
+    var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase()); 
+    tiposCampoFiltrados.removeClass('is-hidden');
+
+  }  
+  )
+
+  // *************** DELETE FORM ***************
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-form-btn').click(function () {
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
+
+  function deleteForm(id) {
+    deleteFormModal.data(id).hide();
+  }
+
+
+
+
+
+
+
+
+</script>
+{% endblock content%}
