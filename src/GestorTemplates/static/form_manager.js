@@ -315,30 +315,6 @@ var FormManager = class {
     }
 
 
-
-        /*
-    * Creates a campo
-    * @param {int} campo type pk.
-    */
-        createSubCampo(tipocampo, campoRelacionado=null) {
-            var campos = this.subcampos;
-          
-            var campoObj = {
-                "model": "forms_manager.campo",
-                "pk":  (campos.length+1)*-1,
-                "fields": {
-                    "conteudo": "",
-                    "tipocampoid": tipocampo,
-                    "position_index": 0,
-                    "campo_relacionado": campoRelacionado,
-                }
-            }
-    
-            campos.push(campoObj);
-    
-            this.renderAll();
-        }
-
     /*
     * Creates a campo
     * @param {int} campo type pk.
@@ -368,7 +344,7 @@ var FormManager = class {
 
         if(tipocampo==ESCOLHA_MULTIPLA && campoRelacionado==null )
         {
-            this.createSubCampo(ESCOLHA_MULTIPLA, campoObj.pk);
+            this.createCampo(ESCOLHA_MULTIPLA, campoObj.pk);
         }
         campos.push(campoObj);
 
