@@ -7,6 +7,8 @@
  * @param {json}   tiposCampo    Django campo types in json
  * @param {string}   containerDivId Id of the div where the form will be rendered
 */
+
+const ESCOLHA_MULTIPLA = 12; //Primary Key na base de dados de uma pergunta de escolha multipla
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
@@ -42,10 +44,6 @@ var FormManager = class {
         return formObj
     }
 
-    isSubcampo(campoObj){
-        return (campoObj && campoObj.fields.campo_relacionado!=null)? true : false;
-    }
-
     /* colapse html campos*/
     colapseCampos(items) {
         items.find('.card-header, .campos-config').addClass('is-hidden');
@@ -64,11 +62,11 @@ var FormManager = class {
     * Shows html campo element as active and updates activeCampo variable
     * @param {JQuery Object} htmlQuestionItem
     */
-    activateCampo(campo) {
+    activateCampo(campoHtml) {
         var todosCampos = $('.campos-item');
         this.colapseCampos(todosCampos);
-        this.expandCampos(campo)
-        form.activeCampo = form.getCampoById(campo.data('id'));
+        this.expandCampos(campoHtml)
+        form.activeCampo = form.getCampoById(campoHtml.data('id'));
     }
 
 
@@ -102,13 +100,12 @@ var FormManager = class {
         tiposCamposHtml.each(
             (i, tipocampo ) => ($(tipocampo).data('id') == tipoCampoId) ? result = $(tipocampo) : null
         )
-        console.log(result)
         return result.clone()
     }
 
     setCampoEventListeners(campoHtml){
         var form = this;
-
+    
         campoHtml.find('.campos-delete-btn').click(function () {
             form.deleteCampo($(this).data('id'), $(this).data('campo-relacionado'));
         })
@@ -116,13 +113,12 @@ var FormManager = class {
             e.stopPropagation();
             form.moveCampo($(this).data('id'), -1, $(this).data('campo-relacionado'));
         })
+        campoHtml.find('.campos-create').click(function (e) {
+            form.createCampo(ESCOLHA_MULTIPLA, $(this).data('campo-relacionado')); 
+        })
         campoHtml.find('.campos-move-down').click(function (e) {
             e.stopPropagation();
             form.moveCampo($(this).data('id'), 1, $(this).data('campo-relacionado'));
-        })
-        campoHtml.find('.campos-create').click(function (e) {
-            e.stopPropagation();
-            form.createCampo($(this).data('tipocampoid'), $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campo__conteudo').change(function () {
             form.updateCampo($(this).data('id'), $(this).val(), $(this).data('campo-relacionado'));
@@ -185,7 +181,7 @@ var FormManager = class {
     * @param {object} campo object.
     * @param {int} (optional) campo index position in the list of campos.
     */
-    renderCampo(formDivId, campoObj, campoPosicao = null, focus = false) {
+    renderCampo(formDivId, campoObj, campoPosicao = null) {
         //update positions
         var form = this;
         if (campoPosicao >= 0)
@@ -242,10 +238,15 @@ var FormManager = class {
         this.container.html('');
         this.renderFormulario()
         //render fields
-        this.campos.forEach((q, i) => this.renderCampo('form-1', q, i));
+        this.campos.forEach((campo, i) => this.renderCampo('form-1',campo, i));
     }
 
     /** MANIPULATE OBJECT **/
+
+    isSubcampo(campoObj){
+        return (campoObj && campoObj.fields.campo_relacionado!=null)? true : false;
+    }
+    
     /*
     * Selects a campo by id
     * @param {int} campo id/pk .
@@ -314,6 +315,30 @@ var FormManager = class {
     }
 
 
+
+        /*
+    * Creates a campo
+    * @param {int} campo type pk.
+    */
+        createSubCampo(tipocampo, campoRelacionado=null) {
+            var campos = this.subcampos;
+          
+            var campoObj = {
+                "model": "forms_manager.campo",
+                "pk":  (campos.length+1)*-1,
+                "fields": {
+                    "conteudo": "",
+                    "tipocampoid": tipocampo,
+                    "position_index": 0,
+                    "campo_relacionado": campoRelacionado,
+                }
+            }
+    
+            campos.push(campoObj);
+    
+            this.renderAll();
+        }
+
     /*
     * Creates a campo
     * @param {int} campo type pk.
@@ -321,6 +346,8 @@ var FormManager = class {
     createCampo(tipocampo, campoRelacionado=null) {
         var campos;
         if (campoRelacionado){
+            console.log(tipocampo, campoRelacionado); 
+
             campos = this.subcampos;
         }
         else{
@@ -330,17 +357,21 @@ var FormManager = class {
         // this way it will always be in sync with the database
         var campoObj = {
             "model": "forms_manager.campo",
-            "pk": null,
+            "pk":  (campos.length+1)*-1,
             "fields": {
                 "conteudo": "",
                 "tipocampoid": tipocampo,
-                "text_field": "asd",
-                "position_index": 1,
+                "position_index": 0,
                 "campo_relacionado": campoRelacionado,
-                "form": 6
             }
         }
+
+        if(tipocampo==ESCOLHA_MULTIPLA && campoRelacionado==null )
+        {
+            this.createSubCampo(ESCOLHA_MULTIPLA, campoObj.pk);
+        }
         campos.push(campoObj);
+
         this.renderAll();
     }
 
@@ -373,6 +404,8 @@ var FormManager = class {
             headers: {'X-CSRFToken': csrftoken},
             data: JSON.stringify(this),
             dataType: 'json',
+            
+
             success: function(response) {
                 console.log(response);
             },

@@ -25,6 +25,7 @@ class Gcp(models.Model):
 
 
 
+
 class ProponenteExterno(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     profissao = models.CharField(max_length=255, blank=True, null=True)

@@ -37,7 +37,7 @@ class FormList(ListView):
         context = super().get_context_data(**kwargs)
         # tiposForm = Tipoformulario.objects.all()
         template = Formulario.objects.filter(is_template = 1)
-        categoria = Tipoformulario.objects.all()[:3]
+        categoria = Tipoformulario.objects.all()[:3] #TODO
         context['tiposForm'] = template
         # context['categorias'] = caterogias_tipo_formulario
         context['categorias'] = categoria
@@ -88,17 +88,31 @@ class FormHandling():
                 campo.obrigatorio = False
         return serializers.serialize("json",campos)
     
+    def saveCampos(self, campos):
+        if(campos):
+            # c = Campos.objects.filter()
+            printspecial(campos)
+        else:
+            printspecial(campos)
+
     
     def post(self, *args, **kwargs):
         if self.request.is_ajax():
             if self.request.method == 'POST':
                 objects_dict = json.loads(self.request.body)
+                printspecial(objects_dict)
+                ## 1. Save Formulario fields
                 formulario = objects_dict['formulario'] 
                 f  = Formulario.objects.filter(pk=formulario['pk'])
                 f.update(**formulario['fields'])
+                ## 2. Save Campos fields
+                campos = objects_dict['campos']
+                self.saveCampos(campos)
+                    
                 ##TODO campos, tipo de campos, relacao campoformulario
+
                 print(f[0].nome)
-        return JsonResponse({'foo': 'bar'})
+        return JsonResponse({'Save': 'Ok'})
 
         return super().post(*args, **kwargs)
 
