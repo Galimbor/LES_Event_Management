@@ -52,7 +52,7 @@
                                 </p>
                             </div>
                             {% for tipo_campo in tipos_campo %}
-                            <a class="panel-block" onclick="form.createCampo($(this).data('id'));" data-id={{tipo_campo.pk}}>
+                            <a class="panel-block create-campo-from-tipo"  data-id={{tipo_campo.pk}}>
                                 <span class="panel-icon">
                                     <i class="fas fa-book" aria-hidden="true"></i>
                                 </span>
@@ -75,7 +75,7 @@
 
 <!-- TEMPLATE DE CAMPO-->
 
-<div class="campos-item is-hidden" id="campo-template-base">
+<div class="campos-item campos-item-parent is-hidden" id="campo-template-base">
     <header class="card-header is-hidden">
         <p class="card-header-title tipocampo_nome">
             Pergunta
@@ -116,11 +116,11 @@
 
 
 <!-- TEMPLATE DE SUBCAMPO-->
-<div class="block columns campos-item " id="subcampo-template-base">
+<div class="block columns campos-item campos-item-child" id="subcampo-template-base">
     <div class="column">
         <div class="campo-content"></div>
     </div>
-    <div class="column is-one-fifth">
+    <div class="column is-3">
         <div class="campos-config is-hidden">
             <button class="button campos-create">
                 <span class="icon is-small">

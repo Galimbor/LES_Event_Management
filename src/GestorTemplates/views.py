@@ -111,7 +111,7 @@ class FormHandling():
                     
                 ##TODO campos, tipo de campos, relacao campoformulario
 
-                print(f[0].nome)
+                print(len(campos))
         return JsonResponse({'Save': 'Ok'})
 
         return super().post(*args, **kwargs)

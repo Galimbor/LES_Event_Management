@@ -19,9 +19,12 @@ var FormManager = class {
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
 
-        var form = this;
+        let form = this;
         // collapse campos when clicking outside
         $(window).click(e => form.colapseCampos($('.campos-item')));
+
+        $('.button.save-form').click(e => form.saveRemotely())
+
     }
 
 
@@ -60,13 +63,18 @@ var FormManager = class {
 
     /*
     * Shows html campo element as active and updates activeCampo variable
-    * @param {JQuery Object} htmlQuestionItem
+    * @param {JQuery Object} campoHtml
+    * Note: works on jquery object (campoHtml) only. To activate campo 
+    * using a campoObj we have to set form.activeCampo = campoObj
     */
     activateCampo(campoHtml) {
         var todosCampos = $('.campos-item');
         this.colapseCampos(todosCampos);
         this.expandCampos(campoHtml)
-        form.activeCampo = form.getCampoById(campoHtml.data('id'));
+        this.activeCampo = form.getCampoById(campoHtml.data('id'));
+        $('html, body').animate({
+            scrollTop: campoHtml.offset().top
+        });
     }
 
 
@@ -92,9 +100,9 @@ var FormManager = class {
 
     /*
     * Obtem o template HTML do tipo de campo
-    * @param {int} campoId
+    * @param {int} tipoCampoId
     */
-    getCampoHtml(tipoCampoId){
+    getTipoCampoHtmlTemplate(tipoCampoId){
         var result;
         var tiposCamposHtml = $('.campos-template-wrap').find('.campo-template')
         tiposCamposHtml.each(
@@ -103,10 +111,19 @@ var FormManager = class {
         return result.clone()
     }
 
+    /*
+    * Obtem o HTML de um determinado campo
+    * @param {int} campoId
+    */
+    getCampoHtml(campoId){
+        return $(`.campos-item[data-id=${campoId}]`).not('[data-campo-relacionado]')
+    }
+
     setCampoEventListeners(campoHtml){
         var form = this;
     
-        campoHtml.find('.campos-delete-btn').click(function () {
+        campoHtml.find('.campos-delete-btn').click(function (e) {
+            e.stopPropagation();
             form.deleteCampo($(this).data('id'), $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campos-move-up').click(function (e) {
@@ -114,6 +131,7 @@ var FormManager = class {
             form.moveCampo($(this).data('id'), -1, $(this).data('campo-relacionado'));
         })
         campoHtml.find('.campos-create').click(function (e) {
+            e.stopPropagation();
             form.createCampo(ESCOLHA_MULTIPLA, $(this).data('campo-relacionado')); 
         })
         campoHtml.find('.campos-move-down').click(function (e) {
@@ -127,7 +145,7 @@ var FormManager = class {
             var campo = form.getCampoById($(this).data('id'));
             campo.fields.obrigatorio = $(this).is(':checked');
         })
-        campoHtml.click(function (e) {
+        campoHtml.not('[data-campo-relacionado]').click(function (e) {
             e.stopPropagation();
             form.activateCampo($(this));
         })
@@ -144,7 +162,7 @@ var FormManager = class {
         var baseTemplateId = isSubcampo? '#subcampo-template-base': '#campo-template-base';
         var campoHtml = $(baseTemplateId).clone();
         campoHtml.find('.campo-content').html(
-            this.getCampoHtml(campoObj.fields.tipocampoid)
+            this.getTipoCampoHtmlTemplate(campoObj.fields.tipocampoid)
         );
         
         //pass data id for action buttons and input fields
@@ -166,9 +184,8 @@ var FormManager = class {
 
         //fill data
         this.setHtmlData(campoObj, campoHtml);
-
-        if (campoObj == this.activeCampo)
-            form.activateCampo(campoHtml);
+        //if (campoObj == this.activeCampo)
+        //    this.activateCampo(campoHtml);
         
         this.setCampoEventListeners(campoHtml);
 
@@ -225,7 +242,11 @@ var FormManager = class {
             $('.formulario__nome').html($(this).val());
         })
         $('.button.ver_form_config').click(e => $('.modal.ver_form_config').addClass('is-active'))
-        $('.button.save-form').click(e => form.saveRemotely())
+
+        $('.create-campo-from-tipo').click(function (e) {
+            e.stopPropagation();
+            form.createCampo($(this).data('id'), $(this).data('campo-relacionado'));
+        })
 
 
     }
@@ -237,8 +258,10 @@ var FormManager = class {
         //render form
         this.container.html('');
         this.renderFormulario()
-        //render fields
+        //render campos
         this.campos.forEach((campo, i) => this.renderCampo('form-1',campo, i));
+        if(this.activeCampo)
+            this.activateCampo(this.getCampoHtml(this.activeCampo.pk))
     }
 
     /** MANIPULATE OBJECT **/
@@ -306,7 +329,9 @@ var FormManager = class {
         else{
             campoObj = form.getCampoById(campoID, this.campos)
             campos = this.campos
+            //all child objects must be deleted as well
         }
+        this.activeCampo = null;
 
         if (campoObj) {
             campos.splice(campoObj.array_index, 1);
@@ -322,7 +347,6 @@ var FormManager = class {
     createCampo(tipocampo, campoRelacionado=null) {
         var campos;
         if (campoRelacionado){
-            console.log(tipocampo, campoRelacionado); 
 
             campos = this.subcampos;
         }
@@ -343,11 +367,11 @@ var FormManager = class {
         }
 
         if(tipocampo==ESCOLHA_MULTIPLA && campoRelacionado==null )
-        {
             this.createCampo(ESCOLHA_MULTIPLA, campoObj.pk);
-        }
-        campos.push(campoObj);
+        if(campoRelacionado==null)
+            this.activeCampo = campoObj
 
+        campos.push(campoObj);
         this.renderAll();
     }
 

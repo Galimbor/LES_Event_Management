@@ -2,6 +2,11 @@
 
 {% block title %}- Página Inicial{% endblock title %}
 
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
 {% block content %}
 {% load static %}
 <div>
@@ -27,15 +32,17 @@
           <section class="modal-card-body">
             <article class="panel is-primary" id="tipos-formulario">
               <p class="panel-tabs">
-                <a class="tipoFormulario is-active" data-id="all"  data-tipo="0" onclick="filterCategory($(this))">Todos</a>
+                <a class="tipoFormulario is-active" data-id="all" data-tipo="0"
+                  onclick="filterCategory($(this))">Todos</a>
                 {% for tipoFormulario in categorias %}
-                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}" onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
+                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}"
+                  onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
                 {% endfor %}
               </p>
 
               <div class="panel-block search">
                 <p class="control has-icons-left">
-                  <input class="input is-primary"  id="search-by-name" type="text" placeholder="Search">
+                  <input class="input is-primary" id="search-by-name" type="text" placeholder="Search">
                   <span class="icon is-left">
                     <i class="fas fa-search" aria-hidden="true"></i>
                   </span>
@@ -48,8 +55,11 @@
                 Em branco
               </a>
               {% for templateFormulario in tiposForm %}
-              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
-                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
+              <a class="panel-block is-active category"
+                href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}"
+                id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}"
+                data-search="{{templateFormulario.nome}}">
                 <span class="panel-icon">
                   <i class="fas fa-book" aria-hidden="true"></i>
                 </span>
@@ -68,6 +78,103 @@
     </div>
 
   </div>
+
+  <div class="section">
+    <div class="columns">
+      <div class="column ">
+  
+        <table id="example" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>Visibilidade</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr>
+              <td>{{obj.id}}</td>
+              <td>{{obj.nome}}</td>
+              <td>{{obj.get_visibilidade_display}}</td>
+  
+            </tr>
+            {% endfor %}
+          </tbody>
+  
+        </table>
+      </div>
+      <div class="column is-3">
+        <nav class="panel">
+          <p class="panel-heading">
+            Repositories
+          </p>
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input class="input" type="text" placeholder="Search">
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+          <p class="panel-tabs">
+            <a class="is-active">All</a>
+            <a>Public</a>
+            <a>Private</a>
+            <a>Sources</a>
+            <a>Forks</a>
+          </p>
+          <a class="panel-block is-active">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            bulma
+          </a>
+          <a class="panel-block">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            marksheet
+          </a>
+          <a class="panel-block">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            minireset.css
+          </a>
+          <a class="panel-block">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            jgthms.github.io
+          </a>
+          <a class="panel-block">
+            <span class="panel-icon">
+              <i class="fas fa-code-branch" aria-hidden="true"></i>
+            </span>
+            daniellowtw/infboard
+          </a>
+          <a class="panel-block">
+            <span class="panel-icon">
+              <i class="fas fa-code-branch" aria-hidden="true"></i>
+            </span>
+            mojs
+          </a>
+          <label class="panel-block">
+            <input type="checkbox">
+            remember me
+          </label>
+          <div class="panel-block">
+            <button class="button is-link is-outlined is-fullwidth">
+              Reset all filters
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+
   <div class="columns is-multiline">
     {% for obj in object_list %}
     <div class="column is-3">
@@ -98,6 +205,8 @@
     </div>
     {% endfor %}
   </div>
+
+
 </div>
 
 </div>
@@ -119,24 +228,7 @@
 </div>
 
 
-<table class="table">
-  <thead>
-    <tr>
-      <th><abbr title="Position">Pos</abbr></th>
-      <th>Team</th>
-      <th>Qualification or relegation</th>
-    </tr>
-  </thead>
-  <tbody>
 
-   
-    <tr>
-      <th>4</th>
-      <td><a href="https://en.wikipedia.org/wiki/Manchester_City_F.C." title="Manchester City F.C.">Manchester City</a></td>
-      <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Play-off_round" title="2016–17 UEFA Champions League">Champions League play-off round</a></td>
-    </tr>
-  </tbody>
-</table> 
 <script>
 
   $('.dropdown').click(function () {
@@ -165,45 +257,45 @@
   });
 
 
-  function filterCategory(category){
+  function filterCategory(category) {
     // <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
 
     //Alterar empty form creation
     var url = "{% url 'create-form' 0 0 %}"
-    url = url.slice(0, -1)+ category.data('tipo')
-    console.log(  url )
+    url = url.slice(0, -1) + category.data('tipo')
+    console.log(url)
     $('.panel-block#empty').attr("href", url)
 
     //FILTER STUFF
     var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
 
     $('.tipoFormulario').removeClass('is-active');
-    if (category.data('id') != 'all'){
+    if (category.data('id') != 'all') {
       tiposCampo.addClass('is-hidden');
-      var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id')); 
+      var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id'));
       tiposCampoFiltrados.removeClass('is-hidden');
     }
-    else{
+    else {
       tiposCampo.removeClass('is-hidden');
     }
-    category.addClass('is-active'); 
+    category.addClass('is-active');
   }
 
-// SEARCH BY NAME 
-  $('.search #search-by-name').keyup( function(){
+  // SEARCH BY NAME 
+  $('.search #search-by-name').keyup(function () {
     var active_category = $('.tipoFormulario.is-active');
 
     var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
     var tiposCampoFiltrados1 = tiposCampo;
     //filtrar primeiro outra vez por categoria
-    if (active_category.data('id') != 'all'){
-     tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id')); 
+    if (active_category.data('id') != 'all') {
+      tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id'));
     }
     tiposCampoFiltrados1.addClass('is-hidden');
-    var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase()); 
+    var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase());
     tiposCampoFiltrados.removeClass('is-hidden');
 
-  }  
+  }
   )
 
   // *************** DELETE FORM ***************
@@ -224,10 +316,20 @@
 
 
 
-
-
-
-
+  $(document).ready(function () {
+    $('#example').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      }
+    });
+  });
 
 </script>
 {% endblock content%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock %}

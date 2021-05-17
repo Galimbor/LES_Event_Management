@@ -129,9 +129,16 @@
 
 {% block page_css%}
 <style>
-    .campos-item {
+    .campos-item-parent {
       margin-bottom:20px;
       border-left: 5px solid #ffffff;
+    }
+    .campos-item-child .column {
+      padding-bottom: 0%;
+      padding-left: 5%;
+    }
+    .campos-config {
+      margin-bottom: auto;
     }
 
     .campos-item:hover {
