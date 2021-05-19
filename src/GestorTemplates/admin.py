@@ -14,7 +14,9 @@ class QuestionInline(admin.TabularInline):
 
 @admin.register(Formulario)
 class FormAdmin(admin.ModelAdmin):
-     inlines = [
+    list_display = ('id', 'nome', 'updated','created')
+
+    inlines = [
          QuestionInline,
      ]
 

@@ -7,7 +7,7 @@ from Utilizadores.models import User, Gcp
 from django.core import serializers
 import json
 from django.http import JsonResponse
-
+from django.utils import timezone
 from django.contrib import messages
 
 # Apenas para demonstração. Esta view não deve estar na app forms_manager
@@ -110,8 +110,7 @@ class FormHandling():
                 else: 
                     updated_campo  = Campo.objects.filter(pk=campo['pk'])
                     updated_campo.update(**campos_dict_clean)
-
-        #trying to save empty form
+        #trying to save empty form ##TODO CHECK BACK LATER ON
         else:
             printspecial(campos)
 
@@ -122,6 +121,8 @@ class FormHandling():
                 objects_dict = json.loads(self.request.body)
                 ## 1. Save Formulario fields
                 formulario = objects_dict['formulario'] 
+                formulario['fields']['updated']=timezone.now()
+
                 f  = Formulario.objects.filter(pk=formulario['pk'])
                 f.update(**formulario['fields'])
                 ## 2. Save Campos fields
@@ -133,12 +134,31 @@ class FormHandling():
         return super().post(*args, **kwargs)
 
 
-
 class FormCreate(FormHandling, CreateView):
     model = Formulario
     fields = ['id']
     template_name = 'GestorTemplates/editar_formulario.html'
     success_url = reverse_lazy('form-list')
+
+
+    #Obtem todos os campos do formulario
+    def get_campos(self, formID):
+        campoIDs = CampoFormulario.objects.filter(formularioid = formID).values_list('campoid')
+        campos = Campo.objects.filter(id__in=campoIDs)
+        return campos
+
+    
+    
+    def duplicate_form(self, form):
+        todos_campos_form = self.get_campos(form.pk)
+        form.pk = None #django create new object by deleting his pk and the clone it
+        form.save()
+        form.created = timezone.now()
+        form.save()
+        for campo in todos_campos_form:
+            CampoFormulario.objects.create(campoid = campo, formularioid = form)
+
+
 
     def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
@@ -149,16 +169,15 @@ class FormCreate(FormHandling, CreateView):
         #create form based on a selected template
         if template_formID and formType:
             form = template_form_queryset.get(id = template_formID) # search for the specific template (event, inscricao, ...)
-            # create new based on the template        TODO missing clone questions as well    
-            # form.pk = None #django create new object by deleting his pk and the clone it
-            # form.save()
+            # create new based on the template            
+            self.duplicate_form(form)
         #new empty form --> selecting type of form (evento, inscricao, ...)
         elif template_formID and not formType:
-            form = Formulario.objects.create(tipoformularioid = formType )
+            form = Formulario.objects.create(tipoformularioid = formType, created = timezone.now())
         # create empty form without selecting type of form 
         else :
             gcp = Gcp.objects.get(id = self.request.user.id)
-            form = Formulario.objects.create(gcpid = gcp) ##TODO check campos obrigatrioressss ##TODO check utilizadores
+            form = Formulario.objects.create(gcpid = gcp, created = timezone.now()) ##TODO check campos obrigatrioressss ##TODO check utilizadores
         context['tipos_campo'] = Tipocampo.objects.all()
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)

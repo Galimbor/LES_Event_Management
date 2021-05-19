@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 # from Evento.models import Feedback, Evento
@@ -60,6 +61,8 @@ class Formulario(models.Model):
         default=0,
         verbose_name="É Template?",
     )
+    created = models.DateTimeField(db_column="DataCriado", default = timezone.now)
+    updated = models.DateTimeField(db_column="DataAtualizado", null=True, blank=True)
     tipoeventoid = models.ForeignKey(
         Tipoevento, models.DO_NOTHING, db_column="TipoEventoID", null=True
     )
@@ -71,6 +74,7 @@ class Formulario(models.Model):
     )  # Field name made lowercase.
 
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
+  
 
     class Meta:
         managed = True
