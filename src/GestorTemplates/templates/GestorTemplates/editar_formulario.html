@@ -14,12 +14,16 @@
      
       <div class="columns is-mobile">
         <div class="column">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-file-alt"></i>
-            </span>
-            <span class="has-text-weight-bold	formulario__nome">Formulário sem título</span> - <span>Guardado automaticamente</span>
-          </span>
+          <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+            <ul>
+              <li><a href="{% url 'form-list' %}">Formulários</a></li>
+              <li class="is-active">
+                <a href="#" aria-current="page">
+                  <span class="has-text-weight-bold	formulario__nome">Formulário sem título</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
         <div class="column">
           <div class="buttons is-pulled-right">
@@ -107,7 +111,8 @@
     var campos_raw = '{{campos_json | safe}}';
     var subcampos_raw = '{{subcampos_json | safe}}';
     // var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
-    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw);
+    let success_url ='{{ success_url | safe }}'
+    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw, success_url);
     form.renderAll();
 
 </script>

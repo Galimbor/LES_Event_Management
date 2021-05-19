@@ -10,86 +10,95 @@
 {% block content %}
 {% load static %}
 <div>
-  <div class="section">
-    <div class="columns">
+  <section class="form-menu">
+
+    <div class="columns is-mobile">
       <div class="column">
-        <h1 class="title">Os Meus Formulários</h1>
+        <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+          <ul>
+            <li class="is-active">
+              <a href="#" aria-current="page">
+                <span class="has-text-weight-bold">Formulários</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <button class="button is-success" id="openModal-newForm">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
-        </span>
-        <span>Novo</span>
-      </button>
-
-      <div class="modal" id="modal-newForm">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Selecione o tipo de Formulário</p>
-            <button class="close-modal delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <article class="panel is-primary" id="tipos-formulario">
-              <p class="panel-tabs">
-                <a class="tipoFormulario is-active" data-id="all" data-tipo="0"
-                  onclick="filterCategory($(this))">Todos</a>
-                {% for tipoFormulario in categorias %}
-                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}"
-                  onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
-                {% endfor %}
-              </p>
-
-              <div class="panel-block search">
-                <p class="control has-icons-left">
-                  <input class="input is-primary" id="search-by-name" type="text" placeholder="Search">
-                  <span class="icon is-left">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </span>
-                </p>
-              </div>
-              <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
-                <span class="panel-icon ">
-                  <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-                </span>
-                Em branco
-              </a>
-              {% for templateFormulario in tiposForm %}
-              <a class="panel-block is-active category"
-                href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}"
-                id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
-                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}"
-                data-search="{{templateFormulario.nome}}">
-                <span class="panel-icon">
-                  <i class="fas fa-book" aria-hidden="true"></i>
-                </span>
-                {{templateFormulario.nome}}
-              </a>
-              {% endfor %}
-            </article>
-          </section>
+      <div class="column">
+        <div class="buttons is-pulled-right">
+          <button class="button is-success" id="openModal-newForm">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Novo</span>
+          </button>
 
         </div>
       </div>
-
-
-
-
     </div>
 
+    <!--Novo Formulario Modal-->
+  </section>
+  <div class="modal" id="modal-newForm">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Selecione o tipo de Formulário</p>
+        <button class="close-modal delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <article class="panel is-primary" id="tipos-formulario">
+          <p class="panel-tabs">
+            <a class="tipoFormulario is-active" data-id="all" data-tipo="0" onclick="filterCategory($(this))">Todos</a>
+            {% for tipoFormulario in categorias %}
+            <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}"
+              onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
+            {% endfor %}
+          </p>
+
+          <div class="panel-block search">
+            <p class="control has-icons-left">
+              <input class="input is-primary" id="search-by-name" type="text" placeholder="Search">
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+          <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+            Em branco
+          </a>
+          {% for templateFormulario in tiposForm %}
+          <a class="panel-block is-active category"
+            href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}"
+            id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+            data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            {{templateFormulario.nome}}
+          </a>
+          {% endfor %}
+        </article>
+      </section>
+
+    </div>
   </div>
+
 
   <div class="section">
     <div class="columns">
       <div class="column ">
-  
+
         <table id="example" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
           <thead>
             <tr>
               <th>#</th>
               <th>Nome</th>
               <th>Visibilidade</th>
-  
+
             </tr>
           </thead>
           <tbody>
@@ -98,11 +107,11 @@
               <td>{{obj.id}}</td>
               <td>{{obj.nome}}</td>
               <td>{{obj.get_visibilidade_display}}</td>
-  
+
             </tr>
             {% endfor %}
           </tbody>
-  
+
         </table>
       </div>
       <div class="column is-3">

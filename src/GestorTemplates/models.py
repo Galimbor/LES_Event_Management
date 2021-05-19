@@ -115,6 +115,7 @@ class Campo(models.Model):
         "Tipocampo", models.CASCADE, db_column="TipoCampoID"
     )  # Field name made lowercase.
     campo_relacionado = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
+    position_index = models.IntegerField(default = 0,  db_column="Posicao")
     respostapossivelid = models.ForeignKey(
         "Respostaspossiveis",
         models.DO_NOTHING,

@@ -32,7 +32,7 @@ class TipoCampoAdmin(admin.ModelAdmin):
 @admin.register(Campo)
 class CampoAdmin(admin.ModelAdmin):
     list_filter = ('tipocampoid',)
-    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado', 'get_obrigatorio')
+    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado','position_index' , 'get_obrigatorio')
 
     
     def get_obrigatorio(self, obj):

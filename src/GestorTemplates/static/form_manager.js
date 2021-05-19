@@ -12,12 +12,13 @@ const ESCOLHA_MULTIPLA = 12; //Primary Key na base de dados de uma pergunta de e
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
-    constructor(formularioJson, camposJson, subcamposJson, containerDivId = 'form-wrapper') {
+    constructor(formularioJson, camposJson, subcamposJson, success_url, containerDivId = 'form-wrapper') {
         this.formulario = JSON.parse(formularioJson)[0];
         this.campos = JSON.parse(camposJson);
         this.subcampos = JSON.parse(subcamposJson);
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
+        this.success_url = success_url;
 
         let form = this;
         // collapse campos when clicking outside
@@ -363,6 +364,8 @@ var FormManager = class {
                 "tipocampoid": tipocampo,
                 "position_index": 0,
                 "campo_relacionado": campoRelacionado,
+                "obrigatorio": false,
+                "respostapossivelid": null
             }
         }
 
@@ -394,10 +397,13 @@ var FormManager = class {
         campoObj.fields.conteudo = val;
     }
 
+
+
     /*
     * Posts form
     */
     saveRemotely() {
+        let success_url = this.success_url
         $.ajax({
             contentType: 'application/json; charset=utf-8',
             type: 'POST',
@@ -407,7 +413,9 @@ var FormManager = class {
             
 
             success: function(response) {
-                console.log(response);
+                if(response.status == 'ok'){
+                    location.replace(success_url);
+                }
             },
             error: function(response) {
                 console.log(response);

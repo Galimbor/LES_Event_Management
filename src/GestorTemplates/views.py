@@ -68,7 +68,7 @@ class FormHandling():
 
     def campos_to_json(self, formID):
         todos_campos_form = self.get_campos(formID) #todos os campos incluindo os da escolha multipla
-        campos = todos_campos_form.filter(campo_relacionado = None) #campos parent
+        campos = todos_campos_form.filter(campo_relacionado = None).order_by('position_index') #campos parent
         for campo in campos:
             if campo.obrigatorio == b'\x01':
                 campo.obrigatorio = True
@@ -79,7 +79,7 @@ class FormHandling():
     
     def subcampos_to_json(self, formID):
         todos_campos_form = self.get_campos(formID) #todos os campos incluindo os da escolha multipla
-        campos = todos_campos_form.filter(campo_relacionado__gt = 0) #campos filho (opcoes de escolha ...)
+        campos = todos_campos_form.filter(campo_relacionado__gt = 0).order_by('position_index') #campos filho (opcoes de escolha ...)
         printspecial(campos)
         for campo in campos:
             if campo.obrigatorio == b'\x01':
@@ -88,10 +88,30 @@ class FormHandling():
                 campo.obrigatorio = False
         return serializers.serialize("json",campos)
     
-    def saveCampos(self, campos):
+    #Cleans data for creating Campo objects
+    #@returns clean dictionary for rapid object create
+    def clean_form(self, campos_dict):
+        printspecial(campos_dict)
+        tipo_campo = Tipocampo.objects.get(id = campos_dict['fields']['tipocampoid'])
+        campos_dict['fields']['tipocampoid'] = tipo_campo
+        return campos_dict['fields']
+
+
+    def saveCampos(self,  objects_dict, formulario):
+        campos = objects_dict['campos']
         if(campos):
-            # c = Campos.objects.filter()
-            printspecial(campos)
+            for campo in campos:
+                campos_dict_clean = self.clean_form(campo)
+                #add new Campo to Formulario
+                if(not Campo.objects.filter(pk=campo['pk']).exists()):
+                    new_campo = Campo.objects.create(**campos_dict_clean)
+                    CampoFormulario.objects.create(campoid = new_campo, formularioid = formulario)
+                #update existing Campo
+                else: 
+                    updated_campo  = Campo.objects.filter(pk=campo['pk'])
+                    updated_campo.update(**campos_dict_clean)
+
+        #trying to save empty form
         else:
             printspecial(campos)
 
@@ -100,19 +120,15 @@ class FormHandling():
         if self.request.is_ajax():
             if self.request.method == 'POST':
                 objects_dict = json.loads(self.request.body)
-                printspecial(objects_dict)
                 ## 1. Save Formulario fields
                 formulario = objects_dict['formulario'] 
                 f  = Formulario.objects.filter(pk=formulario['pk'])
                 f.update(**formulario['fields'])
                 ## 2. Save Campos fields
-                campos = objects_dict['campos']
-                self.saveCampos(campos)
-                    
-                ##TODO campos, tipo de campos, relacao campoformulario
+                printspecial(objects_dict)
+                self.saveCampos(objects_dict, f[0])
 
-                print(len(campos))
-        return JsonResponse({'Save': 'Ok'})
+        return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
         return super().post(*args, **kwargs)
 
@@ -148,8 +164,11 @@ class FormCreate(FormHandling, CreateView):
         context['campos_json'] = self.campos_to_json(form.id)
         context['subcampos_json'] = self.subcampos_to_json(form.id)
         context['tipos_campo_json'] = serializers.serialize("json", Tipocampo.objects.all())
+        context['success_url'] = reverse_lazy('edit-form',kwargs={'pk': form.id})
         return context
 
+    # def get(self, request):
+    #     return redirect
 
 
 
