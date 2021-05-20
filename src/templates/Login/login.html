@@ -8,22 +8,24 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Log In</h1>
-                    <form class="box" id="form" name="form" method="post">
+                    
+                    <form class="box form" id="form" name="form" method="post">
+                        <h1 class="title title-form">Log In</h1>
                             {{ message }}
                         {% csrf_token %}
+                        
                         <div class="form-group-c">
-                            <label>Username
+                            <label class="label">Username
                                 <input class="input-clean" type="text" name="username">
                             </label>
                         </div>
                         <div class="form-group-c">
-                            <label>Password
+                            <label class="label">Password
                                 <input class="input-clean" type="password" name="password">
                             </label>
                         </div>
 
-                        <input type='Submit' value='Save'>
+                        <input class="button-submit" type='Submit' value='Save'>
                     </form>
                 </div>
             </div>

@@ -5,122 +5,107 @@
 {% block content %}
     {% load static %}
 
-
-
-
-
-    <div>
-        <div class="section">
-            <div class="columns">
-                <div class="column">
-                    <h1 class="title">Eventos</h1>
+    <div class="columns">
+        <div class="is-three-quarters">
+            <table id="example" class="table is-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obj in eventos %}
+                    <tr  data-id="{{ obj.id }}" class="evento-selector">
+                        <td class="td">{{ obj.nome }}</td>
+                        <td class="td">{{ obj.horario.datainicial }} - {{ obj.horario.datafinal }}</td>
+                        <td class="td">{{ obj.horario.horainicial }} - {{ obj.horario.horafinal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Título</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="column">
+            <nav class="panel">
+                <p class="panel-heading">
+                  Filtros
+                </p>
+                <div class="panel-block">
+                  <p class="control has-icons-left">
+                    <input class="input" type="text" placeholder="Search">
+                    <span class="icon is-left">
+                      <i class="fas fa-search" aria-hidden="true"></i>
+                    </span>
+                  </p>
                 </div>
-            <div class="column">
-{% if messages %}
-
-
-    <article class="message is-success">
-    {% for message in messages %}
-  <div class="message-header">
-    <p>Success</p>
-    <button class="delete" aria-label="delete"></button>
-  </div>
-  <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-    {{ message }}
-  </div>
-       {% endfor %}
-</article>
-
-{% endif %}
-            </div>
-            </div>
-            <div class="columns is-multiline">
-                {% for obj in eventos %}
-                    <div class="column is-half">
-                        <div class="card pointer" style="min-height: 10px;"  >
-                            <header class="card-header has-text-centered">
-                                <p class="card-header-title is-centered">
-                                    {{ obj.nome }}
-                                </p>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    <p><strong>Descrição: </strong></p>
-                                    <p>{{ obj.descricaogeral | truncatechars:255  }}</p>
-                                    <br>
-                                    <p><strong>Data: </strong></p>
-                                    <time datetime="2016-1-1">
-                                        {{ obj.horario.datainicial }}
-                                        {{ obj.horario.horainicial }}  </time>
-                                    -
-                                    <time datetime="2016-1-1">
-                                        {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
-                                    <br>
-                                    <br>
-                                    {% if obj.estado == 'Logistica Pendente' %}
-                                        <strong>Logisticas:</strong>
-                                        {% for obj_l in logistica %}
-
-                                            {% if obj_l.eventoid == obj %}
-                                                <br>
-                                                - {{ obj_l.nome }}
-                                                <br>
-                                            {% endif %}
-                                        {% endfor %}
-
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <footer class="card-footer">
-                                <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
-                                   class="card-footer-item dark-a">Inscrever</a>
-                                <a href="{% url 'Feedback:create_feedback' eventoid=obj.id %}"
-                                   class="card-footer-item dark-a">Enviar
-                                    feedback</a>
-                            </footer>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar
-                    este formulário?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
+                <a class="panel-block is-active">
+                  <span class="panel-icon">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                  </span>
+                  Palestras
+                </a>
+                <a class="panel-block">
+                  <span class="panel-icon">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                  </span>
+                  Dia Aberto
+                </a>
+                <a class="panel-block">
+                  <span class="panel-icon">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                  </span>
+                  Talk
+                </a>
+                <div class="panel-block">
+                  <button class="button is-link is-outlined is-fullwidth">
+                    Reset all filters
+                  </button>
+                </div>
+              </nav>
         </div>
     </div>
+    
+
+
 
     <script>
-
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function () {
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
-
-
+        $(document).ready(function () {
+        $('#example').DataTable({
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+          }
         });
+      });
 
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
 
-        function deleteForm(id) {
-            deleteFormModal.data(id).hide();
-        }
+
+    //   Get event clicable
+      const event = document.querySelectorAll('.evento-selector');
+      console.log(event);
+      event.forEach(element => {
+        element.addEventListener('click', e => {
+        let url = `{% url 'Evento:view-event' event_id=123 %}`;
+        let id = element.dataset.id;
+
+        // Construct the full URL with "id"
+        document.location.href = url.replace('123', id);
+      })
+      });
 
 
     </script>
 {% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock %}

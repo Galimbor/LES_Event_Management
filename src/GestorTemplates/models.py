@@ -145,18 +145,6 @@ class CampoFormulario(models.Model):
     def __str__(self):
         return "Form: {} ---- Pergunta: {}".format(self.formularioid, self.campoid)
 
-
-class Respostaspossiveis(models.Model):
-    id = models.AutoField(
-        db_column="Id", primary_key=True
-    )  # Field name made lowercase.
-    nome = models.CharField(
-        db_column="Nome", max_length=255
-    )  # Field name made lowercase.
-
-    def __str__(self):
-        return self.nome
-
 class Resposta(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -198,3 +186,16 @@ class GcpFormulario(models.Model):
         managed = True
         db_table = "GCP_Formulario"
         unique_together = (("gcpid", "formularioid"),)
+
+
+class Respostaspossiveis(models.Model):
+    id = models.AutoField(
+        db_column="Id", primary_key=True
+    )  # Field name made lowercase.
+    nome = models.CharField(
+        db_column="Nome", max_length=255
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = "RespostasPossiveis"

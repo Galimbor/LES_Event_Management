@@ -17,8 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
     <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link rel="icon" href="{% static 'img/logo.png' %}"/>
@@ -60,10 +59,14 @@
 
         .footer {
             width: 100%;
-            background-color: #fff;
+            background-color: white;
             padding: 1rem 3rem;
             margin-top: 1.5rem;
-            color: black;
+            color: rgb(61, 61, 61);
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .step-item.is-completed {

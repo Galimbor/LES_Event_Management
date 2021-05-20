@@ -18,6 +18,15 @@
                         <div class="item-description">
                             {{ espaco.nome }}
                         </div>
+                        <div class="item-information">
+                            Quantidade: {{ espaco.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ espaco.horariorequisicao.datainicial }} - {{ espaco.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
+                        </div>
                         <div class="item-check">
                             <span class="mdi mdi-check"></span>
                             <span class="mdi mdi-close"></span>
