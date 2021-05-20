@@ -29,7 +29,6 @@ class EspacoForm(forms.ModelForm):
             'nome': forms.TextInput(attrs={'class': "input-clean"}),
             'tipo': forms.TextInput(attrs={'class': "input-clean"}),
             'capacidade': forms.TextInput(attrs={'class': "input-clean"}),
-            'mobilidade': forms.TextInput(attrs={'class': "input-clean"}),
         }
 
 

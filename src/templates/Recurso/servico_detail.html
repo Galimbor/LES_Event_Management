@@ -1,0 +1,42 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Criar Serviço{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column is-is-four-fifths">
+                    <h1 class="title">Editar Serviço</h1>
+
+                    <form class="box" id="form" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group-c">
+                            <label class="label" for=""> Nome: </label>
+                            {{ object.nome }}
+                        </div>
+                        <div class="form-group-c">
+                            <label class="label" for=""> Descrição: </label>
+                            {{ object.descricao }}
+                        </div>
+                        <div class="form-group-c">
+                            <label class="label" for=""> Empresa: </label>
+                            {{ object.empresaid }}
+                        </div>
+                        <div class="form-group-c">
+                            <label class="label" for=""> Unidade Orgânica: </label>
+                            {{ object.unidadeorganicaid }}
+                        </div>
+
+
+                        <input class="button is-primary" type='Submit' value='Guardar'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

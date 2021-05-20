@@ -9,8 +9,13 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Empresa</h1>
-
+                    <h1 class="title">
+                        {% if detail %}
+                            Editar Empresa
+                        {% else %}
+                            Criar Empresa
+                        {% endif %}
+                    </h1>
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
 
@@ -27,7 +32,7 @@
 
                         <div class="form-group-c">
                             <label class="label" for=""> Email: </label>
-                                {{ form.email }}
+                            {{ form.email }}
                         </div>
 
                         <div class="form-group-c">
@@ -46,7 +51,7 @@
                         </div>
 
                         <div class="form-group-c">
-                            <label class = "label" for=""> Código Postal: </label>
+                            <label class="label" for=""> Código Postal: </label>
                             {{ form.codigopostal }}
                         </div>
 
@@ -55,7 +60,11 @@
                             {{ form.faturacao }}
                         </div>
 
-                        <input class="button is-primary" type='Submit' value='Save'>
+                        {% if detail %}
+                            <input class="button is-primary" type='Submit' value='Guardar'>
+                        {% else %}
+                            <input class="button is-primary" type='Submit' value='Criar'>
+                        {% endif %}
                     </form>
                 </div>
             </div>

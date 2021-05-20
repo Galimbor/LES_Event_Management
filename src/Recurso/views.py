@@ -41,7 +41,7 @@ def recurso_detail(request, my_id):
     context = {
         'object': obj
     }
-    return render(request, "Recurso/recurso_detail.html", context)
+    return render(request, "Recurso/recurso_create.html", context)
 
 
 def recurso_delete(request, my_id):
@@ -66,9 +66,11 @@ def equipamento_create(request):
         empresa = request.POST.get('empresaid')
         if empresa is not None:
             fonte = 'Externa'
+            recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, equipamentoid=form.instance)
         else:
             fonte = 'Interna'
-        recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, empresaid=empresa, equipamentoid=form.instance)
+            recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, empresaid=empresa,
+                              equipamentoid=form.instance)
         recurso.save()
         return redirect('Recurso:equipamentos')
     context = {
@@ -79,11 +81,15 @@ def equipamento_create(request):
 
 
 def equipamento_detail(request, my_id):
-    obj = get_object_or_404(Recurso, id=my_id)
+    obj = get_object_or_404(Equipamento, id=my_id)
+    form = EquipamentoForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
     context = {
-        'object': obj
+        'form': form,
+        'detail': 1
     }
-    return render(request, "Recurso/equip_detail.html", context)
+    return render(request, "Recurso/equip_create.html", context)
 
 
 def equipamento_delete(request, my_id):
@@ -114,11 +120,15 @@ def espaco_create(request):
 
 
 def espaco_detail(request, my_id):
-    obj = get_object_or_404(Recurso, id=my_id)
+    obj = get_object_or_404(Espaco, id=my_id)
+    form = EspacoForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
     context = {
-        'object': obj
+        'form': form,
+        'detail': 1
     }
-    return render(request, "Recurso/espaco_detail.html", context)
+    return render(request, "Recurso/espaco_create.html", context)
 
 
 def espaco_delete(request, my_id):
@@ -155,13 +165,16 @@ def servico_create(request):
     return render(request, 'Recurso/servico_create.html', context)
 
 
-# TODO
 def servico_detail(request, my_id):
     obj = get_object_or_404(Servico, id=my_id)
+    form = ServicoForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
     context = {
-        'object': obj
+        'form': form,
+        'detail': 1
     }
-    return render(request, "Recurso/servico_detail.html", context)
+    return render(request, "Recurso/servico_create.html", context)
 
 
 def servico_delete(request, my_id):
@@ -195,6 +208,19 @@ def empresa_delete(request, my_id):
     return redirect('Recurso:empresas')
 
 
+def empresa_detail(request, my_id):
+    obj = get_object_or_404(Empresa, id=my_id)
+    form = EmpresaForm(request.POST or None, instance=obj)
+    print(form.fields)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form,
+        'detail': 1
+    }
+    return render(request, "Recurso/empresa_create.html", context)
+
+
 def edificios(request):
     obj = Edificio.objects.all()
     context = {
@@ -218,6 +244,19 @@ def edificio_delete(request, my_id):
     obj = get_object_or_404(Edificio, id=my_id)
     obj.delete()
     return redirect('Recurso:edificios')
+
+
+def edificio_detail(request, my_id):
+    obj = get_object_or_404(Edificio, id=my_id)
+    form = EdificioForm(request.POST or None, instance=obj)
+    print(form.fields)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form,
+        'detail': 1
+    }
+    return render(request, "Recurso/edificio_create.html", context)
 
 
 def unidadesorganicas(request):
@@ -245,6 +284,19 @@ def unidadeorganica_delete(request, my_id):
     return redirect('Recurso:unidades-organicas')
 
 
+def unidadeorganica_detail(request, my_id):
+    obj = get_object_or_404(Unidadeorganica, id=my_id)
+    form = UnidadeOrganicaForm(request.POST or None, instance=obj)
+    print(form.fields)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form,
+        'detail': 1
+    }
+    return render(request, "Recurso/unidade-organica_create.html", context)
+
+
 def universidades(request):
     obj = Universidade.objects.all()
     context = {
@@ -262,6 +314,18 @@ def universidade_create(request):
         'form': form,
     }
     return render(request, 'Recurso/universidade_create.html', context)
+
+
+def universidade_detail(request, my_id):
+    obj = get_object_or_404(Universidade, id=my_id)
+    form = UniversidadeForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form,
+        'detail': 1
+    }
+    return render(request, "Recurso/universidade_create.html", context)
 
 
 def universidade_delete(request, my_id):
@@ -287,6 +351,26 @@ def campus_create(request):
         'form': form,
     }
     return render(request, 'Recurso/campus_create.html', context)
+
+
+def campus_update(request, my_id):
+    obj = get_object_or_404(Campus, id=my_id)
+    form = CampusForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form,
+        'detail': 1
+    }
+    return render(request, "Recurso/campus_create.html", context)
+
+
+def campus_detail(request, my_id):
+    obj = get_object_or_404(Campus, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/campus_detail.html", context)
 
 
 def campus_delete(request, my_id):

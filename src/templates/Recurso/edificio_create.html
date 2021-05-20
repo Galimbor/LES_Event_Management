@@ -9,7 +9,13 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Edifício</h1>
+                            <h1 class="title">
+                        {% if detail %}
+                            Editar Edifício
+                        {% else %}
+                            Criar Edifício
+                        {% endif %}
+                    </h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
@@ -18,12 +24,16 @@
                             <label class="label" for="nome"> Nome: </label>
                             {{ form.nome }}
 
-                             <div class="form-group-c">
-                            <label class="label" for="campus"> Campus: </label>
-                            {{ form.campusid }}
+                            <div class="form-group-c">
+                                <label class="label" for="campus"> Campus: </label>
+                                {{ form.campusid }}
+                            </div>
+                            {% if detail %}
+                                <input class="button is-primary" type='Submit' value='Guardar'>
+                            {% else %}
+                                <input class="button is-primary" type='Submit' value='Criar'>
+                            {% endif %}
                         </div>
-
-                        <input class="button is-primary" type='Submit' value='Save'>
                     </form>
                 </div>
             </div>
