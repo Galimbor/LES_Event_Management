@@ -85,6 +85,7 @@ def equipamento_detail(request, my_id):
     form = EquipamentoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
+        return redirect("Recurso:equipamentos")
     context = {
         'form': form,
         'detail': 1
@@ -124,6 +125,7 @@ def espaco_detail(request, my_id):
     form = EspacoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
+        return redirect("Recurso:espacos")
     context = {
         'form': form,
         'detail': 1
@@ -140,7 +142,7 @@ def espaco_delete(request, my_id):
 def servicos(request):
     obj = Servico.objects.all()
     context = {
-        'object': obj
+        'object': obj,
     }
     return render(request, 'Recurso/servico_list.html', context)
 
@@ -170,6 +172,7 @@ def servico_detail(request, my_id):
     form = ServicoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
+        return redirect("Recurso:servicos")
     context = {
         'form': form,
         'detail': 1
@@ -186,7 +189,7 @@ def servico_delete(request, my_id):
 def empresas(request):
     obj = Empresa.objects.all()
     context = {
-        'object': obj
+    'object' :obj
     }
     return render(request, 'Recurso/empresa_list.html', context)
 
