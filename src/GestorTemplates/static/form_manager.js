@@ -397,12 +397,17 @@ var FormManager = class {
         campoObj.fields.conteudo = val;
     }
 
-
+    formValid(){
+        return $('#form').parsley().validate()
+    }
 
     /*
     * Posts form
     */
-    saveRemotely() {
+    saveRemotely() 
+    {
+        if(this.formValid())
+        {
         let success_url = this.success_url
         $.ajax({
             contentType: 'application/json; charset=utf-8',
@@ -424,4 +429,5 @@ var FormManager = class {
             }
         })
     }
+}
 };

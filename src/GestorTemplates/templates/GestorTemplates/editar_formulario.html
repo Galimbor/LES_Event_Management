@@ -118,6 +118,7 @@
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script> 
+<script type="text/javascript" src="https://elasticbeanstalk-eu-west-1-482533445157.s3-eu-west-1.amazonaws.com/LES/parsley_pt_pt.js"></script>
 <script type="text/javascript">
   $(function () {
     $('#form').parsley().on('field:validated', function() {
@@ -166,6 +167,17 @@
         .section{
             padding: 0rem;
         }
+    }
+
+    parsley-errors-list {
+      display: block;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      color: #f14668;
+    }
+
+    .input.parsley-error {
+      border-color: #f14668;
     }
 </style>
 {% endblock %}
