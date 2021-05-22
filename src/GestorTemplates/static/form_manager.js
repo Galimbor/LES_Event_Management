@@ -69,12 +69,13 @@ var FormManager = class {
     * using a campoObj we have to set form.activeCampo = campoObj
     */
     activateCampo(campoHtml) {
-        var todosCampos = $('.campos-item');
+        let todosCampos = $('.campos-item');
         this.colapseCampos(todosCampos);
         this.expandCampos(campoHtml)
         this.activeCampo = form.getCampoById(campoHtml.data('id'));
+        let padding = $('#form-menu').height()+20
         $('html, body').animate({
-            scrollTop: campoHtml.offset().top
+            scrollTop: campoHtml.offset().top-padding
         });
     }
 
@@ -260,7 +261,8 @@ var FormManager = class {
         this.container.html('');
         this.renderFormulario()
         //render campos
-        this.campos.forEach((campo, i) => this.renderCampo('form-1',campo, i));
+        let campos = this.campos.filter(obj => !obj.hasOwnProperty('delete')? obj: null)
+        campos.forEach((c, i) => !c.delete? this.renderCampo('form-1', c, i): null);
         if(this.activeCampo)
             this.activateCampo(this.getCampoHtml(this.activeCampo.pk))
     }
@@ -315,31 +317,6 @@ var FormManager = class {
             this.renderAll();
         }
     }
-
-
-    /*
-    * Deletes a campo
-    * @param {int} campo id/pk.
-    */
-    deleteCampo(campoID, campoRelacionado=null) {
-        var campos, campoObj;
-        if (campoRelacionado){
-            campoObj = form.getCampoById(campoID, this.subcampos)
-            campos = this.subcampos;
-        }
-        else{
-            campoObj = form.getCampoById(campoID, this.campos)
-            campos = this.campos
-            //all child objects must be deleted as well
-        }
-        this.activeCampo = null;
-
-        if (campoObj) {
-            campos.splice(campoObj.array_index, 1);
-            this.renderAll();
-        }
-    }
-
 
     /*
     * Creates a campo
@@ -396,6 +373,46 @@ var FormManager = class {
         }
         campoObj.fields.conteudo = val;
     }
+
+    /*
+    * Deletes a campo
+    * @param {int} campo id/pk.
+    */
+    deleteCampo(campoID, campoRelacionado=null) {
+        let campos, campoObj;
+        this.activeCampo = null; 
+        if (campoRelacionado){
+            campoObj = form.getCampoById(campoID, this.subcampos)
+            campos = this.subcampos;
+        }
+        else{
+            campoObj = form.getCampoById(campoID, this.campos)
+            campos = this.campos
+        }
+        // if not saved in db yet, deletes normally
+        if (campoObj && campoObj.pk < 0) {
+            campos.splice(campoObj.array_index, 1);
+            this.renderAll();
+        }
+        // else, marks for deletion
+        else {
+            campoObj.delete=true
+            this.renderAll();
+        }
+    }
+
+    toggleSubCampos(toggleButton){
+        let campos = $('.campos-item');
+        if (campos.hasClass('campos-item-collapsed')){
+            toggleButton.find('.fas, svg').removeClass('fa-expand').addClass('fa-compress')
+            campos.removeClass('campos-item-collapsed')
+        }
+        else{
+            toggleButton.find('.fas, svg').removeClass('fa-compress').addClass('fa-expand')
+            campos.addClass('campos-item-collapsed')
+        }    
+    }
+
 
     formValid(){
         return $('#form').parsley().validate()

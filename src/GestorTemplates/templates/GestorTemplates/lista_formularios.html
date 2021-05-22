@@ -10,34 +10,73 @@
 {% block content %}
 {% load static %}
 <div>
-  <section class="form-menu">
-
-    <div class="columns is-mobile">
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Formulários</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      
+        <div class="navbar-end">
+          <!-- navbar items on the right side -->
+          
+          <div class="navbar-item buttons has-tooltip-bottom">
+            <button class="button is-success" id="openModal-newForm">
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Novo</span>
+            </button>
+          </div>
+        </div>
+       
+      </div>
+    </nav>
+    <div class="columns">
       <div class="column">
-        <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+        <div class="tabs is-centered is-medium">
           <ul>
-            <li class="is-active">
-              <a href="#" aria-current="page">
-                <span class="has-text-weight-bold">Formulários</span>
+            <li class="is-active" data-column="0" data-filter="">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Todos</span>
               </a>
             </li>
+            <li data-column="0" data-filter="0">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Formulários</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="1">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                <span>Templates</span>
+              </a>
+            </li>
+            
           </ul>
-        </nav>
       </div>
-      <div class="column">
-        <div class="buttons is-pulled-right">
-          <button class="button is-success" id="openModal-newForm">
-            <span class="icon">
-              <i class="fas fa-plus"></i>
-            </span>
-            <span>Novo</span>
-          </button>
-
-        </div>
-      </div>
-    </div>
-
-    <!--Novo Formulario Modal-->
+      </div>   
+  </div>
   </section>
   <div class="modal" id="modal-newForm">
     <div class="modal-background"></div>
@@ -88,13 +127,14 @@
   </div>
 
 
-  <div class="section">
+  <div class="section" id="main-section-content">
     <div class="columns">
       <div class="column ">
 
-        <table id="example" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+        <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
           <thead>
             <tr>
+              <th>is_template</th>
               <th>Formulários por título</th>
               <th>Última modificação</th>
               <th>Visibilidade</th>
@@ -105,6 +145,7 @@
           <tbody>
             {% for obj in object_list %}
             <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
+              <td>{{obj.is_template}}</td>
               <td>{{obj.nome}}</td>
 
               {% if obj.updated %}
@@ -115,16 +156,16 @@
 
               <td>{{obj.get_visibilidade_display}}</td>
               <td>
-                <div class="dropdown">
+                <div class="dropdown is-hoverable">
                   <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <button class="button datatable-row-action" aria-haspopup="true" aria-controls="datatable-row-actions">
                       <span>Click me</span>
                       <span class="icon is-small">
                         <i class="fas fa-angle-down" aria-hidden="true"></i>
                       </span>
                     </button>
                   </div>
-                  <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                  <div class="dropdown-menu" id="datatable-row-actions" role="menu">
                     <div class="dropdown-content">
                       <a href="#" class="dropdown-item">
                         Overview
@@ -143,51 +184,11 @@
           </tbody>
 
         </table>
-
-
-
-      </div>
-      <div class="column is-3">
-        <nav class="panel">
-          <p class="panel-heading">
-            Repositories
-          </p>
-          <div class="panel-block">
-            <p class="control has-icons-left">
-              <input class="input" type="text" placeholder="Search">
-              <span class="icon is-left">
-                <i class="fas fa-search" aria-hidden="true"></i>
-              </span>
-            </p>
-          </div>
-          <p class="panel-tabs">
-            <a class="is-active">All</a>
-            <a>Public</a>
-            <a>Private</a>
-            <a>Sources</a>
-            <a>Forks</a>
-          </p>
-          <a class="panel-block is-active">
-            <span class="panel-icon">
-              <i class="fas fa-book" aria-hidden="true"></i>
-            </span>
-            bulma
-          </a>
-          <label class="panel-block">
-            <input type="checkbox">
-            remember me
-          </label>
-          <div class="panel-block">
-            <button class="button is-link is-outlined is-fullwidth">
-              Reset all filters
-            </button>
-          </div>
-        </nav>
       </div>
     </div>
   </div>
 
-  <div class="columns is-multiline">
+  <div class="section columns is-multiline">
     {% for obj in object_list %}
     <div class="column is-3">
       <div class="card" style="min-height: 10px;">
@@ -239,8 +240,13 @@
   </div>
 </div>
 
+{% endblock content%}
 
+{% block scripts %}
 
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
 <script>
 
   $('.dropdown').click(function () {
@@ -329,26 +335,31 @@
 
 //DATATABLES MANIPULATION
   $(document).ready(function () {
-    $('#example').DataTable({
+  var table = $('#form-list-table').DataTable({
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
       }
     });
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+      table.column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
+    })
   });
 
 
-
+  $('.datatable-row-action').click(function(e){
+    e.stopPropagation()
+  })
   $('.datatable-row').click(function () {
-     let url = "{% url 'edit-form' pk=123  %}" 
-     location.href= url.replace('123',  $(this).data('id'))
+    let url = "{% url 'edit-form' pk=123  %}" 
+    location.href= url.replace('123',  $(this).data('id'))
   });
+
 
 </script>
-{% endblock content%}
-
-{% block scripts %}
-
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
 {% endblock %}

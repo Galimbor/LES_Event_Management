@@ -13,6 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
   <!-- <link rel="stylesheet" href="{% static 'css/mystyle.css' %}"> -->
   <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
@@ -70,6 +71,25 @@
     .step-item.is-active {
       cursor: pointer;
     }
+    .sticky{
+    position: fixed;
+    top: 0;
+    width: 86%;
+    background-color: white;
+    z-index: 10;
+    padding-top: 6px;
+  }
+
+  @media screen and (max-width: 768px) {
+      .section{
+          padding: 0rem;
+      }
+      .sticky{
+        width: 78%;
+        padding-top: 3vh;
+      }
+
+  }
   </style>
   {% block page_css %}
   {% endblock %}
@@ -131,6 +151,22 @@
     $('.messages .delete').click(function(){
       $(this).closest('.messages').remove()
     })
+  </script>
+  <script>
+    $(window).scroll(function(){
+      let subnavbar = $('#subnavbar');
+      let mainSectionContent = $('#main-section-content');
+      if ($(window).scrollTop() >= mainSectionContent.offset().top) {
+          if(!subnavbar.hasClass('sticky')){
+            subnavbar.hide().addClass('sticky').fadeIn();
+            mainSectionContent.css('padding-top','100px')
+          }
+      }
+      else{
+          subnavbar.removeClass('sticky');
+          mainSectionContent.css('padding-top','10px')     
+        }
+    });
   </script>
   {% block scripts %}
   {% endblock scripts %}
