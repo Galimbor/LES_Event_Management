@@ -37,7 +37,7 @@ class Tipoformulario(models.Model):
         db_table = "TipoFormulario"
 
     def __str__(self):
-        return "{} : {}-{}".format(self.id,self.get_categoria_display(), self.nome)
+        return self.nome
 
 
 class Formulario(models.Model):
