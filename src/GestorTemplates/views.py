@@ -179,6 +179,7 @@ class FormCreate(FormHandling, CreateView):
             gcp = Gcp.objects.get(id = self.request.user.id)
             form = Formulario.objects.create(gcpid = gcp, created = timezone.now()) ##TODO check campos obrigatrioressss ##TODO check utilizadores
         context['tipos_campo'] = Tipocampo.objects.all()
+        context['formulario'] = form
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
         context['subcampos_json'] = self.subcampos_to_json(form.id)
@@ -212,9 +213,6 @@ class FormUpdate(FormHandling, UpdateView):
         return context
 
     
-
-
-
 
 
 

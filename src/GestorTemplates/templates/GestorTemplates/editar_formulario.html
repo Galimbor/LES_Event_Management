@@ -55,7 +55,7 @@
               </span>
             </button>
             
-            <a class="button is-primary has-tooltip-bottom" data-tooltip="Coloca o formulário visível">
+            <a class="button is-primary ver_form_publish publish-form  has-tooltip-bottom" data-tooltip="Coloca o formulário visível">
               <span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>
               <span>Publicar</span>
             </a>
@@ -119,6 +119,38 @@
       </div>
   </div>
 
+</div>
+
+<!--FORM PUBLISH MODAL-->
+<div id="ver_form_publish" class="ver_form_publish modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Publicar Formulário</p>
+
+      <button onclick="$('#ver_form_publish').removeClass('is-active');" class="delete"></button>
+
+    </header>
+    <section class="modal-card-body">
+      <p><b> Escolha a opção de visualização do seu formulário:  </b></p>
+
+      <div class="control form-visibility">
+        {% for choices in formulario.VISIBILIDADE_list %}
+          <label class="radio">
+          <input type="radio" name="answer" data-id="{{choices.0}}"  {% if  formulario.visibilidade == choices.0  %} checked="checked" {% endif %} >
+            {{ choices.1 }} 
+          </label>  <br>
+          {% endfor %}
+          
+      </div>
+
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button ">Cancelar</button>
+      <button class="button is-success publish">Publicar</button>
+    </footer>
+
+  </div>
 </div>
 {% endblock content%}
 

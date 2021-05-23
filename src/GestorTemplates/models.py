@@ -45,12 +45,13 @@ class Formulario(models.Model):
         db_column="Id", primary_key=True
     )  # Field name made lowercase.
     nome = models.CharField(db_column="Nome", max_length=255, default="Sem título")
-    VISIBILIDADE = [
-        ("0", "Público"),
-        ("1", "Privado"),
+    VISIBILIDADE_list = [
+        ("0", "Privado"),
+        ("1", "Utilizadores da aplicação"),
+        ("2", "Público"),
     ]
     visibilidade = models.CharField(
-        db_column="Visibilidade", max_length=255, choices=VISIBILIDADE, default="0"
+        db_column="Visibilidade", max_length=255, choices=VISIBILIDADE_list, default="0"
     )
     is_template = models.IntegerField(
         db_column="IsTemplate",

@@ -19,12 +19,20 @@ var FormManager = class {
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
         this.success_url = success_url;
-
+        
         let form = this;
         // collapse campos when clicking outside
         $(window).click(e => form.colapseCampos($('.campos-item')));
 
+        $('.button.publish').click(function(){
+
+            let selected_option = document.querySelector('input[name="answer"]:checked').dataset.id;
+            // console.log( $('input[name="answer"]:checked').data('id'))
+            form.publishForm(selected_option) //this is a HTML element   
+        })
+
         $('.button.save-form').click(e => form.saveRemotely())
+
 
     }
 
@@ -245,6 +253,8 @@ var FormManager = class {
         })
         $('.button.ver_form_config').click(e => $('.modal.ver_form_config').addClass('is-active'))
 
+        $('.button.ver_form_publish').click(e => $('.modal.ver_form_publish').addClass('is-active'))
+
         $('.create-campo-from-tipo').click(function (e) {
             e.stopPropagation();
             form.createCampo($(this).data('id'), $(this).data('campo-relacionado'));
@@ -411,6 +421,21 @@ var FormManager = class {
             toggleButton.find('.fas, svg').removeClass('fa-compress').addClass('fa-expand')
             campos.addClass('campos-item-collapsed')
         }    
+    }
+
+    /***
+     * Publish form
+     */
+    publishForm(id){
+        if(id){
+            console.log(id);
+            this.formulario.fields.visibilidade = id;
+            this.saveRemotely();
+        }
+        else {
+            // this doesnt work #TODO
+            // alert("Deve selecionar pelo menos uma opção!");
+        }
     }
 
 
