@@ -4,8 +4,9 @@
 
 {% block content %}
     {% load static %}
-
+    <h1 class="title">Todos Eventos</h1>
     <div class="columns">
+
         <div class="is-three-quarters">
             <table id="example" class="table is-striped" style="width:100%">
                 <thead>
@@ -17,7 +18,7 @@
                 </thead>
                 <tbody>
                     {% for obj in eventos %}
-                    <tr  data-id="{{ obj.id }}" class="evento-selector">
+                    <tr  data-id="{{ obj.id }}" class="datatable-selector">
                         <td class="td">{{ obj.nome }}</td>
                         <td class="td">{{ obj.horario.datainicial }} - {{ obj.horario.datafinal }}</td>
                         <td class="td">{{ obj.horario.horainicial }} - {{ obj.horario.horafinal }}</td>
@@ -88,7 +89,7 @@
 
 
     //   Get event clicable
-      const event = document.querySelectorAll('.evento-selector');
+      const event = document.querySelectorAll('.datatable-selector');
       console.log(event);
       event.forEach(element => {
         element.addEventListener('click', e => {

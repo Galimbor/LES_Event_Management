@@ -225,11 +225,11 @@ select {
       padding: 1rem !important;
   }
 
-  .evento-selector {
+  .datatable-selector {
       cursor: pointer;
   }
 
-  .evento-selector:hover 
+  .datatable-selector:hover 
   {
       opacity: .8;
       color: white !important;

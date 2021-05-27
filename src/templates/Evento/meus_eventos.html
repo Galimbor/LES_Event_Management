@@ -4,8 +4,7 @@
 
 {% block content %}
     {% load static %}
-    <div>
-        <div class="section">
+        <!-- <div class="section">
             <div class="columns">
                 <div class="column">
                     <h1 class="title">Meus Eventos</h1>
@@ -60,45 +59,141 @@
                     </div>
                 {% endfor %}
             </div>
+        </div> -->
+
+
+        <h1 class="title">Meus Eventos</h1>
+        <div class="columns">
+            <div class="is-three-quarters">
+                <table id="example" class="table is-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Estado</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obj in eventos %}
+                        <div class="modal my-modal">
+                            <div class="modal-background"></div>
+                            <div class="modal-content">
+                                {% if obj.estado == 'Validado' %}
+                                <a class="button is-dark" href=
+                                        "{% url 'Evento:create-event2' event_id=obj.id %}">
+                                    Adicionar Logistica
+                                </a>
+                                <a class="button is-success" href=
+                                        "{% url 'Evento:submit-logistic' event_id=obj.id %}">
+                                    Submeter Logistica
+                                </a>
+                            {% else %}
+                                <br>
+                            {% endif %}
+                            </div>
+                            <button class="modal-close is-large" aria-label="close"></button>
+                        </div>
+                        <tr  data-id="{{ obj.id }}" class="datatable-selector">
+                            <td class="td">{{ obj.nome }}</td>
+                            <td class="td">{{ obj.estado }}</td>
+                            <td class="td">{{ obj.horario.datainicial }} {{ obj.horario.horainicial }} - {{ obj.horario.datafinal }} {{ obj.horario.horafinal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Título</th>
+                            <th>Estado</th>
+                            <th>Data</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="column">
+                <nav class="panel">
+                    <p class="panel-heading">
+                      Filtros
+                    </p>
+                    <div class="panel-block">
+                      <p class="control has-icons-left">
+                        <input class="input" type="text" placeholder="Search">
+                        <span class="icon is-left">
+                          <i class="fas fa-search" aria-hidden="true"></i>
+                        </span>
+                      </p>
+                    </div>
+                    <a class="panel-block is-active">
+      
+                      Validado
+                    </a>
+                    <a class="panel-block">
+    
+                      Logistica Pendente
+                    </a>
+                    <a class="panel-block">
+    
+                      Aceite
+                    </a>
+                    <div class="panel-block">
+                      <button class="button is-link is-outlined is-fullwidth">
+                        Reset all filters
+                      </button>
+                    </div>
+                  </nav>
+            </div>
         </div>
 
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar
-                    este formulário?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
-    </div>
-
-    <script>
-
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function () {
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
 
 
-        });
-
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
-
-        function deleteForm(id) {
-            deleteFormModal.data(id).hide();
-        }
+    
+    
+    
+        <script>
+            const modal = document.querySelector('.my-modal');
 
 
-    </script>
-{% endblock content %}
+            $(document).ready(function () {
+            $('#example').DataTable({
+              "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+              }
+            });
+          });
+    
+    
+    
+        //   Get event clicable
+          const event = document.querySelectorAll('.datatable-selector');
+          event.forEach(element => {
+            element.addEventListener('click', e => {
+                e.preventDefault();
+                console.log(modal);
+            modal.classList.add("is-active");
+
+            let id = element.dataset.id;
+
+            // let url = `{% url 'Evento:gerir' event_id=123 %}`;
+    
+            // // Construct the full URL with "id"
+            // document.location.href = url.replace('123', id);
+          })
+          });
+        
+
+          //Listen to close event in modal
+          document.querySelector('.modal-close').addEventListener('click', function(e) {
+            modal.classList.remove('is-active');
+            console.log(modal.classList);
+          });
+          
+
+    
+    
+        </script>
+    {% endblock content %}
+    
+    {% block scripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+    {% endblock %}
