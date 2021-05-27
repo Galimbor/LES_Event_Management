@@ -27,14 +27,14 @@
                         <div class="form-group-c">
                             <input class="text input-clean" type="number" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
                         </div>
-                {% elif pergunta.campoid.tipocampoid.nome == 'RadioBox'%}
+                {% elif pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla'%}
 
                         <div class="form-group-c">
                         <label class="field" > {{ pergunta.campoid.conteudo }}</label>
                         {% for opcao in pergunta.campoid.respostas %}
                             <label class="radio" for="{{ pergunta.campoid.id }}">
-                                <input type="radio" class="input-clean" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao }}">
-                                    {{ opcao }}
+                                <input type="radio" class="input-clean" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao.conteudo }}">
+                                    {{ opcao.conteudo }}
                             </label>
                         {% endfor %}
                         </div>

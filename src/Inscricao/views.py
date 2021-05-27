@@ -28,13 +28,18 @@ def CriarInscricao(request, eventoid):
 
     # print(formularioInscricao)
 
-    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0]).exclude(campoid_id=28).exclude(
+    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0], campoid__campo_relacionado=None).exclude(campoid_id=28).exclude(
         campoid_id=27)
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+            pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            # pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+            # pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado__campo__id=pergunta.campoid.id)
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
+            # print(Campo.objects.filter(campo_relacionado=pergunta.campoid))
+            # print(f"{pergunta.campoid.respostas}")
+
 
     if request.method == 'POST':
 
@@ -166,16 +171,14 @@ def PartInscricaoCheckin(request, id):
 
     if request.method == "POST":
 
-
         inscricao.checkin = request.POST.get(f"{28}") == 'Vou' if 1 else 0
 
-        respostadb = Resposta.objects.get(inscricaoid=inscricao,campoid_id=28)
+        respostadb = Resposta.objects.get(inscricaoid=inscricao, campoid_id=28)
 
-        if request.POST.get(f"{28}") == 'Vou' :
+        if request.POST.get(f"{28}") == 'Vou':
             respostadb.conteudo = "1"
         else:
             respostadb.conteudo = "0"
-
 
         respostadb.save()
 
@@ -194,7 +197,6 @@ def PartInscricaoCheckin(request, id):
 
 
 def PartAlterarInscricao(request, id):
-
     inscricao = Inscricao.objects.get(id=id)
 
     respostas = Resposta.objects.filter(inscricaoid=inscricao).exclude(campoid_id=28).exclude(
@@ -231,9 +233,7 @@ def PartAlterarInscricao(request, id):
             resposta.conteudo = resposta_get
             resposta.save()
 
-
         inscricao.save()
-
 
         messages.success(request, f'Alterou a sua inscrição com sucesso!')
 
@@ -262,7 +262,6 @@ class PropConsultarInscricoes(ListView):
 
 
 def PropRemoverInscricao(request, inscricaoid):
-
     # We don't have users yet.
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
@@ -285,9 +284,7 @@ def PropRemoverInscricao(request, inscricaoid):
 
     messages.success(request, f'Eliminou a inscrição com sucesso!')
 
-    return redirect('Inscricao:prop_list_inscricao', evento.id )
-
-
+    return redirect('Inscricao:prop_list_inscricao', evento.id)
 
 
 def PropAlterarEstadoInscricao(request, id):
@@ -308,11 +305,7 @@ def PropAlterarEstadoInscricao(request, id):
     QAA = zip(perguntas, respostas)
 
     if request.method == "POST":
-
-
         inscricao.estado = request.POST.get(f"{27}")
-
-
 
         inscricao.save()
 
@@ -334,17 +327,15 @@ def PropAlterarEstadoInscricao(request, id):
     return render(request, 'inscricao/proponente/inscricao_update.html', context)
 
 
-#---------- PROPONENTES E PARTICIPANTES-------------------------
+# ---------- PROPONENTES E PARTICIPANTES-------------------------
 
 def consultarInscricao(request, inscricaoid):
-
     inscricao = Inscricao.objects.get(id=inscricaoid)
 
     respostas = Resposta.objects.filter(inscricaoid=inscricao)
 
     context = {
-        'inscricao' : respostas,
+        'inscricao': respostas,
     }
 
     return render(request, 'inscricao/inscricao_consultar.html', context)
-

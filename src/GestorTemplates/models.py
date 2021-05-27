@@ -114,13 +114,7 @@ class Campo(models.Model):
         "Tipocampo", models.CASCADE, db_column="TipoCampoID"
     )  # Field name made lowercase.
     campo_relacionado = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
-    respostapossivelid = models.ForeignKey(
-        "Respostaspossiveis",
-        models.DO_NOTHING,
-        db_column="RespostaPossivelId",
-        blank=True,
-        null=True,
-    )  # Field name made lowercase.
+    position_index = models.IntegerField(default = 0,  db_column="Posicao")
 
     class Meta:
         managed = True
@@ -146,16 +140,10 @@ class CampoFormulario(models.Model):
         return "Form: {} ---- Pergunta: {}".format(self.formularioid, self.campoid)
 
 
-class Respostaspossiveis(models.Model):
-    id = models.AutoField(
-        db_column="Id", primary_key=True
-    )  # Field name made lowercase.
-    nome = models.CharField(
-        db_column="Nome", max_length=255
-    )  # Field name made lowercase.
 
-    def __str__(self):
-        return self.nome
+
+
+
 
 class Resposta(models.Model):
     id = models.AutoField(
@@ -184,6 +172,8 @@ class Resposta(models.Model):
     def __str__(self):
         return self.conteudo
 
+    def __str__(self):
+        return self.nome
 
 
 class GcpFormulario(models.Model):

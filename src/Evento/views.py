@@ -1,4 +1,8 @@
-from django.shortcuts import redirect, render
+import csv
+
+from django.shortcuts import redirect, render, HttpResponse
+
+from Inscricao.models import Inscricao
 from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
@@ -238,8 +242,18 @@ def view_event(request, event_id):
     return render(request, 'Evento/view_evento.html', context)
 
 
-
-
+def create_csv_certificates(request, evento_id):
+    # todos os incritos do evento
+    # TODO - verificar apenas os com o check-in a true
+    inscritos = Inscricao.objects.filter(eventoid=evento_id)
+    print(inscritos)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="certificados{Evento.objects.get(id=evento_id).nome}.csv"'
+    writer = csv.writer(response)
+    # TODO - Profissao should be switched with institution but we dont save that..
+    for inscrito in inscritos:
+        writer.writerow([f'{inscrito.nome} {inscrito.profissao}'])
+    return response
 
 # HELPER FUNCTIONS
 def get_user_type(request):
@@ -331,3 +345,5 @@ def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
     tipo.horariorequisicao = horario
     tipo.logisticaid = logistica
     tipo.save()
+
+
