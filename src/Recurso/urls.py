@@ -11,9 +11,9 @@ from Recurso.views import recursos, recurso_detail, recurso_delete, espacos, emp
 app_name = 'Recurso'
 
 urlpatterns = [
-    # path('recurso', recursos, name='recursos'),
+    path('', recursos, name='recursos'),
     # # path('recurso/recurso_create/', recurso_create, name='recurso-create'),
-    # path('recurso/<int:my_id>/', recurso_detail, name='recurso-detail'),
+    path('recurso/<int:my_id>/', recurso_detail, name='recurso-detail'),
     # path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),
 
     # ESPAÇO

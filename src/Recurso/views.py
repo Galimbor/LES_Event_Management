@@ -38,10 +38,13 @@ def recursos(request):
 
 def recurso_detail(request, my_id):
     obj = get_object_or_404(Recurso, id=my_id)
-    context = {
-        'object': obj
-    }
-    return render(request, "Recurso/recurso_create.html", context)
+
+    if obj.espacoid is not None:
+        return redirect('Recurso:espaco-detail', obj.espacoid.id)
+    elif obj.equipamentoid is not None:
+        return redirect('Recurso:equipamento-detail', obj.equipamentoid.id)
+    else:
+        return redirect('Recurso:servico-detail', obj.servicoid.id)
 
 
 def recurso_delete(request, my_id):
@@ -189,7 +192,7 @@ def servico_delete(request, my_id):
 def empresas(request):
     obj = Empresa.objects.all()
     context = {
-    'object' :obj
+        'object': obj
     }
     return render(request, 'Recurso/empresa_list.html', context)
 
