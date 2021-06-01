@@ -56,28 +56,28 @@
                 <div class="column">
                     <div class="tabs is-centered is-medium">
                         <ul>
-                            <li class="is-active" data-column="0" data-filter="">
+                            <li class="is-active" data-column="1" data-filter="">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-align-justify"
                                                                    aria-hidden="true"></i></span>
                                     <span>Todos</span>
                                 </a>
                             </li>
-                            <li data-column="0" data-filter="0">
+                            <li data-column="1" data-filter="Equipamento">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-toolbox"
                                                                    aria-hidden="true"></i></span>
                                     <span>Equipamentos</span>
                                 </a>
                             </li>
-                            <li data-column="0" data-filter="1">
+                            <li data-column="1" data-filter="Espaço">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-home"
                                                                    aria-hidden="true"></i></span>
                                     <span>Espaços</span>
                                 </a>
                             </li>
-                            <li data-column="0" data-filter="1">
+                            <li data-column="1" data-filter="Serviço">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-cogs"
                                                                    aria-hidden="true"></i></span>
@@ -90,56 +90,6 @@
                 </div>
             </div>
         </section>
-        <div class="modal" id="modal-newForm">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Selecione o tipo de Formulário</p>
-                    <button class="close-modal delete" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <article class="panel is-primary" id="tipos-formulario">
-                        <p class="panel-tabs">
-                            <a class="tipoFormulario is-active" data-id="all" data-tipo="0"
-                               onclick="filterCategory($(this))">Todos</a>
-                            {% for tipoFormulario in categorias %}
-                                <a class="tipoFormulario" data-id="{{ tipoFormulario.categoria.0 }}"
-                                   data-tipo="{{ tipoFormulario.id }}"
-                                   onclick="filterCategory($(this))">{{ tipoFormulario.nome }}</a>
-                            {% endfor %}
-                        </p>
-
-                        <div class="panel-block search">
-                            <p class="control has-icons-left">
-                                <input class="input is-primary" id="search-by-name" type="text" placeholder="Search">
-                                <span class="icon is-left">
-                <i class="fas fa-search" aria-hidden="true"></i>
-              </span>
-                            </p>
-                        </div>
-                        <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
-            <span class="panel-icon ">
-              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-            </span>
-                            Em branco
-                        </a>
-                        {% for templateFormulario in tiposForm %}
-                            <a class="panel-block is-active category"
-                               href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"
-                               id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"
-                               data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"
-                               data-search="{{ templateFormulario.nome }}">
-            <span class="panel-icon">
-              <i class="fas fa-book" aria-hidden="true"></i>
-            </span>
-                                {{ templateFormulario.nome }}
-                            </a>
-                        {% endfor %}
-                    </article>
-                </section>
-
-            </div>
-        </div>
 
 
         <div class="section" id="main-section-content">
@@ -150,14 +100,23 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Tipo</th>
                                 <th>Fonte</th>
                                 <th>Empresa</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
                                 <td class="td">{{ obj.nome }}</td>
+                                {% if obj.espacoid is not None %}
+                                <td class="td"> Espaço </td>
+                                {% elif obj.equipamentoid.nome is not None%}
+                                <td class="td"> Equipamento </td>
+                                {% elif obj.servicoid.nome is not None %}
+                                <td class="td"> Serviço </td>
+                                {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
                                 <td class="td"> {{ obj.empresaid }}</td>
                                 <td>
@@ -181,23 +140,7 @@
 
     </div>
 
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este recurso?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
-    </div>
+
 
 {% endblock content %}
 
@@ -294,10 +237,10 @@
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
                 },
-                "columnDefs": [{"orderable": false, "targets": 6},
+                "columnDefs": [{"orderable": false, "targets": 4},
                     {
                         "targets": [0],
-                        "visible": false
+                        "visible": true
                     }
                 ],
             });
