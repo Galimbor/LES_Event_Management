@@ -90,7 +90,49 @@
                 </div>
             </div>
         </section>
+        <div class="modal" id="modal-newForm">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Selecione o tipo de Recurso</p>
+                    <button class="close-modal delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <article class="panel is-primary" id="tipos-formulario">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:equipamento-create' %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+                            Equipamentos
+                        </a>
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:espaco-create'%}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+                            Espaço
+                            <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+                                Serviço
+{#                                {% for templateFormulario in tiposForm %}#}
+{#                                    <a class="panel-block is-active category"#}
+{#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
+{#                                       id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"#}
+{#                                       data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"#}
+{#                                       data-search="{{ templateFormulario.nome }}">#}
+{#            <span class="panel-icon">#}
+{#              <i class="fas fa-book" aria-hidden="true"></i>#}
+{#            </span>#}
+{#                                        {{ templateFormulario.nome }}#}
+{#                                    </a>#}
+{#                                {% endfor %}#}
+                            </a>
+                    </article>
+                </section>
 
+            </div>
+        </div>
 
         <div class="section" id="main-section-content">
             <div class="columns">
@@ -98,24 +140,24 @@
 
                     <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
                         <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Tipo</th>
-                                <th>Fonte</th>
-                                <th>Empresa</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Fonte</th>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
                                 <td class="td">{{ obj.nome }}</td>
                                 {% if obj.espacoid is not None %}
-                                <td class="td"> Espaço </td>
-                                {% elif obj.equipamentoid.nome is not None%}
-                                <td class="td"> Equipamento </td>
+                                    <td class="td"> Espaço</td>
+                                {% elif obj.equipamentoid.nome is not None %}
+                                    <td class="td"> Equipamento</td>
                                 {% elif obj.servicoid.nome is not None %}
-                                <td class="td"> Serviço </td>
+                                    <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
                                 <td class="td"> {{ obj.empresaid }}</td>
