@@ -73,11 +73,12 @@ class Servico(models.Model):
 
 class EventoRecurso(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    eventoid = models.OneToOneField(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
-    recursoid = models.OneToOneField('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
+    recursoid = models.ForeignKey('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
 
     class Meta:
         managed = False
+        unique_together = ('eventoid', 'recursoid')
         db_table = 'Evento_Recurso'
 
 

@@ -1,7 +1,7 @@
 from django.urls import path, include
 # from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # from .views import RecursoList, RecursoCreate, RecursoDelete
-from Recurso.views import recursos, recurso_detail, recurso_delete, espacos, empresas, edificios, unidadesorganicas, \
+from Recurso.views import recursos, recursosv2, recurso_detail, recurso_delete, espacos, empresas, edificios, unidadesorganicas, \
     equipamentos, servicos, servico_create, equipamento_create, espaco_create, equipamento_delete, servico_delete, \
     empresa_create, empresa_delete, edificio_create, edificio_delete, unidadeorganica_delete, unidadeorganica_create, \
     universidades, universidade_create, universidade_delete, campis, campus_delete, campus_create, espaco_delete, \
@@ -12,9 +12,10 @@ app_name = 'Recurso'
 
 urlpatterns = [
     path('', recursos, name='recursos'),
+    path('all/<int:my_id>/', recursosv2, name='recursos-2'),
     # # path('recurso/recurso_create/', recurso_create, name='recurso-create'),
     path('recurso/<int:my_id>/', recurso_detail, name='recurso-detail'),
-    # path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),
+    path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),
 
     # ESPAÇO
     path('espaco', espacos, name='espacos'),

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
-from .models import Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, Universidade
+from .models import Evento,Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, Universidade, EventoRecurso
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
 
@@ -22,18 +22,17 @@ def recursos(request):
     return render(request, 'Recurso/recurso_list.html', context)
 
 
-# def recurso_create(request):
-#     form = RecursoForm(request.POST or None)
-#     if form.is_valid():
-#         nome = request.POST.get("nome")
-#         fonte = request.POST.get("fonte")
-#         recurso = Recurso(nome=nome, fonte=fonte)
-#         recurso.save()
-#         return redirect('Recurso:recursos')
-#     context = {
-#         'form': form
-#     }
-#     return render(request, 'Recurso/recurso_create.html', context)
+def recursosv2(request, my_id):
+    obj = get_object_or_404(Evento, id=my_id)
+    eventoRecursos = EventoRecurso.objects.filter(eventoid__id=obj.id)
+    recursos = []
+    for i in eventoRecursos:
+        recursos.append(i.recursoid)
+    context = {
+        'object': recursos
+    }
+    return render(request, 'Recurso/recurso_list_event.html', context)
+
 
 
 def recurso_detail(request, my_id):
@@ -49,7 +48,17 @@ def recurso_detail(request, my_id):
 
 def recurso_delete(request, my_id):
     obj = get_object_or_404(Recurso, id=my_id)
+    if obj.espacoid is not None:
+        innerObj = obj.espacoid
+    elif obj.equipamentoid is not None:
+        innerObj = obj.equipamentoid
+    else:
+        innerObj = obj.servicoid
+    eventoRecursos = EventoRecurso.objects.filter(recursoid_id=obj.id)
+    for i in eventoRecursos:
+        i.delete()
     obj.delete()
+    innerObj.delete()
     return redirect('Recurso:recursos')
 
 
@@ -75,7 +84,7 @@ def equipamento_create(request):
             recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, empresaid=empresa,
                               equipamentoid=form.instance)
         recurso.save()
-        return redirect('Recurso:equipamentos')
+        return redirect('Recurso:recursos')
     context = {
         'form': form,
         'form2': form2
@@ -88,7 +97,7 @@ def equipamento_detail(request, my_id):
     form = EquipamentoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
-        return redirect("Recurso:equipamentos")
+        return redirect("Recurso:recursos")
     context = {
         'form': form,
         'detail': 1
@@ -99,7 +108,7 @@ def equipamento_detail(request, my_id):
 def equipamento_delete(request, my_id):
     obj = get_object_or_404(Equipamento, id=my_id)
     obj.delete()
-    return redirect('Recurso:equipamentos')
+    return redirect('Recurso:recursos')
 
 
 def espacos(request):
@@ -114,9 +123,9 @@ def espaco_create(request):
     form = EspacoForm(request.POST or None)
     if form.is_valid():
         form.save()
-        # recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
-        # recurso.save()
-        return redirect('Recurso:espacos')
+        recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
+        recurso.save()
+        return redirect('Recurso:recursos')
     context = {
         'form': form
     }
@@ -128,7 +137,7 @@ def espaco_detail(request, my_id):
     form = EspacoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
-        return redirect("Recurso:espacos")
+        return redirect("Recurso:recursos")
     context = {
         'form': form,
         'detail': 1
@@ -139,7 +148,7 @@ def espaco_detail(request, my_id):
 def espaco_delete(request, my_id):
     obj = get_object_or_404(Recurso, id=my_id)
     obj.delete()
-    return redirect('Recurso:espacos')
+    return redirect('Recurso:recursos')
 
 
 def servicos(request):
@@ -147,7 +156,7 @@ def servicos(request):
     context = {
         'object': obj,
     }
-    return render(request, 'Recurso/servico_list.html', context)
+    return render(request, 'Recurso/recurso_list.html', context)
 
 
 def servico_create(request):
@@ -162,7 +171,7 @@ def servico_create(request):
             fonte = 'Interna'
         recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, servicoid=form.instance)
         recurso.save()
-        return redirect('Recurso:servicos')
+        return redirect('Recurso:recursos')
     context = {
         'form': form,
         'form2': form2
@@ -175,7 +184,7 @@ def servico_detail(request, my_id):
     form = ServicoForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
-        return redirect("Recurso:servicos")
+        return redirect("Recurso:recursos")
     context = {
         'form': form,
         'detail': 1
