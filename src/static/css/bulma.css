@@ -2162,6 +2162,7 @@ a.box:active {
   background-color: #48c774;
   border-color: transparent;
   color: #fff;
+  padding: 1.5rem 2rem !important;
 }
 .button.is-success:hover, .button.is-success.is-hovered {
   background-color: #3ec46d;
@@ -9984,7 +9985,3 @@ label.panel-block:hover {
 /*
 Custom
  */
-
-.button .is-dark .spaced {
-  margin-right: auto;
-}

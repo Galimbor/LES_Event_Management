@@ -6,11 +6,11 @@
 {% block content %}
     {% load static %}
 
-
-    <div class="section">
+<div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
-                 <h1 class="title">Criar Evento <span>[3]</span></h1>
+                <h1 class="title">Recurso Equipamento</h1>
+                <h2 class="subtitle">{{ evento.nome }}</h2>
                 {{ type }}
                 <form class="box" id="form" method="post">
                     {% csrf_token %}
@@ -37,14 +37,14 @@
                         {% elif campo.campoid.tipocampoid.id == 7 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-data" name="{{ campo.campoid.id }}" type="date">
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="date">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 8 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-time" name="{{ campo.campoid.id }}" type="time">
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="time">
                             </div>
-                        {% elif campo.campoid.tipocampoid.id == 12 %}
+                        {% elif campo.campoid.tipocampoid.id == 2 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
                                 <div class="radio-label">
@@ -65,5 +65,5 @@
         </div>
 
     </div>
-{% endblock content %}
 
+{% endblock content %}

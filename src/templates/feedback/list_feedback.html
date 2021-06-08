@@ -8,50 +8,46 @@
   <div class="section">
     <div class="columns">
       <div class="column">
-        <h1 class="title">As minhas inscrições</h1>
+        <h1 class="title">Feedbacks para o meu evento</h1>
+
       </div>
+                              <a class="button is-success"
+                   href="{% url 'Feedback:view_feedback_statistics' eventoid=request.resolver_match.kwargs.eventoid %}">
+        <span class="icon">
+          <i class="fas "></i>
+        </span>
+                    <span>Ver estatísticas de feedback</span>
+                </a>
 
 {% if messages %}
-
-
-    <article class="message is-success">
-    {% for message in messages %}
-  <div class="message-header">
-    <p>Success</p>
-    <button class="delete" aria-label="delete"></button>
-  </div>
-  <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-    {{ message }}
-  </div>
-       {% endfor %}
-</article>
-
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
 
 
     </div>
     <div class="columns is-multiline">
       {% for obj in object_list %}
-      <div class="column is-half">
-        <div class="card pointer" style="min-height: 10px;">
-          <header class="card-header  has-text-centered">
-            <a class="card-header-title is-centered" href="{% url 'Inscricao:consultar_inscricao' inscricaoid=obj.id %}">
+      <div class="column is-3">
+        <div class="card" style="min-height: 10px;">
+          <header class="card-header">
+            <p class="card-header-title">
               {{obj.eventoid.nome}}
-            </a>
+            </p>
           </header>
           <div class="card-content">
             <div class="content">
-                <p> <strong> Inscrito como : </strong> {{ obj.nome }} </p>
+             Feedback número :  {{ obj.id }}
+              <br>
                 <br>
-                <p> <strong> Estado da inscrição :  </strong> {{ obj.estado }} </p>
-                <br>
-                <p> <strong> Check-in : </strong>  {% if obj.checkin  %} Check-in confirmado. {% else %} Check-in não confirmado. {% endif %} </p>
+                <p> Descrição geral : {{ obj.descricao }}</p>
             </div>
           </div>
           <footer class="card-footer">
-              <a href="{% url 'Inscricao:part_update_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Fazer o check-in</a>
-              <a href="{% url 'Inscricao:part_alterar_inscricao' obj.pk %}" class="card-footer-item update-form-btn" >Alterar dados</a>
-                <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:part_delete_inscricao' obj.pk %}">Eliminar inscrição</a>
+              <a href="{% url 'Feedback:view_feedback' feedbackid=obj.pk %}" class="card-footer-item update-form-btn" >Ver mais</a>
           </footer>
         </div>
       </div>

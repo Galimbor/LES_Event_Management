@@ -7,59 +7,101 @@
     <div>
         <div class="section">
             <div class="columns">
-                <div class="column">
-                    <h1 class="title">Gerir - {{ evento.nome }}</h1>
+                <div class="column ">
+                    <h1 class="title">Gerir - <a href="{% url 'Evento:view-event' event_id=evento.id %}">{{ evento.nome }}</a></h1>
+                    <h2 class="sub-title">Estado: {{ evento.estado }}</h2>
                 </div>
 
             </div>
-            <div class="columns is-multiline">
+            <div class="columns is-multiline is-space-between mt-5">
+
                 <div class="column is-3">
                     {# //Inscricoes Rescursos Logistica#}
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
-                                    Inscrições
-                                </a>
+                            <a class="mx-auto" href="">
+                            <p class="card-header-title is-centered">
+                                    Inscricoes
                             </p>
+                            </a>
                         </header>
                     </div>
                 </div>
                 <div class="column is-3">
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
+                            <a class="mx-auto" href="">
+                            <p class="card-header-title is-centered">
                                     Recursos
-                                </a>
                             </p>
-                        </header>
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
-                                    Editar Evento
-                                </a>
-                            </p>
-                        </header>
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                <a href="#">
-                                    Editar Logistica
-                                </a>
-                            </p>
+                            </a>
                         </header>
                     </div>
                 </div>
 
+                {% if evento.estado == 'Pendente'%}
+
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header card-header-success">
+                            <a class="mx-auto" href="{% url 'Evento:validar-evento' event_id=id %}">
+                            <p class="card-header-title is-centered">
+                                    Validar Evento
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
+                {% elif evento.estado == 'Logistica Pendente'%}
+
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Evento:view-logistic' event_id=id %}">
+                            <p class="card-header-title is-centered">
+                                    Logísticas
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
+                {% elif evento.estado == 'Submetido'%}
+
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header card-header-success">
+                            <a class="mx-auto" href="{% url 'Evento:aceitar-event' event_id=id %}">
+                            <p class="card-header-title is-centered">
+                                    Aceitar Evento
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
+                {% endif %}
             </div>
+
+            <section class="pedido mt-5">
+                <h2 class="sub-title">Dados do evento proposto</h1>
+                
+                {% for pergunta in perguntas %}
+                    {% for resposta in respostas %}
+
+                        {% if pergunta.campoid == resposta.campoid %} 
+                        <div class="block mt-3">
+                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
+                            <p class="resposta">{{resposta.conteudo}}</p>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </section>
         </div>
     </div>
 

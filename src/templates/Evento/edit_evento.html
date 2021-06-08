@@ -10,39 +10,43 @@
     <div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
-                 <h1 class="title">Criar Evento <span>[3]</span></h1>
+                 <h1 class="title">Editar {{evento.nome}}</h1>
                 {{ type }}
                 <form class="box" id="form" method="post">
                     {% csrf_token %}
                     {{ form.media }}
 
+                    
+
                     {% for campo in campos %}
 
+                    {% for resposta in respostas %} 
+                        {% if resposta.campoid == campo.campoid %}
                         {% if campo.campoid.tipocampoid.id == 1 %}
                             <div class="form-group-c">
                                 <label class="label" for="nome">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text">
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text" value="{{resposta.conteudo}}">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 4 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
                                 <textarea class="input-clean" name="{{ campo.campoid.id }}" cols="30"
-                                          rows="10"></textarea>
+                                          rows="10">{{resposta.conteudo}}</textarea>
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 6 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="number">
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="number" value="{{resposta.conteudo}}">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 7 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-data" name="{{ campo.campoid.id }}" type="date">
+                                <input class="input-clean input-data" name="{{ campo.campoid.id }}" type="date" value="{{resposta.conteudo}}">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 8 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-time" name="{{ campo.campoid.id }}" type="time">
+                                <input class="input-clean input-time" name="{{ campo.campoid.id }}" type="time" value="{{resposta.conteudo}}">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 12 %}
                             <div class="form-group-c">
@@ -56,6 +60,9 @@
                                 </div>
                             </div>
                         {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
 
                     {% endfor %}
 

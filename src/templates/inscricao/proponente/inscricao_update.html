@@ -10,43 +10,40 @@
     <div class="columns">
       <div class="column is-is-four-fifths">
         <h1 class="title">Alterar estado da inscrição</h1>
-         <div >
-             <h2 class="subtitle">Dados gerais da inscrição</h2>
-            <div class="form-group-c">
-                <label> Nome completo : {{ inscricao.nome }} </label>
 
+            <h2 class="subtitle">Dados gerais da inscrição</h2>
+            {% for pergunta, resposta in QAA %}
+                <article class="message">
+                  <div class="message-header">
+                    <p>{{ pergunta.conteudo }}</p>
+                  </div>
+                  <div class="message-body">
+                    {% if resposta.conteudo|length == 0  %} Answer is empty.
+                    {% elif pergunta.id == 20 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
+                    {% else %} {{ resposta.conteudo }}  {% endif %}
+                  </div>
+                </article>
+            {% endfor %}
+
+            <form class="box" id="form" method="post">
+                <h2 class="subtitle">Estado do evento</h2>
+                {% csrf_token %}
+            <div class="field">
+                <label class="field" for="{{ estado.campoid.id }}"> {{ estado.campoid.conteudo }} </label>
+                    <div class="select is-small">
+                      <select name="{{ estado.campoid.id }}" id="{{ estado.campoid.id }}" >
+                          {% for opcao in estado.respostas %}
+                            <option name="{{ opcao}}" {% if estado.conteudo == opcao %} selected {% endif %} > {{opcao}} </option>
+                          {% endfor %}
+                      </select>
+                    </div>
             </div>
-            <div class="form-group-c">
-                <label>Email : {{ inscricao.email }} </label>
-
+            <div class="control">
+              <input class="button is-link" type='Submit' value='Submit'>
             </div>
-            <div class="form-group-c">
-            <label> Idade : {{ inscricao.idade }} </label>
+            </form>
 
-            </div>
-            <div class="form-group-c">
-            <label> Número de telemóvel : {{ inscricao.telemovel }} </label>
 
-            </div>
-            <div class="form-group-c">
-            <label> Profissão : {{ inscricao.profissao }} </label>
-
-            </div>
-         </div>
-          <br>
-          <br>
-          <br>
-        <form class="box" id="form" method="post">
-            <h2 class="subtitle">Estado da inscrição</h2>
-            {% csrf_token %}
-
-            <div class="form-group-c">
-            <label> Estado da inscrição :  </label>
-            {{ form.estado }}
-            </div>
-
-            <input type='Submit' value='Save'>    
-        </form>    
     </div>
   </div>
  </div>

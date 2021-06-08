@@ -104,5 +104,4 @@ class InscricaoCheckinUpdateForm(forms.ModelForm):
 
     def clean_checkin(self):
         checkin = self.cleaned_data.get("checkin")
-        print(checkin)
-        return False
+        return checkin

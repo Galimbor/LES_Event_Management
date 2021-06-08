@@ -10,13 +10,13 @@
     <div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
-                <h1 class="title">Criar Evento <span>[1]</span></h1>
+                <h1 class="title">Criar Evento <span>[2]</span></h1>
 
                 <form class="box" id="form" method="post">
                     {% csrf_token %}
 
                     <div class="form-group-c">
-                        <label class="label" for="sim">Qual tipo de evento?</label>
+                        <label class="label" for="sim">Qual o formulario?</label>
                         {% for tipo in tipos %}
                             <div class="radio-label">
                                 <label for="tipo">{{ tipo.nome }}</label>

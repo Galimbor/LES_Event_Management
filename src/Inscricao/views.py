@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+
+from GestorTemplates.models import Tipoformulario, Formulario, CampoFormulario, Resposta, Campo
 from .forms import InscricaoForm, InscricaoUpdateForm, InscricaoCheckinUpdateForm
 from Evento.models import Evento
 from .models import Inscricao
@@ -8,64 +10,102 @@ from django.contrib import messages
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
 
+# -------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
 
-#-------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
-
+# TODO : fazer uma outra versão para utilizadores autenticados
 def CriarInscricao(request, eventoid):
-    form = InscricaoForm(request.POST or None)
+    evento = Evento.objects.get(id=eventoid)
 
-    if form.is_valid():
-        eventoid = Evento.objects.get(id=eventoid)
+    if evento.inscritos == evento.maxparticipantes:
+        messages.success(request, f'O número máximo de inscritos foi atingido.')
 
-        num_inscricao = eventoid.inscritos + 1
+        return redirect('Evento:eventos')
 
-        eventoid.inscritos = eventoid.inscritos + 1
-        eventoid.save()
+    # Associado à inscrição
+    tipoformulario = Tipoformulario.objects.get(id=1)
 
-        if eventoid.val_inscritos:
+    formularioInscricao = Formulario.objects.filter(eventoid=evento, tipoformularioid=tipoformulario)
+
+    # print(formularioInscricao)
+
+    perguntas = CampoFormulario.objects.filter(formularioid=formularioInscricao[0]).exclude(campoid_id=28).exclude(
+        campoid_id=27)
+
+    for pergunta in perguntas:
+        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
+                pergunta.campoid.tipocampoid.nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+
+    if request.method == 'POST':
+
+        # TODO : Aqui deve acontecer alguma validação dos campos submetidos
+
+        num_inscricao = evento.inscritos + 1
+
+        evento.inscritos = evento.inscritos + 1
+        evento.save()
+
+        respostas = []
+
+        inscricao = Inscricao(eventoid=evento)
+        for pergunta in perguntas:
+            perguntaid = pergunta.campoid.id
+            # print(perguntaid)
+            resposta = request.POST.get(f"{perguntaid}")
+            # print(resposta)
+            if perguntaid == 1:  # NOME
+                inscricao.nome = resposta
+            elif perguntaid == 2:  # IDADE
+                print("im here")
+                inscricao.idade = resposta
+            elif perguntaid == 3:  # EMAIL
+                inscricao.email = resposta
+            elif perguntaid == 4:  # NUMERO TELEMOVEL
+                inscricao.telemovel = resposta
+            elif perguntaid == 5:  # PROFISSAO
+                inscricao.profissao = resposta
+            respostas.append(Resposta(conteudo=resposta, inscricaoid=inscricao, campoid=pergunta.campoid))
+
+        if evento.val_inscritos:
             estado = "Pendente"
         else:
             estado = "Confirmado"
-        # We don't have users implemented yet.
-        # if request.user.is_authenticated:
-        #     userid = request.user
-        # We don't have users yet.
-        # if not Inscricao.objects.filter(userid=userid).filter(eventoid=eventoid):
-        #     if True:
-        #         messages.error(request, f'Já se encontra inscrito no evento.')
-        #         return redirect('Evento:list_eventos')
-
-        nome = form.cleaned_data.get('nome')
-        email = form.cleaned_data.get('email')
-        idade = form.cleaned_data.get('idade')
-        telemovel = form.cleaned_data.get('telemovel')
-        profissao = form.cleaned_data.get('profissao')
-        checkin = 0
 
         userid = None
 
-        inscricao = Inscricao(nome=nome, email=email, idade=idade, telemovel=telemovel, profissao=profissao,
-                              eventoid=eventoid, userid=userid, estado=estado, num_inscricao=num_inscricao, checkin= checkin)
+        inscricao.eventoid = evento
+        inscricao.userid = userid
+
+        inscricao.estado = estado
+        respostas.append(Resposta(conteudo=estado, inscricaoid=inscricao, campoid=Campo.objects.get(id=27)))
+
+        inscricao.num_inscricao = num_inscricao
+
+        inscricao.checkin = 0
+        respostas.append(Resposta(conteudo=0, inscricaoid=inscricao, campoid=Campo.objects.get(id=28)))
 
         inscricao.save()
 
-        messages.success(request, f'Inscreveu-se com sucesso no evento.')
+        for resposta in respostas:
+            resposta.save()
+
+        messages.success(request, f'Concluiu a sua inscrição com sucesso!')
 
         return redirect('Evento:eventos')
-    else:
-        print(form.errors)
 
     context = {
-        'form': form
+        'form': perguntas
     }
     return render(request, 'inscricao/participantes/inscricao_create.html', context)
 
 
-class PartConsultarInscricao(ListView):
+# TODO: melhorar a consulta com filtros e barra de procura
+class PartConsultarInscricoes(ListView):
     # We don't have users yet.
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
     #         return redirect('Inscricao:list_inscricao')
+
     template_name = 'inscricao/participantes/list_inscricao.html'
 
     paginate_by = 10
@@ -78,32 +118,66 @@ class PartConsultarInscricao(ListView):
     #     return Inscricao.objects.filter(userid=self.request.user)
 
 
-class PartInscricaoCancelar(DeleteView):
-    model = Inscricao
-    success_url = reverse_lazy('Inscricao:part_list_inscricao')
+# TODO : apenas para utilizadores logged in
+def PartInscricaoCancelar(request, inscricaoid):
+    # We don't have users yet.
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:inscricao')
 
-    def get(self, request, *args, **kwargs):
-        messages.success(request, f'Já não se encontra inscrito no evento.')
-        inscricaoid = self.kwargs.get('pk')
-        inscricao = Inscricao.objects.get(id=inscricaoid)
-        evento = Evento.objects.get(id=inscricao.eventoid.id)
-        evento.inscritos = evento.inscritos - 1
-        evento.save()
-        return self.post(request, *args, **kwargs)
+    inscricao = Inscricao.objects.get(id=inscricaoid)
 
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    for resposta in respostas:
+        resposta.delete()
+
+    evento = inscricao.eventoid
+
+    evento.inscritos -= 1
+
+    evento.save()
+
+    inscricao.delete()
+
+    # print("what")
+    messages.success(request, f'Eliminou a sua sucessão com sucesso!')
+
+    return redirect('Inscricao:part_list_inscricao')
+    # return render(request, 'inscricao/participantes/list_inscricao.html')
 
 
 def PartInscricaoCheckin(request, id):
     inscricao = Inscricao.objects.get(id=id)
 
-    form = InscricaoCheckinUpdateForm(request.POST or None)
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    perguntas = []
+
+    checkin = None
+
+    for resposta in respostas:
+        perguntas.append(resposta.campoid)
+        if resposta.campoid.id == 28:
+            checkin = resposta
+            checkin.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+
+    QAA = zip(perguntas, respostas)
+
+    if request.method == "POST":
 
 
+        inscricao.checkin = request.POST.get(f"{28}") == 'Vou' if 1 else 0
 
-    if form.is_valid():
+        respostadb = Resposta.objects.get(inscricaoid=inscricao,campoid_id=28)
+
+        if request.POST.get(f"{28}") == 'Vou' :
+            respostadb.conteudo = "1"
+        else:
+            respostadb.conteudo = "0"
 
 
-        inscricao.checkin = form.cleaned_data.get('checkin')
+        respostadb.save()
 
         inscricao.save()
 
@@ -112,36 +186,73 @@ def PartInscricaoCheckin(request, id):
         return redirect('Inscricao:part_list_inscricao')
 
     context = {
-        'form': form,
-        'inscricao': inscricao
+        'QAA': QAA,
+        'checkin': checkin,
+
     }
     return render(request, 'inscricao/participantes/inscricao_update.html', context)
 
 
-class PartAlterarInscricao(UpdateView):
-    template_name = 'inscricao/participantes/inscricao_alterar.html'
-    form_class = InscricaoForm
-    queryset = Inscricao.objects.all()
+def PartAlterarInscricao(request, id):
 
-    def get_object(self):
-        id_ = self.kwargs.get("id")
-        return get_object_or_404(Inscricao, id=id_)
+    inscricao = Inscricao.objects.get(id=id)
 
-    def get_success_url(self):
-        messages.success(self.request, f'Alterou as informações da sua inscrição com sucesso!')
-        return reverse_lazy('Inscricao:part_list_inscricao')
+    respostas = Resposta.objects.filter(inscricaoid=inscricao).exclude(campoid_id=28).exclude(
+        campoid_id=27)
 
+    perguntas = []
+
+    for resposta in respostas:
+        if resposta.campoid.tipocampoid.nome == 'RadioBox' or \
+                resposta.campoid.tipocampoid.nome == 'Dropdown':
+            resposta.campoid.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+        perguntas.append(resposta.campoid)
+
+    QAA = zip(perguntas, respostas)
+
+    if request.method == "POST":
+
+        for resposta in respostas:
+            perguntaid = resposta.campoid.id
+
+            resposta_get = request.POST.get(f"{perguntaid}")
+
+            if perguntaid == 1:  # NOME
+                inscricao.nome = resposta_get
+            elif perguntaid == 2:  # IDADE
+                print("im here")
+                inscricao.idade = resposta_get
+            elif perguntaid == 3:  # EMAIL
+                inscricao.email = resposta_get
+            elif perguntaid == 4:  # NUMERO TELEMOVEL
+                inscricao.telemovel = resposta_get
+            elif perguntaid == 5:  # PROFISSAO
+                inscricao.profissao = resposta_get
+            resposta.conteudo = resposta_get
+            resposta.save()
+
+
+        inscricao.save()
+
+
+        messages.success(request, f'Alterou a sua inscrição com sucesso!')
+
+        return redirect('Inscricao:part_list_inscricao')
+
+    context = {
+        'QAA': QAA,
+    }
+    return render(request, 'inscricao/participantes/inscricao_alterar.html', context)
 
 
 # --------------------Views associadas aos perfil de PROPONENTE------------------------------------------------
 
-class PropConsultarInscricao(ListView):
+class PropConsultarInscricoes(ListView):
     # We don't have users yet. -- Implement with @Login
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
     #         return redirect('Inscricao:list_inscricao')
     template_name = 'inscricao/proponente/list_inscricao.html'
-
 
     paginate_by = 10
 
@@ -150,52 +261,90 @@ class PropConsultarInscricao(ListView):
         return Inscricao.objects.filter(userid=self.request.GET.get('eventoid'))
 
 
+def PropRemoverInscricao(request, inscricaoid):
 
+    # We don't have users yet.
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:inscricao')
 
-class PropRemoverInscricao(DeleteView):
-    model = Inscricao
+    inscricao = Inscricao.objects.get(id=inscricaoid)
 
-    def get(self, request, *args, **kwargs):
-        messages.success(request, f'A inscrição foi removida do evento.')
-        inscricaoid = self.kwargs.get('pk')
-        inscricao = Inscricao.objects.get(id=inscricaoid)
-        evento = Evento.objects.get(id=inscricao.eventoid.id)
-        evento.inscritos = evento.inscritos - 1
-        evento.save()
-        return self.post(request, *args, **kwargs)
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
 
-    def get_success_url(self):
-        return reverse_lazy('Inscricao:prop_list_inscricao', kwargs={'eventoid': self.kwargs.get('pk')})
+    for resposta in respostas:
+        resposta.delete()
 
+    evento = inscricao.eventoid
 
-class PropAlterarEstadoInscricao(UpdateView):
-    template_name = 'inscricao/proponente/inscricao_update.html'
-    form_class = InscricaoUpdateForm
-    queryset = Inscricao.objects.all()
+    evento.inscritos -= 1
 
-    def get_object(self):
-        id_ = self.kwargs.get("id")
-        return get_object_or_404(Inscricao, id=id_)
+    evento.save()
 
-    def get_success_url(self):
-        return reverse_lazy('Inscricao:prop_list_inscricao', kwargs={'eventoid': self.kwargs.get('id')})
+    inscricao.delete()
+
+    messages.success(request, f'Eliminou a inscrição com sucesso!')
+
+    return redirect('Inscricao:prop_list_inscricao', evento.id )
 
 
 
 
+def PropAlterarEstadoInscricao(request, id):
+    inscricao = Inscricao.objects.get(id=id)
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    perguntas = []
+
+    estado = None
+
+    for resposta in respostas:
+        perguntas.append(resposta.campoid)
+        if resposta.campoid.id == 27:
+            estado = resposta
+            estado.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+
+    QAA = zip(perguntas, respostas)
+
+    if request.method == "POST":
+
+
+        inscricao.estado = request.POST.get(f"{27}")
 
 
 
-# PARA SUBSTITUIR DEPOIS
+        inscricao.save()
 
-def Eventos_GerirInscricao(request):
-    # For when we implement users
-    # events = Evento.objects.all().filter(estado='aceite',proponente_internoid=request.user)
+        respostadb = Resposta.objects.get(inscricaoid=inscricao, campoid_id=27)
 
-    events = Evento.objects.all().filter(estado='aceite')
+        respostadb.conteudo = request.POST.get(f"{27}")
+
+        respostadb.save()
+
+        messages.success(request, f'Alterou o estado da inscrição com sucesso!')
+
+        return redirect('Inscricao:prop_list_inscricao', inscricao.eventoid.id)
 
     context = {
-        'eventos': events,
+        'QAA': QAA,
+        'estado': estado,
+
+    }
+    return render(request, 'inscricao/proponente/inscricao_update.html', context)
+
+
+#---------- PROPONENTES E PARTICIPANTES-------------------------
+
+def consultarInscricao(request, inscricaoid):
+
+    inscricao = Inscricao.objects.get(id=inscricaoid)
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    context = {
+        'inscricao' : respostas,
     }
 
-    return render(request, 'evento/proponente/eventos.html', context)
+    return render(request, 'inscricao/inscricao_consultar.html', context)
+

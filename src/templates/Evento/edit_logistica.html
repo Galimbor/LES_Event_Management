@@ -1,0 +1,129 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">Logistica - {{ evento.nome }}</h1>
+                </div>
+            </div>
+            <h2 class="subtitle">Espaços</h2>
+            <div class="columns is-full display-column">
+                {% for espaco in espacos %}
+                    <div class="item item-espaco item-view" data-evento="{{evento.id}}" data-espaco="{{espaco.id}}">
+                        <div class="item-description">
+                            {{ espaco.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ espaco.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ espaco.horariorequisicao.datainicial }} - {{ espaco.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Equipamentos</h2>
+            <div class="columns is-full display-column">
+                {% for equipamento in equipamentos %}
+                    <div class="item item-equipamento item-view" data-evento="{{evento.id}}" data-equipamento="{{equipamento.id}}">
+                        <div class="item-description">
+                            {{ equipamento.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ equipamento.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ equipamento.horariorequisicao.datainicial }} - {{ equipamento.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ equipamento.horariorequisicao.horainicial }} - {{ equipamento.horariorequisicao.horafinal }}
+                        </div>
+                    </div>
+
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Serviços</h2>
+            <div class="columns is-full display-column">
+
+                {% for servico in servicos %}
+                    <div class="item item-servico item-view" data-evento="{{evento.id}}" data-servico="{{servico.id}}">
+                        <div class="item-description">
+                            {{ servico.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ servico.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ servico.horariorequisicao.datainicial }} - {{ servico.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ servico.horariorequisicao.horainicial }} - {{ servico.horariorequisicao.horafinal }}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const items = document.querySelectorAll('.item');
+        items.forEach(item => {
+            item.addEventListener('click', function(e) {
+                const element = e.target.closest('.item-espaco');
+                const id = element.dataset.espaco;
+                const event_id = element.dataset.evento;
+
+                let url = `{% url 'Evento:edit-espaco' event_id=123 espaco_id=345 tipo='espaco'%}`;
+
+                // Construct the full URL with "id"
+                url = url.replace('123', event_id);
+                
+                document.location.href = url.replace('345', id);
+            })
+        })
+
+        items.forEach(item => {
+            item.addEventListener('click', function(e) {
+                const element = e.target.closest('.item-servico');
+                const id = element.dataset.servico;
+                const event_id = element.dataset.evento;
+
+                let url = `{% url 'Evento:edit-espaco' event_id=123 espaco_id=345 tipo='servico'%}`;
+
+                // Construct the full URL with "id"
+                url = url.replace('123', event_id);
+                
+                document.location.href = url.replace('345', id);
+            })
+        })
+
+        items.forEach(item => {
+            item.addEventListener('click', function(e) {
+                const element = e.target.closest('.item-equipamento');
+                const id = element.dataset.equipamento;
+                const event_id = element.dataset.evento;
+
+                let url = `{% url 'Evento:edit-espaco' event_id=123 espaco_id=345 tipo='equipamento'%}`;
+
+                // Construct the full URL with "id"
+                url = url.replace('123', event_id);
+                
+                document.location.href = url.replace('345', id);
+            })
+        })
+    </script>
+
+{% endblock content %}

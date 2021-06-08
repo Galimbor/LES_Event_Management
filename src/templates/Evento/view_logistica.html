@@ -1,0 +1,208 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+    <div>
+        <div class="section">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">Logistica - {{ evento.nome }}</h1>
+                </div>
+            </div>
+            <h2 class="subtitle">Espaços</h2>
+            <div class="columns is-full display-column">
+                {% for espaco in espacos %}
+                    <div class="item item-espaco">
+                        <div class="item-description">
+                            {{ espaco.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ espaco.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ espaco.horariorequisicao.datainicial }} - {{ espaco.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                            <div class="item-atribuir">
+                                Atribuir Espaco
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Equipamentos</h2>
+            <div class="columns is-full display-column">
+                {% for equipamento in equipamentos %}
+                    <div class="item item-equipamento">
+                        <div class="item-description">
+                            {{ equipamento.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ equipamento.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ equipamento.horariorequisicao.datainicial }} - {{ equipamento.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ equipamento.horariorequisicao.horainicial }} - {{ equipamento.horariorequisicao.horafinal }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                        </div>
+                    </div>
+
+                    <br>
+                {% endfor %}
+            </div>
+            <h2 class="subtitle">Serviços</h2>
+            <div class="columns is-full display-column">
+
+                {% for servico in servicos %}
+                    <div class="item item-servico">
+                        <div class="item-description">
+                            {{ servico.nome }}
+                        </div>
+                        <div class="item-information">
+                            Quantidade: {{ servico.quantidade }}
+                        </div>
+                        <div class="item-information">
+                            Data: {{ servico.horariorequisicao.datainicial }} - {{ servico.horariorequisicao.datafinal }}
+                        </div>
+                        <div class="item-information">
+                            Hora: {{ servico.horariorequisicao.horainicial }} - {{ servico.horariorequisicao.horafinal }}
+                        </div>
+                        <div class="item-check">
+                            <span class="mdi mdi-check"></span>
+                            <span class="mdi mdi-close"></span>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+
+            </div>
+            
+            <div class="buttons mt-3">
+                <a href="#" class="button-submit">Finalizar Logísticas</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const itemsEspaco = document.querySelectorAll('.item-espaco');
+        const itemsEquipamento = document.querySelectorAll('.item-equipamento');
+        const itemsServico = document.querySelectorAll('.item-servico');
+        const checkBtn = document.querySelector('.mdi-check');
+        const closeBtn = document.querySelector('.mdi-check');
+
+        itemsEquipamento.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const check = parentEl.firstChild.nextSibling;
+            const x = check.nextSibling.nextSibling;
+
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+        });
+
+        itemsEspaco.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const check = parentEl.firstChild.nextSibling;
+            const x = check.nextSibling.nextSibling;
+
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+        });
+
+        itemsServico.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const check = parentEl.firstChild.nextSibling;
+            const x = check.nextSibling.nextSibling;
+
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+        });
+
+
+            //CSRF Token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Listen to button submit
+        const submitBtn = document.querySelector('.button-submit');
+        submitBtn.addEventListener('click', function() {
+            let salaRecusada = false;
+
+            itemsEspaco.forEach(item => {
+                if(item.classList.contains('item-invalid')) salaRecusada = true;
+            });
+
+            $.ajax({
+          url: '/Evento/ajax/finalizar_logistica',
+          type: 'POST',
+          data: {
+            myData: salaRecusada,
+            id: `{{evento.id}}`,
+          },        
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            let url = `{% url 'Evento:eventos-gerir' %}`;
+            document.location.href = url;
+            }
+          ,
+          error: function (error) {
+            console.log(error);
+          }
+        })
+        });
+
+    </script>
+
+{% endblock content %}
