@@ -53,12 +53,13 @@ class Formulario(models.Model):
     visibilidade = models.CharField(
         db_column="Visibilidade", max_length=255, choices=VISIBILIDADE_list, default="0"
     )
-    is_template = models.IntegerField(
-        db_column="IsTemplate",
-        choices=[
+    TEMPLATE_LIST = [
             (0, "Não"),
             (1, "Sim"),
-        ],
+    ]
+    is_template = models.IntegerField(
+        db_column="IsTemplate",
+        choices=TEMPLATE_LIST,
         default=0,
         verbose_name="É Template?",
     )
@@ -74,7 +75,7 @@ class Formulario(models.Model):
         Gcp, models.DO_NOTHING, db_column="GCPid"
     )  # Field name made lowercase.
 
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
+    # eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
   
 
     class Meta:

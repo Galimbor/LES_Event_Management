@@ -81,9 +81,10 @@ var FormManager = class {
         this.colapseCampos(todosCampos);
         this.expandCampos(campoHtml)
         this.activeCampo = form.getCampoById(campoHtml.data('id'));
-        let padding = $('#form-menu').height()+20
+        let padding = $('#subnavbar').height()+20
+        console.log(padding)
         $('html, body').animate({
-            scrollTop: campoHtml.offset().top-padding
+            scrollTop: campoHtml.offset().top-padding 
         });
     }
 

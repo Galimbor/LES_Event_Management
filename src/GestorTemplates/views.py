@@ -80,7 +80,7 @@ class FormHandling():
     def subcampos_to_json(self, formID):
         todos_campos_form = self.get_campos(formID) #todos os campos incluindo os da escolha multipla
         campos = todos_campos_form.filter(campo_relacionado__gt = 0).order_by('position_index') #campos filho (opcoes de escolha ...)
-        printspecial(campos)
+        # printspecial(campos)
         for campo in campos:
             if campo.obrigatorio == b'\x01':
                 campo.obrigatorio = True
@@ -91,7 +91,7 @@ class FormHandling():
     #Cleans data for creating Campo objects
     #@returns clean dictionary for rapid object create
     def clean_form(self, campos_dict):
-        printspecial(campos_dict)
+        # printspecial(campos_dict)
         tipo_campo = Tipocampo.objects.get(id = campos_dict['fields']['tipocampoid'])
         campos_dict['fields']['tipocampoid'] = tipo_campo
         return campos_dict['fields']
@@ -111,8 +111,7 @@ class FormHandling():
                     updated_campo  = Campo.objects.filter(pk=campo['pk'])
                     updated_campo.update(**campos_dict_clean)
         #trying to save empty form ##TODO CHECK BACK LATER ON
-        else:
-            printspecial(campos)
+        
 
     
     def post(self, *args, **kwargs):
@@ -126,12 +125,19 @@ class FormHandling():
                 f  = Formulario.objects.filter(pk=formulario['pk'])
                 f.update(**formulario['fields'])
                 ## 2. Save Campos fields
-                printspecial(objects_dict)
+                # printspecial(objects_dict)
                 self.saveCampos(objects_dict, f[0])
 
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
         return super().post(*args, **kwargs)
+    
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = caterogias_tipo_formulario
+
+        return context
 
 
 class FormCreate(FormHandling, CreateView):
@@ -178,6 +184,9 @@ class FormCreate(FormHandling, CreateView):
         else :
             gcp = Gcp.objects.get(id = self.request.user.id)
             form = Formulario.objects.create(gcpid = gcp, created = timezone.now()) ##TODO check campos obrigatrioressss ##TODO check utilizadores
+        
+        
+      
         context['tipos_campo'] = Tipocampo.objects.all()
         context['formulario'] = form
         context['formulario_json'] = serializers.serialize("json", [form])

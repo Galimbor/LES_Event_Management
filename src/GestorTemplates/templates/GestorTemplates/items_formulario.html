@@ -192,13 +192,53 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Definições de Publicação</p>
+        <p class="modal-card-title">Definições de Formulário</p>
 
         <button onclick="$('#ver_form_config').removeClass('is-active');" class="delete"></button>
 
       </header>
-      <section class="modal-card-body">
-        
+      <section class="modal-card-body">    
+          
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Tipo de Formulário</label>
+            </div>
+            <div class="field-body">
+              <div class="field is-narrow">
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select>
+                      {% for categoria in categorias %}
+                      <option data-categoria={{categoria.0}} 
+                        {% if formulario.tipoformularioid.categoria == categoria.0 %} selected="selected" {% endif %}>{{categoria.1}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="field-label">
+              <label class="label">Tornar template?</label>
+            </div>
+            <div class="field-body">
+              <div class="field is-narrow">
+                <div class="control">
+           
+                    {% for istemplate in formulario.TEMPLATE_LIST %}
+                  <label class="radio">
+                    <input type="radio" name="template" data-id="{{istemplate.0}}" {% if  formulario.is_template == istemplate.0  %} checked="checked" {% endif %}>
+                    {{istemplate.1}}
+                  </label>
+                  {% endfor %}
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+
       </section><footer class="modal-card-foot">
         <button class="button">Cancel</button>
         <button class="button is-success">Save changes</button>
