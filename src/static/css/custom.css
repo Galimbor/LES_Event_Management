@@ -236,3 +236,61 @@ select {
       background-color:  rgb(70, 116, 199) !important;
   }
 
+
+  .is-filter-active
+  {
+      background-color: rgb(70, 116, 199) !important;
+      color: white !important;
+  }
+
+
+  .none
+  {
+      display: none;
+  }
+
+  .item-description
+  {
+      width: 400px !important;
+  }
+
+  .display-column .item-valid {
+    background-color: #3abb67;
+}
+
+.display-column .item-invalid {
+    background-color: #cc0f35;
+}
+
+.card-header-success {
+    background-color: #3abb67 !important;
+}
+
+
+.sub-title {
+    font-size: 1.5rem;
+}
+
+.block {
+    padding: 2rem;
+    background-color: #DEDEDE;
+}
+
+.pergunta {
+    font-weight: bold;
+    color: #1A76C9;
+}
+
+
+.item-view {
+    cursor: pointer;
+}
+
+.item-view:hover {
+    background-color: rgb(70, 116, 199) !important;
+    color: white;
+}
+
+.hidden {
+    display: none;
+} 

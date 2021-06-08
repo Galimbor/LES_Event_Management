@@ -16,7 +16,7 @@
                         <th>Hora</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="tbody">
                     {% for obj in eventos %}
                     <tr  data-id="{{ obj.id }}" class="datatable-selector">
                         <td class="td">{{ obj.nome }}</td>
@@ -39,34 +39,13 @@
                 <p class="panel-heading">
                   Filtros
                 </p>
+                {% for tipo in tipos %}
+                <a class="panel-block filter-item">
+                  {{tipo.nome}}
+                </a>
+                {% endfor %}
                 <div class="panel-block">
-                  <p class="control has-icons-left">
-                    <input class="input" type="text" placeholder="Search">
-                    <span class="icon is-left">
-                      <i class="fas fa-search" aria-hidden="true"></i>
-                    </span>
-                  </p>
-                </div>
-                <a class="panel-block is-active">
-                  <span class="panel-icon">
-                    <i class="fas fa-book" aria-hidden="true"></i>
-                  </span>
-                  Palestras
-                </a>
-                <a class="panel-block">
-                  <span class="panel-icon">
-                    <i class="fas fa-book" aria-hidden="true"></i>
-                  </span>
-                  Dia Aberto
-                </a>
-                <a class="panel-block">
-                  <span class="panel-icon">
-                    <i class="fas fa-book" aria-hidden="true"></i>
-                  </span>
-                  Talk
-                </a>
-                <div class="panel-block">
-                  <button class="button is-link is-outlined is-fullwidth">
+                  <button class="button reset is-link is-outlined is-fullwidth">
                     Reset all filters
                   </button>
                 </div>
@@ -90,7 +69,6 @@
 
     //   Get event clicable
       const event = document.querySelectorAll('.datatable-selector');
-      console.log(event);
       event.forEach(element => {
         element.addEventListener('click', e => {
         let url = `{% url 'Evento:view-event' event_id=123 %}`;
@@ -101,6 +79,110 @@
       })
       });
 
+
+
+
+    //Get elements
+    const items = document.querySelectorAll('.filter-item');
+
+    //Get rid of the active background of every element
+    const clearActive = function() {
+      items.forEach(element => {
+        element.classList.remove('is-filter-active');
+      })  
+    };
+
+
+    //CSRF Token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Filter element
+    const parentEl = document.querySelector('.tbody');
+    items.forEach(element => {
+      element.addEventListener('click', e => {
+        clearActive();
+        element.classList.add('is-filter-active');
+        $.ajax({
+          url: '/Evento/ajax/',
+          type: 'POST',
+          data: {
+            myData: element.textContent.trim()
+          },        
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            const eventos = data.eventos;
+            parentEl.innerHTML = "";
+            //Populate DOM
+            eventos.forEach(evento => {
+              const markUp = `
+                    <tr  data-id="" class="datatable-selector">
+                        <td class="td">${evento.nome}</td>
+                        <td class="td">${evento.data}</td>
+                        <td class="td">${evento.hora}</td>
+                    </tr>
+              `;
+              parentEl.insertAdjacentHTML("afterbegin", markUp);
+            })
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+        
+
+      })
+    });
+
+    //Reset filter
+    const resetBtn = document.querySelector('.reset');
+    resetBtn.addEventListener('click', function(e) {
+      $.ajax({
+          url: '/Evento/ajax/',
+          type: 'POST',
+          data: {
+            myData: "reset"
+          },        
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            const eventos = data.eventos;
+            clearActive();
+            parentEl.innerHTML = "";
+            //Populate DOM
+            eventos.forEach(evento => {
+              const markUp = `
+                    <tr  data-id="" class="datatable-selector">
+                        <td class="td">${evento.nome}</td>
+                        <td class="td">${evento.data}</td>
+                        <td class="td">${evento.hora}</td>
+                    </tr>
+              `;
+              parentEl.insertAdjacentHTML("afterbegin", markUp);
+            })
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+    });
 
     </script>
 {% endblock content %}

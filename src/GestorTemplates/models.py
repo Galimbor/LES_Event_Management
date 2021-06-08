@@ -71,8 +71,6 @@ class Formulario(models.Model):
         Gcp, models.DO_NOTHING, db_column="GCPid"
     )  # Field name made lowercase.
 
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
-
     class Meta:
         managed = True
         db_table = "Formulario"
