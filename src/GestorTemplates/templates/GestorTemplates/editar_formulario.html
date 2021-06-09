@@ -168,7 +168,8 @@
     var subcampos_raw = '{{subcampos_json | safe}}';
     // var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
     let success_url ='{{ success_url | safe }}'
-    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw, success_url);
+    let tipo_formulario = '{{ formulario.tipoformularioid.categoria }}'
+    var form = new FormManager(formulario_raw, tipo_formulario, campos_raw, subcampos_raw, success_url);
     form.renderAll();
 
 </script>

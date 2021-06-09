@@ -206,11 +206,10 @@
             <div class="field-body">
               <div class="field is-narrow">
                 <div class="control">
-                  <div class="select is-fullwidth">
+                  <div class="select is-fullwidth tipo_formulario">
                     <select>
-                      {% for categoria in categorias %}
-                      <option data-categoria={{categoria.0}} 
-                        {% if formulario.tipoformularioid.categoria == categoria.0 %} selected="selected" {% endif %}>{{categoria.1}}</option>
+                      {% for tipoformulario in categorias %}
+                      <option data-tipoformulario={{tipoformulario.0}} >{{tipoformulario.1}}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -225,11 +224,11 @@
             </div>
             <div class="field-body">
               <div class="field is-narrow">
-                <div class="control">
+                <div class="control is_template_option">
            
                     {% for istemplate in formulario.TEMPLATE_LIST %}
                   <label class="radio">
-                    <input type="radio" name="template" data-id="{{istemplate.0}}" {% if  formulario.is_template == istemplate.0  %} checked="checked" {% endif %}>
+                    <input type="radio" name="template" data-id="{{istemplate.0}}">
                     {{istemplate.1}}
                   </label>
                   {% endfor %}
@@ -240,8 +239,8 @@
           </div>
 
       </section><footer class="modal-card-foot">
-        <button class="button">Cancel</button>
-        <button class="button is-success">Save changes</button>
+        <button class="button" onclick="$('#ver_form_config').removeClass('is-active');"> Cancel</button>
+        <button class="button is-success save-form-settings">Save changes</button>
 
       </footer>
 

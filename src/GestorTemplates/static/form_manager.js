@@ -12,8 +12,9 @@ const ESCOLHA_MULTIPLA = 12; //Primary Key na base de dados de uma pergunta de e
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
-    constructor(formularioJson, camposJson, subcamposJson, success_url, containerDivId = 'form-wrapper') {
+    constructor(formularioJson, tipo_formulario, camposJson, subcamposJson, success_url, containerDivId = 'form-wrapper') {
         this.formulario = JSON.parse(formularioJson)[0];
+        this.tipo_formulario = tipo_formulario
         this.campos = JSON.parse(camposJson);
         this.subcampos = JSON.parse(subcamposJson);
         this.container = $('#' + containerDivId);
@@ -82,7 +83,6 @@ var FormManager = class {
         this.expandCampos(campoHtml)
         this.activeCampo = form.getCampoById(campoHtml.data('id'));
         let padding = $('#subnavbar').height()+20
-        console.log(padding)
         $('html, body').animate({
             scrollTop: campoHtml.offset().top-padding 
         });
@@ -252,10 +252,51 @@ var FormManager = class {
             form.formulario.fields.nome = $(this).val()
             $('.formulario__nome').html($(this).val());
         })
-        $('.button.ver_form_config').click(e => $('.modal.ver_form_config').addClass('is-active'))
 
+        //*********************** */
+        // ***** SETTINGS *******
+        // ***********************
+        let tipo_formulario = this.tipo_formulario;
+        let istemplate = this.formulario.fields.is_template;
+        $('.button.ver_form_config').click(e => {
+            
+            $('.modal.ver_form_config').addClass('is-active')
+            // Tipo de Formulario, Funcao que serve para selecionar qual foi o tipo selecionado anteriormente
+            $('.tipo_formulario option').removeAttr("selected")
+            $('.tipo_formulario option').each(function()
+            {
+                if($(this).data("tipoformulario") == tipo_formulario)
+                    $(this).attr("selected" , "selected")                
+            })
+           
+            //Tornar template
+            $('.is_template_option input').prop("checked", false)
+            $('.is_template_option input').each(function(){
+                if($(this).data("id") == istemplate)
+                    $(this).prop("checked" , true)      
+            })       
+        })
+
+        // SAVE SETTINGS
+        $('.button.save-form-settings').click(e => {
+
+            // Tipo de Formulario
+            form.formulario.fields.tipoformularioid = $('.tipo_formulario option:selected').data("tipoformulario")
+                       
+            //Tornar template
+            form.formulario.fields.is_template= $('.is_template_option input:checked').data("id") 
+            
+            $('.ver_form_config').removeClass('is-active')
+
+        })
+
+
+        // ********************************
+        // *********** PUBLISH
+        // *******************************
         $('.button.ver_form_publish').click(e => $('.modal.ver_form_publish').addClass('is-active'))
 
+        // *********** FIELDS
         $('.create-campo-from-tipo').click(function (e) {
             e.stopPropagation();
             form.createCampo($(this).data('id'), $(this).data('campo-relacionado'));
@@ -429,7 +470,6 @@ var FormManager = class {
      */
     publishForm(id){
         if(id){
-            console.log(id);
             this.formulario.fields.visibilidade = id;
             this.saveRemotely();
         }
