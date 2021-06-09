@@ -52,6 +52,19 @@
 
                 </div>
             </nav>
+            {% if messages %}
+                <article class="message is-success">
+                    {% for message in messages %}
+                        <div class="message-header">
+                            <p>Success</p>
+                            <button id="close-message" class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </article>
+            {% endif %}
             <div class="columns">
                 <div class="column">
                     <div class="tabs is-centered is-medium">
@@ -177,6 +190,13 @@
                                     <td class="td">Unidade Orgânica</td>
                                 {% endif %}
                                 <td>
+                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
+                                            data-id="{{ obj.id }}"
+                                            data-tooltip="Editar componente: {{ obj.nome }}">
+                      <span class="icon">
+                        <i class="far fa-edit"></i>
+                      </span>
+                                    </button>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:componente-delete' obj.id %}"
                                             data-tooltip="Eliminar componente: {{ obj.nome }}">
@@ -332,6 +352,17 @@
 
         $('.datatable-row').click(function () {
             let url = "{% url 'Recurso:componente-detail' my_id=123  %}"
+            location.href = url.replace('123', $(this).data('id'))
+        });
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+
+        $('.button-edit').click(function (e) {
+            e.stopPropagation();
+            let url = "{% url 'Recurso:componente-update' my_id=123  %}"
             location.href = url.replace('123', $(this).data('id'))
         });
 

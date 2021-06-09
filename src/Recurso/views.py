@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.contrib import messages
 from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
     Universidade, EventoRecurso, Componente
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
@@ -31,18 +32,33 @@ def componentes(request):
     return render(request, 'Recurso/componentes_list.html', context)
 
 
+def componente_update(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-update', obj.empresaid.id)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-update', obj.edificioid.id)
+    elif obj.campusid is not None:
+        return redirect('Recurso:campus-update', obj.campusid.id)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-update', obj.universidadeid.id)
+    else:
+        return redirect('Recurso:unidade-organica-update', obj.unidade_organicaid.id)
+
+
 def componente_detail(request, my_id):
     obj = get_object_or_404(Componente, id=my_id)
     if obj.empresaid is not None:
         return redirect('Recurso:empresa-detail', obj.empresaid.id)
     elif obj.edificioid is not None:
-        return redirect('Recurso:edificio-detail', obj.edificioid)
-    elif obj.edificioid is not None:
-        return redirect('Recurso:campus-detail', obj.campusid)
-    elif obj.edificioid is not None:
-        return redirect('Recurso:universidade-detail', obj.universidadeid)
+        return redirect('Recurso:edificio-detail', obj.edificioid.id)
+    elif obj.campusid is not None:
+        return redirect('Recurso:campus-detail', obj.campusid.id)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-detail', obj.universidadeid.id)
     else:
-        return redirect('Recurso:unidade-organica-detail', obj.unidade_organicaid)
+        return redirect('Recurso:unidade-organica-detail', obj.unidade_organicaid.id)
+
 
 def componente_delete(request, my_id):
     obj = get_object_or_404(Componente, id=my_id)
@@ -79,6 +95,16 @@ def recurso_detail(request, my_id):
         return redirect('Recurso:equipamento-detail', obj.equipamentoid.id)
     else:
         return redirect('Recurso:servico-detail', obj.servicoid.id)
+
+
+def recurso_update(request, my_id):
+    obj = get_object_or_404(Recurso, id=my_id)
+    if obj.espacoid is not None:
+        return redirect('Recurso:espaco-update', obj.espacoid.id)
+    elif obj.equipamentoid is not None:
+        return redirect('Recurso:equipamento-update', obj.equipamentoid.id)
+    else:
+        return redirect('Recurso:servico-update', obj.servicoid.id)
 
 
 def recurso_delete(request, my_id):
@@ -119,6 +145,7 @@ def equipamento_create(request):
             recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, empresaid=empresa,
                               equipamentoid=form.instance)
         recurso.save()
+        messages.success(request, 'Equipamento criado com sucesso')
         return redirect('Recurso:recursos')
     context = {
         'form': form,
@@ -127,7 +154,7 @@ def equipamento_create(request):
     return render(request, 'Recurso/equip_create.html', context)
 
 
-def equipamento_detail(request, my_id):
+def equipamento_update(request, my_id):
     obj = get_object_or_404(Equipamento, id=my_id)
     form = EquipamentoForm(request.POST or None, instance=obj)
     if form.is_valid():
@@ -138,6 +165,14 @@ def equipamento_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/equip_create.html", context)
+
+
+def equipamento_detail(request, my_id):
+    obj = get_object_or_404(Equipamento, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/equip_detail.html", context)
 
 
 def equipamento_delete(request, my_id):
@@ -160,14 +195,17 @@ def espaco_create(request):
         form.save()
         recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
         recurso.save()
+        messages.success(request, 'Espaço criado com sucesso')
         return redirect('Recurso:recursos')
+    else:
+        print(form.errors)
     context = {
         'form': form
     }
     return render(request, 'Recurso/espaco_create.html', context)
 
 
-def espaco_detail(request, my_id):
+def espaco_update(request, my_id):
     obj = get_object_or_404(Espaco, id=my_id)
     form = EspacoForm(request.POST or None, instance=obj)
     if form.is_valid():
@@ -178,6 +216,14 @@ def espaco_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/espaco_create.html", context)
+
+
+def espaco_detail(request, my_id):
+    obj = get_object_or_404(Espaco, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/espaco_detail.html", context)
 
 
 def espaco_delete(request, my_id):
@@ -206,6 +252,7 @@ def servico_create(request):
             fonte = 'Interna'
         recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, servicoid=form.instance)
         recurso.save()
+        messages.success(request, 'Serviço criado com sucesso')
         return redirect('Recurso:recursos')
     context = {
         'form': form,
@@ -214,7 +261,7 @@ def servico_create(request):
     return render(request, 'Recurso/servico_create.html', context)
 
 
-def servico_detail(request, my_id):
+def servico_update(request, my_id):
     obj = get_object_or_404(Servico, id=my_id)
     form = ServicoForm(request.POST or None, instance=obj)
     if form.is_valid():
@@ -225,6 +272,14 @@ def servico_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/servico_create.html", context)
+
+
+def servico_detail(request, my_id):
+    obj = get_object_or_404(Servico, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/servico_detail.html", context)
 
 
 def servico_delete(request, my_id):
@@ -247,6 +302,7 @@ def empresa_create(request):
         form.save()
         recurso = Componente(nome=request.POST.get("nome"), empresaid=form.instance)
         recurso.save()
+        messages.success(request, 'Empresa criada com sucesso')
         return redirect('Recurso:componentes')
     context = {
         'form': form,
@@ -260,7 +316,7 @@ def empresa_delete(request, my_id):
     return redirect('Recurso:componentes')
 
 
-def empresa_detail(request, my_id):
+def empresa_update(request, my_id):
     obj = get_object_or_404(Empresa, id=my_id)
     form = EmpresaForm(request.POST or None, instance=obj)
     print(form.fields)
@@ -271,6 +327,14 @@ def empresa_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/empresa_create.html", context)
+
+
+def empresa_detail(request, my_id):
+    obj = get_object_or_404(Empresa, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/empresa_detail.html", context)
 
 
 def edificios(request):
@@ -287,6 +351,7 @@ def edificio_create(request):
         form.save()
         componente = Componente(nome=request.POST.get("nome"), edificioid=form.instance)
         componente.save()
+        messages.success(request, 'Edifício criado com sucesso')
         return redirect('Recurso:componentes')
     context = {
         'form': form,
@@ -300,7 +365,7 @@ def edificio_delete(request, my_id):
     return redirect('Recurso:edificios')
 
 
-def edificio_detail(request, my_id):
+def edificio_update(request, my_id):
     obj = get_object_or_404(Edificio, id=my_id)
     form = EdificioForm(request.POST or None, instance=obj)
     print(form.fields)
@@ -311,6 +376,14 @@ def edificio_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/edificio_create.html", context)
+
+
+def edificio_detail(request, my_id):
+    obj = get_object_or_404(Edificio, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/edificio_detail.html", context)
 
 
 def unidadesorganicas(request):
@@ -327,6 +400,7 @@ def unidadeorganica_create(request):
         form.save()
         componente = Componente(nome=request.POST.get("nome"), unidade_organicaid=form.instance)
         componente.save()
+        messages.success(request, 'Unidade Orgânica criada com sucesso')
         return redirect('Recurso:componentes')
     context = {
         'form': form,
@@ -340,7 +414,7 @@ def unidadeorganica_delete(request, my_id):
     return redirect('Recurso:unidades-organicas')
 
 
-def unidadeorganica_detail(request, my_id):
+def unidadeorganica_update(request, my_id):
     obj = get_object_or_404(Unidadeorganica, id=my_id)
     form = UnidadeOrganicaForm(request.POST or None, instance=obj)
     print(form.fields)
@@ -351,6 +425,14 @@ def unidadeorganica_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/unidade-organica_create.html", context)
+
+
+def unidadeorganica_detail(request, my_id):
+    obj = get_object_or_404(Unidadeorganica, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/unidade-organica_detail.html", context)
 
 
 def universidades(request):
@@ -367,6 +449,7 @@ def universidade_create(request):
         form.save()
         componente = Componente(nome=request.POST.get("nome"), universidadeid=form.instance)
         componente.save()
+        messages.success(request, 'Universidade criada com sucesso')
         return redirect('Recurso:componentes')
     context = {
         'form': form,
@@ -374,7 +457,7 @@ def universidade_create(request):
     return render(request, 'Recurso/universidade_create.html', context)
 
 
-def universidade_detail(request, my_id):
+def universidade_update(request, my_id):
     obj = get_object_or_404(Universidade, id=my_id)
     form = UniversidadeForm(request.POST or None, instance=obj)
     if form.is_valid():
@@ -384,6 +467,14 @@ def universidade_detail(request, my_id):
         'detail': 1
     }
     return render(request, "Recurso/universidade_create.html", context)
+
+
+def universidade_detail(request, my_id):
+    obj = get_object_or_404(Universidade, id=my_id)
+    context = {
+        'obj': obj,
+    }
+    return render(request, "Recurso/universidade_detail.html", context)
 
 
 def universidade_delete(request, my_id):
@@ -406,6 +497,7 @@ def campus_create(request):
         form.save()
         componente = Componente(nome=request.POST.get("nome"), campusid=form.instance)
         componente.save()
+        messages.success(request, 'Campus criado com sucesso')
         return redirect('Recurso:componentes')
     context = {
         'form': form,

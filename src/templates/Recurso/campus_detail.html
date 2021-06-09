@@ -1,27 +1,23 @@
 {% extends 'app.html' %}
 
-
-{% block title %}- Criar Campus{% endblock title %}
+{% block title %}- Página Inicial{% endblock title %}
 
 {% block content %}
     {% load static %}
+
     <div>
         <div class="section">
-            <div class="columns">
-                <div class="column is-is-four-fifths">
-                    <h1 class="title">Campus</h1>
-                        {% csrf_token %}
-                        <div class="form-group-c">
-                            <label class="label" for="nome"> Nome: </label>
-                            {{ obj.nome }}
-                        </div>
-                         <div class="form-group-c">
-                            <label class="label" for="universidade"> Universidade: </label>
-                            {{ obj.universidadeid }}
-                        </div>
+            <div class="columns is-align-items-center">
+                <div class="column">
+                    <h1 class="title has-text-centered">{{ obj.nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Universidade:</span>
+                        <p class="event-body long-text">{{ obj.universidadeid }} </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock content %}
 

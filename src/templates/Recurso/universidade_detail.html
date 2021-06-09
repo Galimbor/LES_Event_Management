@@ -1,34 +1,22 @@
 {% extends 'app.html' %}
 
-
-{% block title %}-Universidade{% endblock title %}
+{% block title %}- Página Inicial{% endblock title %}
 
 {% block content %}
     {% load static %}
+
     <div>
         <div class="section">
-            <div class="columns">
-                <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Universidade</h1>
-
-                    <form class="box" id="form" method="post">
-                        {% csrf_token %}
-
-                        <div class="form-group-c">
-                            <label for="">Nome</label>
-                            {{ form.nome }}
-                        </div>
-
-                        <div class="form-group-c">
-                            <label for="">Localização</label>
-                            {{ form.localizacao }}
-                        </div>
-
-                        <input type='Submit' value='Save'>
-                    </form>
+            <div class="columns is-align-items-center">
+                <div class="column">
+                    <h1 class="title has-text-centered">{{ obj.nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Localização:</span>
+                        <p class="event-body long-text">{{ obj.localizacao }} </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock content %}
 
+{% endblock content %}

@@ -4,82 +4,23 @@
 
 {% block content %}
     {% load static %}
+
     <div>
         <div class="section">
-            <div class="columns">
+            <div class="columns is-align-items-center">
                 <div class="column">
-                    <h1 class="title">Editar Edifício</h1>
-                </div>
-                <a class="button is-success" href="{% url 'Recurso:edificio-create' %}">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
-        </span>
-                    <span>Novo</span>
-                </a>
-
-            </div>
-            <div class="columns is-multiline">
-                {% for obj in object %}
-                    <div class="column is-3">
-                        <div class="card" style="min-height: 10px;">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    {{ obj.nome }}
-                                </p>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    {{ obj.descricao }}
-                                </div>
-                            </div>
-                            <footer class="card-footer">
-                                <a href="#" class="card-footer-item">Editar</a>
-                                <a href="#" class="card-footer-item delete-form-btn"
-                                   data-delete-url="{% url 'Recurso:edificio-delete' obj.id %}">Eliminar</a>
-                            </footer>
-                        </div>
+                    <h1 class="title has-text-centered">{{ obj.nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Localização:</span>
+                        <p class="event-body long-text">{{ obj.localizacao }} </p>
                     </div>
-                {% endfor %}
+                    <div class="event-group">
+                        <span class="span-header">Campus:</span>
+                        <p class="event-body long-text">{{ obj.campusid }} </p>
+                    </div>
+                </div>
             </div>
         </div>
-
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este Edifício?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
     </div>
 
-    <script>
-
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function () {
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
-
-
-        });
-
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
-
-        function deleteForm(id) {
-            deleteFormModal.data(id).hide();
-        }
-
-
-    </script>
 {% endblock content %}
-

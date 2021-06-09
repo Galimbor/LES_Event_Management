@@ -52,6 +52,19 @@
 
                 </div>
             </nav>
+            {% if messages %}
+                <article class="message is-success">
+                    {% for message in messages %}
+                        <div class="message-header">
+                            <p>Success</p>
+                            <button id="close-message" class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </article>
+            {% endif %}
             <div class="columns">
                 <div class="column">
                     <div class="tabs is-centered is-medium">
@@ -105,30 +118,30 @@
             </span>
                             Equipamentos
                         </a>
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:espaco-create'%}">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:espaco-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
                             Espaço
                         </a>
-                            <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                                Serviço
-                            </a>
-{#                                {% for templateFormulario in tiposForm %}#}
-{#                                    <a class="panel-block is-active category"#}
-{#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
-{#                                       id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"#}
-{#                                       data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"#}
-{#                                       data-search="{{ templateFormulario.nome }}">#}
-{#            <span class="panel-icon">#}
-{#              <i class="fas fa-book" aria-hidden="true"></i>#}
-{#            </span>#}
-{#                                        {{ templateFormulario.nome }}#}
-{#                                    </a>#}
-{#                                {% endfor %}#}
+                            Serviço
+                        </a>
+                        {#                                {% for templateFormulario in tiposForm %}#}
+                        {#                                    <a class="panel-block is-active category"#}
+                        {#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
+                        {#                                       id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"#}
+                        {#                                       data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"#}
+                        {#                                       data-search="{{ templateFormulario.nome }}">#}
+                        {#            <span class="panel-icon">#}
+                        {#              <i class="fas fa-book" aria-hidden="true"></i>#}
+                        {#            </span>#}
+                        {#                                        {{ templateFormulario.nome }}#}
+                        {#                                    </a>#}
+                        {#                                {% endfor %}#}
                     </article>
                 </section>
 
@@ -164,9 +177,16 @@
                                 {% if obj.empresaid is not None %}
                                     <td class="td"> {{ obj.empresaid }}</td>
                                 {% else %}
-                                    <td class="td"> -------- </td>
+                                    <td class="td"> --------</td>
                                 {% endif %}
                                 <td>
+                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
+                                            data-id="{{ obj.id }}"
+                                            data-tooltip="Editar recurso: {{ obj.nome }}">
+                      <span class="icon">
+                        <i class="far fa-edit"></i>
+                      </span>
+                                    </button>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
                                             data-tooltip="Eliminar recurso: {{ obj.nome }}">
@@ -186,7 +206,7 @@
 
     </div>
 
-        </div>
+    </div>
     <div class="modal" id="confirm-delete-form-modal" data-id="">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -322,6 +342,17 @@
 
         $('.datatable-row').click(function () {
             let url = "{% url 'Recurso:recurso-detail' my_id=123  %}"
+            location.href = url.replace('123', $(this).data('id'))
+        });
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+
+        $('.button-edit').click(function (e) {
+            e.stopPropagation();
+            let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
             location.href = url.replace('123', $(this).data('id'))
         });
 
