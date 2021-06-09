@@ -12,7 +12,7 @@
     {% load static %}
     <div>
         <section id="subnavbar">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
+            <nav class="" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <a role="button" class="navbar-burger burger"
                        onclick="$('#form-menu-buttons').toggleClass('is-active')">
@@ -161,7 +161,11 @@
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
-                                <td class="td"> {{ obj.empresaid }}</td>
+                                {% if obj.empresaid is not None %}
+                                    <td class="td"> {{ obj.empresaid }}</td>
+                                {% else %}
+                                    <td class="td"> -------- </td>
+                                {% endif %}
                                 <td>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"

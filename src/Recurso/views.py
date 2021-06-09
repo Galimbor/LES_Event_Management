@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
-from .models import Evento,Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, Universidade, EventoRecurso
+from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
+    Universidade, EventoRecurso, Componente
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
 
@@ -22,6 +23,41 @@ def recursos(request):
     return render(request, 'Recurso/recurso_list.html', context)
 
 
+def componentes(request):
+    obj = Componente.objects.all()
+    context = {
+        'object': obj
+    }
+    return render(request, 'Recurso/componentes_list.html', context)
+
+
+def componente_detail(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-detail', obj.empresaid.id)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-detail', obj.edificioid)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:campus-detail', obj.campusid)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:universidade-detail', obj.universidadeid)
+    else:
+        return redirect('Recurso:unidade-organica-detail', obj.unidade_organicaid)
+
+def componente_delete(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-delete', obj.empresaid)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-delete', obj.edificioid)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-delete', obj.universidadeid)
+    elif obj.unidade_organicaid is not None:
+        return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid)
+    else:
+        return redirect('Recurso:campus-delete', obj.campusid)
+
+
 def recursosv2(request, my_id):
     obj = get_object_or_404(Evento, id=my_id)
     eventoRecursos = EventoRecurso.objects.filter(eventoid__id=obj.id)
@@ -32,7 +68,6 @@ def recursosv2(request, my_id):
         'object': recursos
     }
     return render(request, 'Recurso/recurso_list_event.html', context)
-
 
 
 def recurso_detail(request, my_id):
@@ -210,7 +245,9 @@ def empresa_create(request):
     form = EmpresaForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('Recurso:empresas')
+        recurso = Componente(nome=request.POST.get("nome"), empresaid=form.instance)
+        recurso.save()
+        return redirect('Recurso:componentes')
     context = {
         'form': form,
     }
@@ -220,7 +257,7 @@ def empresa_create(request):
 def empresa_delete(request, my_id):
     obj = get_object_or_404(Empresa, id=my_id)
     obj.delete()
-    return redirect('Recurso:empresas')
+    return redirect('Recurso:componentes')
 
 
 def empresa_detail(request, my_id):
@@ -248,7 +285,9 @@ def edificio_create(request):
     form = EdificioForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('Recurso:edificios')
+        componente = Componente(nome=request.POST.get("nome"), edificioid=form.instance)
+        componente.save()
+        return redirect('Recurso:componentes')
     context = {
         'form': form,
     }
@@ -286,7 +325,9 @@ def unidadeorganica_create(request):
     form = UnidadeOrganicaForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('Recurso:unidades-organicas')
+        componente = Componente(nome=request.POST.get("nome"), unidade_organicaid=form.instance)
+        componente.save()
+        return redirect('Recurso:componentes')
     context = {
         'form': form,
     }
@@ -324,7 +365,9 @@ def universidade_create(request):
     form = UniversidadeForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('Recurso:universidades')
+        componente = Componente(nome=request.POST.get("nome"), universidadeid=form.instance)
+        componente.save()
+        return redirect('Recurso:componentes')
     context = {
         'form': form,
     }
@@ -361,7 +404,9 @@ def campus_create(request):
     form = CampusForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('Recurso:campis')
+        componente = Componente(nome=request.POST.get("nome"), campusid=form.instance)
+        componente.save()
+        return redirect('Recurso:componentes')
     context = {
         'form': form,
     }

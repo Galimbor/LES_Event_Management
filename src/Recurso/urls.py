@@ -6,16 +6,25 @@ from Recurso.views import recursos, recursosv2, recurso_detail, recurso_delete, 
     empresa_create, empresa_delete, edificio_create, edificio_delete, unidadeorganica_delete, unidadeorganica_create, \
     universidades, universidade_create, universidade_delete, campis, campus_delete, campus_create, espaco_delete, \
     servico_detail, equipamento_detail, empresa_detail, unidadeorganica_detail, universidade_detail, campus_update, \
-    edificio_detail, espaco_detail, campus_detail
+    edificio_detail, espaco_detail, campus_detail, componentes, componente_delete, componente_detail
 
 app_name = 'Recurso'
 
 urlpatterns = [
+
+    # RECURSO
     path('', recursos, name='recursos'),
     path('all/<int:my_id>/', recursosv2, name='recursos-2'),
     # # path('recurso/recurso_create/', recurso_create, name='recurso-create'),
     path('recurso/<int:my_id>/', recurso_detail, name='recurso-detail'),
     path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),
+
+
+
+    # COMPONENTE
+    path('componentes', componentes, name='componentes'),
+    path('componentes/<int:my_id>/delete/', componente_delete, name='componente-delete'),
+    path('componente/<int:my_id>/', componente_detail, name='componente-detail'),
 
     # ESPAÇO
     path('espaco', espacos, name='espacos'),
