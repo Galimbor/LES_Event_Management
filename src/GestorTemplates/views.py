@@ -30,7 +30,6 @@ def create_form(request):
 
 class FormList(ListView):
     model = Formulario
-    paginate_by = 10 
     template_name = 'GestorTemplates/lista_formularios.html'
 
     def get_context_data(self, **kwargs):
