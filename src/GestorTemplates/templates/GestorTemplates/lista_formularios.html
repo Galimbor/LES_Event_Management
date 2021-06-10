@@ -153,9 +153,9 @@
               <td> {{obj.tipoeventoid}}</td>
 
               {% if obj.updated %}
-              <td>{{obj.updated |date:'d-m-Y' }}</td>
+              <td>{{obj.updated |date:'Y-m-d H:m' }}</td>
               {% else %}
-              <td>{{obj.created |date:'d-m-Y'}}</td>
+              <td>{{obj.created |date:'Y-m-d H:m'}}</td>
               {% endif %}
               <td>{{obj.get_visibilidade_display}}</td>
               <td>             

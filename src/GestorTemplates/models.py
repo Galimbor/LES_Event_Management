@@ -86,6 +86,22 @@ class Formulario(models.Model):
         return self.nome
 
 
+class EventoFormulario(models.Model):
+    eventoid = models.ForeignKey(
+        Evento, models.CASCADE, db_column="eventoID"
+    )  # Field name made lowercase.
+    formularioid = models.ForeignKey(
+        Formulario, models.CASCADE, db_column="formularioID"
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "Evento_Formulario"
+
+    def str(self):
+        return "Evento: {} ---- Formulario: {}".format( self.eventoid, self.formularioid)
+
+
 class Tipocampo(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -111,9 +127,8 @@ class Campo(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
     )  # Field name made lowercase.
-    conteudo = models.CharField(
-        db_column="Conteudo", max_length=255
-    )  # Field name made lowercase.
+    conteudo = models.TextField(db_column='Conteudo')
+     # Field name made lowercase.
     obrigatorio = models.BooleanField(
         db_column="Obrigatorio"
     )  # Field name made lowercase. This field type is a guess.

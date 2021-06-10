@@ -71,7 +71,12 @@
               <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                 <div class="dropdown-content">
                   <div class="dropdown-item">
-                    <p>Outras opções como fazer cópia, guardar como template, eliminar etc,</p>
+                    <button class="button is-text has-text-grey  has-tooltip-bottom delete-form-btn"  data-delete-url="{% url 'delete-form' object.pk %}" data-tooltip="Eliminar formulário: {{object.nome}}">
+                      <span class="icon">
+                        <i class="far fa-trash-alt"></i>
+                      </span>
+                      <span>Eliminar formulário </span>
+                    </button> 
                   </div>
                 </div>
               </div>
@@ -119,6 +124,23 @@
       </div>
   </div>
 
+</div>
+
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar este formulário?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal">Cancel</button>
+    </footer>
+  </div>
 </div>
 
 <!--FORM PUBLISH MODAL-->
@@ -171,6 +193,19 @@
     let tipo_formulario = '{{ formulario.tipoformularioid.categoria }}'
     var form = new FormManager(formulario_raw, tipo_formulario, campos_raw, subcampos_raw, success_url);
     form.renderAll();
+
+      // *************** DELETE FORM ***************
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-form-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript 
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
 
 </script>
 

@@ -90,6 +90,7 @@ class FormHandling():
     #Cleans data for creating Campo objects
     #@returns clean dictionary for rapid object create
     def clean_form(self, campos_dict, campo=None):
+        # printspecial(campos_dict)
         tipo_campo = Tipocampo.objects.get(id = campos_dict['fields']['tipocampoid'])
         campos_dict['fields']['tipocampoid'] = tipo_campo
         if campos_dict['fields']['campo_relacionado'] and campo:
@@ -98,27 +99,47 @@ class FormHandling():
         return campos_dict['fields']
 
 
-    def saveSubCampos(self, subcampos, new_campo, formulario):        
+    def saveSubCampos(self, subcampos, formulario, new_campo=None):        
         for subcampo in subcampos:
-            subcampo_clean = self.clean_form(subcampo, new_campo)
-            new_subcampo = Campo.objects.create(**subcampo_clean)    
-            CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
+            if not Campo.objects.filter(pk=subcampo['pk']).exists():
+                if(new_campo):
+                    subcampo_clean = self.clean_form(subcampo, new_campo)
+                else:
+                    campo_obj = Campo.objects.get(pk = subcampo["fields"]["campo_relacionado"])
+                    subcampo_clean = self.clean_form(subcampo, campo_obj)
+                new_subcampo = Campo.objects.create(**subcampo_clean)    
+                new_subcampo = Campo.objects.create(**subcampo_clean)    
+                new_subcampo = Campo.objects.create(**subcampo_clean)    
+                CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
+
+
+    def updateSubCampos(self, subcampos, formulario):   
+        # subcampos estao ja limpos (com o tipocampo certo??)    
+        for subcampo in subcampos:
+            subcampos_qs = Campo.objects.filter(pk=subcampo['pk'])
+            subcampos_qs.update(**subcampo["fields"])  
+            
 
     
-    def deleteCampos(self, updated_campo, campo, formulario):
-        if(formulario.is_template):
-            #se for de escolha multipla elimina todos os campos
-            Campo.objects.filter(campo_relacionado = updated_campo[0]).delete() 
-            updated_campo.delete()
-
-        # elif(not formulario.is_template):
-        #                 campo_formulario.delete() 
+    def deleteCampos(self, campo_qs, formulario):
+        for campo in campo_qs:
+            forms_with_this_campo = CampoFormulario.objects.filter(campoid=campo.id)
+            # se o campo estiver em mais do que um formulario
+            # apagamentos apenas a relacao campo_formulario
+            if forms_with_this_campo.count()>1: 
+                CampoFormulario.objects.filter(campoid=campo.id, formularioid=formulario).delete()      
+            # caso contrario apagamos o campo definitivamente 
+            else:
+                Campo.objects.filter(campo_relacionado = campo).delete() 
+                campo_qs.delete()
 
 
     def deleteSubCampos(self, subcampos_dict, formulario):
         for subcampo in subcampos_dict:
             if(subcampo.get("delete")):
-                Campo.objects.filter(pk = subcampo["pk"]).delete() 
+                Campo.objects.filter(pk = subcampo["pk"]).delete()
+
+
 
     def saveCampos(self,  objects_dict, formulario):
         ## TODO fazer o eliminar, checkar no objeto campo delete=true --> elimin  
@@ -131,19 +152,18 @@ class FormHandling():
                 if(not Campo.objects.filter(pk=campo['pk']).exists()):
                     new_campo = Campo.objects.create(**campos_dict_clean)
                     CampoFormulario.objects.create(campoid = new_campo, formularioid = formulario)
-                    self.saveSubCampos(subcampos,new_campo, formulario)
+                    self.saveSubCampos(subcampos,formulario, new_campo)
                 #update existing Campo
                 else: 
                     #TODO check save subcampos
                     updated_campo  = Campo.objects.filter(pk=campo['pk'])
                     campo_formulario = CampoFormulario.objects.filter(campoid = campo['pk'], formularioid = formulario)
                     if(campo.get("delete")):
-                        self.deleteCampos(updated_campo, campo, formulario)
-                   
-                    # TODO MISS UPDATE SUBCAMPOS
+                        self.deleteCampos(updated_campo, formulario)
                     else:
                         updated_campo.update(**campos_dict_clean)
-                        # self.saveSubCampos(subcampos,new_campo, formulario)
+                        self.updateSubCampos(subcampos, formulario)
+        self.saveSubCampos(subcampos,formulario)
         self.deleteSubCampos(subcampos, formulario)     
         #trying to save empty form ##TODO CHECK BACK LATER ON
      
@@ -195,6 +215,7 @@ class FormCreate(FormHandling, CreateView):
     def duplicate_form(self, form):
         todos_campos_form = self.get_campos(form.pk)
         form.pk = None #django create new object by deleting his pk and the clone it
+        form.is_template = 0
         form.save()
         form.created = timezone.now()
         form.save()
@@ -270,9 +291,18 @@ class FormDelete(DeleteView):
     def get(self, request, *args, **kwargs):
 
         form = self.get_object()
-        # if (form.is_template):
-        #     # messages.add_message(request, messages.WARNING, 'Não pode eliminar formulários que são templates')
-        #     return redirect(reverse_lazy('form-list'))
+        eventos_deste_form = EventoFormulario.objects.filter(formularioid=form).values_list('eventoid')
+
+        # nao eliminar formularios que estao em eventos
+        if eventos_deste_form:
+            messages.add_message(request, messages.WARNING, 'Não é possível eliminar formulários associados a eventos')
+            return redirect(reverse_lazy('form-list'))
+
+        campos_deste_form = CampoFormulario.objects.filter(formularioid=form).values_list('campoid')
+        respostas_deste_form = Resposta.objects.filter(campoid__in=campos_deste_form, eventoid__in=eventos_deste_form.values_list('eventoid'))
+        if respostas_deste_form.exists():
+            messages.add_message(request, messages.WARNING, 'Querias.. querias... Mas este formulário tem respostas pá:')
+            return redirect(reverse_lazy('form-list'))
         return self.post(request, *args, **kwargs)
 
 
