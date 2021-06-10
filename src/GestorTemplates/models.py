@@ -146,6 +146,7 @@ class CampoFormulario(models.Model):
     formularioid = models.ForeignKey(
         "Formulario", models.CASCADE, db_column="FormularioId"
     )  # Field name made lowercase.
+    # position_index = models.IntegerField(default = 0,  db_column="Posicao")
 
     class Meta:
         managed = True

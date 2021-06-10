@@ -90,15 +90,36 @@ class FormHandling():
     
     #Cleans data for creating Campo objects
     #@returns clean dictionary for rapid object create
-    def clean_form(self, campos_dict):
-        # printspecial(campos_dict)
+    def clean_form(self, campos_dict, campo=None):
         tipo_campo = Tipocampo.objects.get(id = campos_dict['fields']['tipocampoid'])
         campos_dict['fields']['tipocampoid'] = tipo_campo
+        if campos_dict['fields']['campo_relacionado'] and campo:
+            campos_dict['fields']['campo_relacionado'] = campo
+            #print('tipo campo clean', campos_dict['fields']['campo_relacionado'])
         return campos_dict['fields']
 
 
+    def saveSubCampos(self, subcampos, new_campo, formulario):        
+        for subcampo in subcampos:
+            subcampo_clean = self.clean_form(subcampo, new_campo)
+            new_subcampo = Campo.objects.create(**subcampo_clean)    
+            CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
+
+    
+    def deleteCampos(self, updated_campo, campo, formulario):
+        if(formulario.is_template):
+            #se for de escolha multipla elimina todos os campos
+            Campo.objects.filter(campo_relacionado = updated_campo[0]).delete() 
+            updated_campo.delete()
+
+        # elif(not formulario.is_template):
+        #                 campo_formulario.delete() 
+
+
     def saveCampos(self,  objects_dict, formulario):
+        ## TODO fazer o eliminar, checkar no objeto campo delete=true --> elimin  
         campos = objects_dict['campos']
+        subcampos = objects_dict['subcampos']
         if(campos):
             for campo in campos:
                 campos_dict_clean = self.clean_form(campo)
@@ -106,12 +127,21 @@ class FormHandling():
                 if(not Campo.objects.filter(pk=campo['pk']).exists()):
                     new_campo = Campo.objects.create(**campos_dict_clean)
                     CampoFormulario.objects.create(campoid = new_campo, formularioid = formulario)
+                    self.saveSubCampos(subcampos,new_campo, formulario)
                 #update existing Campo
                 else: 
+                    #TODO check save subcampos
                     updated_campo  = Campo.objects.filter(pk=campo['pk'])
-                    updated_campo.update(**campos_dict_clean)
+                    campo_formulario = CampoFormulario.objects.filter(campoid = campo['pk'], formularioid = formulario)
+                    if(campo.get("delete")):
+                        self.deleteCampos(updated_campo, campo, formulario)
+                    # TODO
+                    else:
+                        updated_campo.update(**campos_dict_clean)
+                        # self.saveSubCampos(subcampos,new_campo, formulario)
+                
         #trying to save empty form ##TODO CHECK BACK LATER ON
-        
+     
 
     
     def post(self, *args, **kwargs):
@@ -127,6 +157,8 @@ class FormHandling():
                 ## 2. Save Campos fields
                 # printspecial(objects_dict)
                 self.saveCampos(objects_dict, f[0])
+
+
 
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
