@@ -57,7 +57,7 @@
                     {% for message in messages %}
                         <div class="message-header">
                             <p>Success</p>
-                            <button id="close-message" class="delete" aria-label="delete"></button>
+                            <button id="close-message " class="delete" aria-label="delete"></button>
                         </div>
                         <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
                             {{ message }}
@@ -122,14 +122,14 @@
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Espaço
                         </a>
+                        Espaço
                         <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Serviço
                         </a>
+                        Serviço
                         {#                                {% for templateFormulario in tiposForm %}#}
                         {#                                    <a class="panel-block is-active category"#}
                         {#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
@@ -142,6 +142,7 @@
                         {#                                        {{ templateFormulario.nome }}#}
                         {#                                    </a>#}
                         {#                                {% endfor %}#}
+
                     </article>
                 </section>
 
@@ -174,11 +175,7 @@
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
-                                {% if obj.empresaid is not None %}
-                                    <td class="td"> {{ obj.empresaid }}</td>
-                                {% else %}
-                                    <td class="td"> --------</td>
-                                {% endif %}
+                                <td class="td"> {{ obj.empresaid }}</td>
                                 <td>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
@@ -198,30 +195,13 @@
                             </tr>
                         {% endfor %}
                         </tbody>
+
                     </table>
                 </div>
             </div>
         </div>
 
 
-    </div>
-
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este recurso?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
     </div>
 
 

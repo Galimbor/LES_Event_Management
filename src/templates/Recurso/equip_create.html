@@ -9,7 +9,13 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Equipamento</h1>
+                    <h1 class="title">
+                        {% if detail %}
+                            Editar Equipamento
+                        {% else %}
+                            Criar Equipamento
+                        {% endif %}
+                    </h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
@@ -26,8 +32,8 @@
 
 
                         <div class="form-group-c">
-                            <label class="label" for=""> Empresa: </label>
-                                {{ form2.empresaid }}
+                            <label class="label" for="empresaid"> Empresa: </label>
+                            {{ form2.empresaid }}
                         </div>
 
                         <div class="form-group-c">
@@ -40,7 +46,11 @@
                             {{ form.espacoid }}
                         </div>
 
-                        <input class="button is-primary" type='Submit' value='Criar'>
+                        {% if detail %}
+                            <input class="button is-primary" type='Submit' value='Guardar'>
+                        {% else %}
+                            <input class="button is-primary" type='Submit' value='Criar'>
+                        {% endif %}
                     </form>
                 </div>
             </div>

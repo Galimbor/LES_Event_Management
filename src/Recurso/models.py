@@ -73,11 +73,12 @@ class Servico(models.Model):
 
 class EventoRecurso(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    eventoid = models.OneToOneField(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
-    recursoid = models.OneToOneField('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
+    recursoid = models.ForeignKey('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
 
     class Meta:
         managed = False
+        unique_together = ('eventoid', 'recursoid')
         db_table = 'Evento_Recurso'
 
 
@@ -87,8 +88,6 @@ class Campus(models.Model):
 
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
-    # localizacao = models.CharField(db_column='Localizaçao', max_length=255, blank=True,
-    #                                null=True)  # Field name made lowercase.
     universidadeid = models.ForeignKey('Universidade', models.DO_NOTHING,
                                        db_column='UniversidadeID')  # Field name made lowercase.
 
@@ -107,7 +106,6 @@ class Edificio(models.Model):
                                    null=True)  # Field name made lowercase.
     campusid = models.ForeignKey(Campus, models.DO_NOTHING, db_column='CampusID', blank=True,
                                  null=True)  # Field name made lowercase.
-
     class Meta:
         managed = False
         db_table = 'Edificio'
@@ -164,6 +162,25 @@ class Recurso(models.Model):
     class Meta:
         managed = False
         db_table = 'Recurso'
+
+
+class Componente(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    nome = models.CharField(db_column='Nome', max_length=255)  # Field name made lowercase.
+    empresaid = models.ForeignKey(Empresa, models.DO_NOTHING, db_column='EmpresaId', blank=True,
+                                  null=True)  # Field name made lowercase.
+    campusid = models.ForeignKey(Campus, models.DO_NOTHING, db_column='CampusId', blank=True,
+                                 null=True)  # Field name made lowercase.
+    edificioid = models.ForeignKey(Edificio, models.DO_NOTHING, db_column='EdificioId', blank=True,
+                                   null=True)  # Field name made lowercase.
+    unidade_organicaid = models.ForeignKey(Unidadeorganica, models.DO_NOTHING, db_column='UOrganicaId', blank=True,
+                                           null=True)  # Field name made lowercase.
+    universidadeid = models.ForeignKey(Universidade, models.DO_NOTHING, db_column='UniversidadeId', blank=True,
+                                       null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'RecursoComponente'
 
 
 class Tipoespaco(models.Model):

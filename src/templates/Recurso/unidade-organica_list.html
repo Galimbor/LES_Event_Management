@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <footer class="card-footer">
-                                <a href="#" class="card-footer-item">Editar</a>
+                                <a href="{% url 'Recurso:unidade-organica-detail' obj.id %}" class="card-footer-item">Editar</a>
                                 <a href="#" class="card-footer-item delete-form-btn"
                                    data-delete-url="{% url 'Recurso:unidade-organica-delete' obj.id %}">Eliminar</a>
                             </footer>

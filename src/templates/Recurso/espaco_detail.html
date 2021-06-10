@@ -1,0 +1,42 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+    <div>
+        <div class="section">
+            <div class="columns is-align-items-center">
+                <div class="column">
+                    <h1 class="title has-text-centered">{{ obj.nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Tipo:</span>
+                        <p class="event-body long-text">{{ obj.tipo }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Capacidade:</span>
+                        <p class="event-body long-text">{{ obj.capacidade }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Mobilidade:</span>
+                        {% if obj.edificioid is True %}
+                            <p class="event-body long-text">Sim</p>
+                        {% else %}
+                            <p class="event-body long-text">Não</p>
+                        {% endif %}
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Edifício:</span>
+                        {% if obj.edificioid is not None %}
+                            <p class="event-body long-text">{{ obj.edificioid }} </p>
+                        {% else %}
+                            <p class="event-body long-text">--------</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

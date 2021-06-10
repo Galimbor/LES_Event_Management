@@ -9,8 +9,13 @@
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Espaço</h1>
-
+                    <h1 class="title">
+                        {% if detail %}
+                            Editar Espaço
+                        {% else %}
+                            Criar Espaço
+                        {% endif %}
+                    </h1>
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
 
@@ -39,7 +44,11 @@
                             {{ form.edificioid }}
                         </div>
 
-                        <input class="button is-primary" type='Submit' value='Criar'>
+                        {% if detail %}
+                            <input class="button is-primary" type='Submit' value='Guardar'>
+                        {% else %}
+                            <input class="button is-primary" type='Submit' value='Criar'>
+                        {% endif %}
                     </form>
                 </div>
             </div>

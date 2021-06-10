@@ -29,7 +29,7 @@
                                 <ul>
                                     <li class="is-active">
                                         <a href="#" aria-current="page">
-                                            <span class="has-text-weight-bold">Recursos</span>
+                                            <span class="has-text-weight-bold">Componentes</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -76,28 +76,41 @@
                                     <span>Todos</span>
                                 </a>
                             </li>
-                            <li data-column="1" data-filter="Equipamento">
+                            <li data-column="1" data-filter="Empresa">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-toolbox"
                                                                    aria-hidden="true"></i></span>
-                                    <span>Equipamentos</span>
+                                    <span>Empresas</span>
                                 </a>
                             </li>
-                            <li data-column="1" data-filter="Espaço">
+                            <li data-column="1" data-filter="Edificio">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-home"
                                                                    aria-hidden="true"></i></span>
-                                    <span>Espaços</span>
+                                    <span>Edifícios</span>
                                 </a>
                             </li>
-                            <li data-column="1" data-filter="Serviço">
+                            <li data-column="1" data-filter="Unidade">
                                 <a>
                                     <span class="icon is-small"><i class="fas fa-cogs"
                                                                    aria-hidden="true"></i></span>
-                                    <span>Serviços</span>
+                                    <span>Unidades Orgânicas</span>
                                 </a>
                             </li>
-
+                            <li data-column="1" data-filter="Universidade">
+                                <a>
+                                    <span class="icon is-small"><i class="fas fa-cogs"
+                                                                   aria-hidden="true"></i></span>
+                                    <span>Universidades</span>
+                                </a>
+                            </li>
+                            <li data-column="1" data-filter="Campus">
+                                <a>
+                                    <span class="icon is-small"><i class="fas fa-cogs"
+                                                                   aria-hidden="true"></i></span>
+                                    <span>Campis</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -107,41 +120,42 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Selecione o tipo de Recurso</p>
+                    <p class="modal-card-title">Selecione o tipo de Componente</p>
                     <button class="close-modal delete" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">
                     <article class="panel is-primary" id="tipos-formulario">
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:equipamento-create' %}">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:empresa-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Equipamentos
+                            Empresa
                         </a>
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:espaco-create' %}">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:edificio-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Espaço
+                            Edifício
                         </a>
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:unidade-organica-create' %}">
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Serviço
+                            Unidade Orgânica
                         </a>
-                        {#                                {% for templateFormulario in tiposForm %}#}
-                        {#                                    <a class="panel-block is-active category"#}
-                        {#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
-                        {#                                       id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"#}
-                        {#                                       data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"#}
-                        {#                                       data-search="{{ templateFormulario.nome }}">#}
-                        {#            <span class="panel-icon">#}
-                        {#              <i class="fas fa-book" aria-hidden="true"></i>#}
-                        {#            </span>#}
-                        {#                                        {{ templateFormulario.nome }}#}
-                        {#                                    </a>#}
-                        {#                                {% endfor %}#}
+
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:universidade-create' %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+                            Universidade
+                        </a>
+                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:campus-create' %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+                            Campuss
+                        </a>
                     </article>
                 </section>
 
@@ -157,8 +171,6 @@
                         <tr>
                             <th>Nome</th>
                             <th>Tipo</th>
-                            <th>Fonte</th>
-                            <th>Empresa</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -166,30 +178,28 @@
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
                                 <td class="td">{{ obj.nome }}</td>
-                                {% if obj.espacoid is not None %}
-                                    <td class="td"> Espaço</td>
-                                {% elif obj.equipamentoid.nome is not None %}
-                                    <td class="td"> Equipamento</td>
-                                {% elif obj.servicoid.nome is not None %}
-                                    <td class="td"> Serviço</td>
-                                {% endif %}
-                                <td class="td"> {{ obj.fonte }}</td>
                                 {% if obj.empresaid is not None %}
-                                    <td class="td"> {{ obj.empresaid }}</td>
-                                {% else %}
-                                    <td class="td"> --------</td>
+                                    <td class="td">Empresa</td>
+                                {% elif obj.edificioid is not None %}
+                                    <td class="td">Edificio</td>
+                                {% elif obj.universidadeid is not None %}
+                                    <td class="td">Universidade</td>
+                                {% elif obj.campusid is not None %}
+                                    <td class="td">Campus</td>
+                                {% elif obj.unidade_organicaid is not None %}
+                                    <td class="td">Unidade Orgânica</td>
                                 {% endif %}
                                 <td>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
-                                            data-tooltip="Editar recurso: {{ obj.nome }}">
+                                            data-tooltip="Editar componente: {{ obj.nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
-                                            data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                            data-tooltip="Eliminar recurso: {{ obj.nome }}">
+                                            data-delete-url="{% url 'Recurso:componente-delete' obj.id %}"
+                                            data-tooltip="Eliminar componente: {{ obj.nome }}">
                       <span class="icon">
                         <i class="far fa-trash-alt"></i>
                       </span>
@@ -211,7 +221,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este recurso?</p>
+                <p class="modal-card-title">Tem a certeza que deseja eliminar este componente?</p>
                 <button class="close-modal delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">
@@ -321,7 +331,7 @@
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
                 },
-                "columnDefs": [{"orderable": false, "targets": 4},
+                "columnDefs": [{"orderable": false, "targets": 2},
                     {
                         "targets": [0],
                         "visible": true
@@ -341,7 +351,7 @@
 
 
         $('.datatable-row').click(function () {
-            let url = "{% url 'Recurso:recurso-detail' my_id=123  %}"
+            let url = "{% url 'Recurso:componente-detail' my_id=123  %}"
             location.href = url.replace('123', $(this).data('id'))
         });
 
@@ -352,7 +362,7 @@
 
         $('.button-edit').click(function (e) {
             e.stopPropagation();
-            let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
+            let url = "{% url 'Recurso:componente-update' my_id=123  %}"
             location.href = url.replace('123', $(this).data('id'))
         });
 

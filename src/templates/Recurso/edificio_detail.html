@@ -11,16 +11,12 @@
                 <div class="column">
                     <h1 class="title has-text-centered">{{ obj.nome }}</h1>
                     <div class="event-group">
-                        <span class="span-header">Descrição:</span>
-                        <p class="event-body long-text">{{ obj.descricao }} </p>
+                        <span class="span-header">Localização:</span>
+                        <p class="event-body long-text">{{ obj.localizacao }} </p>
                     </div>
                     <div class="event-group">
-                        <span class="span-header">Unidade Orgânica:</span>
-                        {% if obj.unidadeorganicaid is not None %}
-                        <p class="event-body long-text">{{ obj.unidadeorganicaid }} </p>
-                        {% else %}
-                        <p class="event-body long-text">--------</p>
-                        {% endif %}
+                        <span class="span-header">Campus:</span>
+                        <p class="event-body long-text">{{ obj.campusid }} </p>
                     </div>
                 </div>
             </div>
