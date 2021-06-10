@@ -18,9 +18,7 @@
                         <div class="item-description">
                             {{ espaco.nome }}
                         </div>
-                        <div class="item-information">
-                            Quantidade: {{ espaco.quantidade }}
-                        </div>
+                        
                         <div class="item-information">
                             Data: {{ espaco.horariorequisicao.datainicial }} - {{ espaco.horariorequisicao.datafinal }}
                         </div>
@@ -28,9 +26,7 @@
                             Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
                         </div>
                         <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
-                            <span class="btn-espaco">Atribuir Espaco</span>
+                            <span data-time={{espaco.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
                     </div>
                     <br>
@@ -43,9 +39,7 @@
                         <div class="item-description">
                             {{ equipamento.nome }}
                         </div>
-                        <div class="item-information">
-                            Quantidade: {{ equipamento.quantidade }}
-                        </div>
+                        
                         <div class="item-information">
                             Data: {{ equipamento.horariorequisicao.datainicial }} - {{ equipamento.horariorequisicao.datafinal }}
                         </div>
@@ -53,9 +47,7 @@
                             Hora: {{ equipamento.horariorequisicao.horainicial }} - {{ equipamento.horariorequisicao.horafinal }}
                         </div>
                         <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
-                            <span class="btn-equipamento">Atribuir Equipamento</span>
+                            <span data-time={{equipamento.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
                     </div>
 
@@ -70,9 +62,7 @@
                         <div class="item-description">
                             {{ servico.nome }}
                         </div>
-                        <div class="item-information">
-                            Quantidade: {{ servico.quantidade }}
-                        </div>
+                        
                         <div class="item-information">
                             Data: {{ servico.horariorequisicao.datainicial }} - {{ servico.horariorequisicao.datafinal }}
                         </div>
@@ -80,9 +70,7 @@
                             Hora: {{ servico.horariorequisicao.horainicial }} - {{ servico.horariorequisicao.horafinal }}
                         </div>
                         <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
-                            <span class="btn-servico">Atribuir Servico</span>
+                            <span data-time={{servico.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
                     </div>
                     <br>
@@ -97,66 +85,9 @@
     </div>
 
     <script>
-        const itemsEspaco = document.querySelectorAll('.item-espaco');
-        const itemsEquipamento = document.querySelectorAll('.item-equipamento');
-        const itemsServico = document.querySelectorAll('.item-servico');
-        const checkBtn = document.querySelector('.mdi-check');
-        const closeBtn = document.querySelector('.mdi-check');
-
-        itemsEquipamento.forEach(item => {
-            const parentEl = item.lastChild.previousSibling;
-            const check = parentEl.firstChild.nextSibling;
-            const x = check.nextSibling.nextSibling;
-
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
-        });
-
-        itemsEspaco.forEach(item => {
-            const parentEl = item.lastChild.previousSibling;
-            const check = parentEl.firstChild.nextSibling;
-            const x = check.nextSibling.nextSibling;
-
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
-        });
-
-        itemsServico.forEach(item => {
-            const parentEl = item.lastChild.previousSibling;
-            const check = parentEl.firstChild.nextSibling;
-            const x = check.nextSibling.nextSibling;
-
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
-        });
-
 
             //CSRF Token
-        function getCookie(name) {
+            function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
                 const cookies = document.cookie.split(';');
@@ -172,6 +103,91 @@
             return cookieValue;
         }
         const csrftoken = getCookie('csrftoken');
+
+
+        const itemsEspaco = document.querySelectorAll('.item-espaco');
+        const itemsEquipamento = document.querySelectorAll('.item-equipamento');
+        const itemsServico = document.querySelectorAll('.item-servico');
+        const checkBtn = document.querySelector('.mdi-check');
+        const closeBtn = document.querySelector('.mdi-check');
+
+        itemsEquipamento.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[4].children[2];
+
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+            atribuir.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789%}`;
+                url = url.replace('456', 'equipamento')
+                url = url.replace('789', horarioid)
+                document.location.href = url.replace('123', id);;
+
+            });
+        });
+
+        itemsEspaco.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[4].children[2];
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+            //Listen to atribuir evento
+            atribuir.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789%}`;
+                url = url.replace('456', 'espaco')
+                url = url.replace('789', horarioid)
+                document.location.href = url.replace('123', id);;
+
+            });
+        });
+
+        itemsServico.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[4].children[2];
+            //Listen to check click event
+            check.addEventListener('click', function(e) {
+                item.classList.add('item-valid');
+                item.classList.remove('item-invalid');
+            });
+            //Listen to x click event
+            x.addEventListener('click', function(e) {
+                item.classList.add('item-invalid');
+                item.classList.remove('item-valid');
+            });
+            atribuir.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789%}`;
+                url = url.replace('456', 'servico')
+                url = url.replace('789', horarioid)
+                document.location.href = url.replace('123', id);;
+            });
+        });
+
+
 
         // Listen to button submit
         const submitBtn = document.querySelector('.button-submit');

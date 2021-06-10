@@ -10,7 +10,8 @@
           <div class="modal-content">
             {% if obj.estado == 'Validado' %}
               <div class="container-modal">
-                <h3 class="modal-title mb-3">O evento foi validado. Para continuar o processo, é necessario adicionar a logistica. Apos todos os pedidos forem adicionados, favor submeter logistica.</h3>
+                <div class="inside-container">
+                  <h3 class="modal-title mb-3">O evento foi validado. Para continuar o processo, é necessario adicionar a logistica. Apos todos os pedidos forem adicionados, favor submeter logistica.</h3>
 
                 <div class="buttons">
                   <a class="button is-dark" href=
@@ -22,60 +23,108 @@
                       Submeter Logistica
                   </a>
                 </div>
+                </div>
               </div>
           {% elif obj.estado == 'Pendente' %}
               <div class="container-modal">
-                <a class="button is-dark" href=
+                <div class="inside-container cancel-1">
+                  <h3 class="modal-title mb-3">O evento encontra-se no estado Pendente. Apos a validacao pelo GCP, recursos poderao ser adicionados.</h3>
+                <div class="buttons">
+                  <a class="button is-dark" href=
                 "{% url 'Evento:edit-event' event_id=obj.id %}">
-                  Editar Evento
+                  Alterar Evento
                 </a>
                 <a class="button is-danger button-cancel" href=
                 "#">
                   Cancelar Evento
                 </a>
-              </div>
+                </div>
+                </div>
 
-              <div class="cancel-remainder hidden">
-                Tem deseja que cancelar o evento?
-                <a class="button is-dark " href=
-                "{% url 'Evento:delete-event' event_id=obj.id %}">
-                  Cancelar Evento
-                </a>
-                <a class="button is-danger button-voltar" href=
-                "#">
-                  Voltar
-                </a>
+
+                <div class="hidden inside-container cancel-2">
+                  <h3 class="modal-title mb-3">Tem certeza que deseja cancelar o evento?</h3>
+                  <div class="buttons">
+                    <a class="button is-danger " href=
+                  "{% url 'Evento:delete-event' event_id=obj.id %}">
+                    Cancelar Evento
+                  </a>
+                  <a class="button is-dark button-voltar" href=
+                  "{% url 'Evento:meus-eventos' %}">
+                    Voltar
+                  </a>
+                  </div>
+                </div>
               </div>
+              
+
+
 
               
 
           {% elif obj.estado == 'Logistica Pendente' %}
           <div class="container-modal">
-            <a class="button is-dark" href=
+            <div class="inside-container cancel-1">
+              <h3 class="modal-title mb-3">A logistica foi submetida com successo. Enquanto nao for aprovada, podera alterar ou cancelar.</h3>
+              <div class="buttons">
+                <a class="button is-dark" href=
             "{% url 'Evento:edit-logistica' event_id=obj.id %}">
-              Editar Logística
+              Alterar Logística
             </a>
             <a class="button is-danger button-cancel" href=
             "#">
               Cancelar Logística
             </a>
-          </div>
+              </div>
+            </div>
 
-          <div class="cancel-remainder hidden">
-            <a class="button is-dark " href=
+            <div class="inside-container cancel-2 hidden">
+              <h3 class="modal-title mb-3">Tem certeza que deseja cancelar a logistica?</h3>
+              <div class="buttons">
+                <a class="button is-danger  " href=
             "{% url 'Evento:delete-logistica' event_id=obj.id %}">
               Cancelar Logistica
             </a>
-            <a class="button is-danger button-voltar" href=
+            <a class="button is-dark button-voltar" href=
             "#">
               Voltar
             </a>
+              </div>
+            </div>
+            
           </div>
+
           {% elif obj.estado == 'Logistica Validada' %}
-          <a class="button is-dark " href=
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Para finalizar o processo da criacao do evento, favor submeter o mesmo. Apos ser aprovado pelo GCP, recebera uma notificacao de sucesso</h3>
+              <div class="buttons">
+                <a class="button is-dark " href=
           "{% url 'Evento:submeter-event' event_id=obj.id %}">
             Submeter Evento
           </a>
+              </div>
+            </div>
+          </div>
+          {% elif obj.estado == 'Submetido' %}
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Apos ser aprovado pelo GCP, recebera uma notificacao de sucesso</h3>
+            
+            </div>
+          </div>
+          {% elif obj.estado == 'Aceite' %}
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Evento aprovado!</h3>
+              <div class="buttons">
+                <a class="button is-dark " href=
+          "{% url 'Evento:view-event' event_id=obj.id %}">
+            Visualizar Evento
+          </a>
+              </div>
+            </div>
+          </div>
           {% endif %}
           </div>
           <button class="modal-close is-large" aria-label="close"></button>
@@ -185,8 +234,9 @@
               e.preventDefault();
               const btn = e.target.closest('.button-cancel');
               const container = e.target.closest('.container-modal');
-              container.classList.add('hidden');
-              container.nextElementSibling.classList.remove("hidden");
+              console.log(container.children);
+              container.children[0].classList.add('hidden');
+              container.children[1].classList.remove("hidden");
             })
           })
 
@@ -203,6 +253,10 @@
           modals.forEach(modal => {
             modal.childNodes[5]?.addEventListener('click', function(e) {
               modal.classList.remove('is-active');
+              console.log(e.target.parentElement.children[1].children[0].children[0]);
+              e.target.parentElement.children[1].children[0].children[0].classList.remove('hidden')
+              if(!e.target.parentElement.children[1].children[0].children[1].classList.contains('hidden'))
+                e.target.parentElement.children[1].children[0].children[1].classList.add('hidden')
             })
           })
   

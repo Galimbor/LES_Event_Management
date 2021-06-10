@@ -8,7 +8,7 @@ from Recurso.views import recursos, recursosv2, recurso_detail, recurso_delete, 
     servico_detail, equipamento_detail, empresa_detail, unidadeorganica_update, unidadeorganica_detail,\
     universidade_detail, campus_update, edificio_detail, espaco_detail, campus_detail, componentes, componente_delete,\
     componente_detail, componente_update, recurso_update, equipamento_update, servico_update, empresa_update, edificio_update,\
-    espaco_update, universidade_update
+    espaco_update, universidade_update, recurso_atribuir, recurso_atribuir_list, recurso_atribuir_cancelar
 
 app_name = 'Recurso'
 
@@ -17,6 +17,9 @@ urlpatterns = [
     # RECURSO
     path('', recursos, name='recursos'),
     path('all/<int:my_id>/', recursosv2, name='recursos-2'),
+    path('atribuir/<int:my_id>/<str:tipo>/<int:time>', recurso_atribuir_list, name='recurso-atribuir-list'),
+    path('atribuir-2/<int:my_id>/<int:obj_id>/<int:time>', recurso_atribuir, name='recurso-atribuir'),
+    path('atribuir-cancelar/<int:my_id>/<int:obj_id>', recurso_atribuir_cancelar, name='recurso-atribuir-cancelar'),
     path('recurso/<int:my_id>/detail/', recurso_detail, name='recurso-detail'),
     path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),
     path('recurso/<int:my_id>/', recurso_update, name='recurso-update'),
@@ -34,6 +37,7 @@ urlpatterns = [
     path('espaco/<int:my_id>/delete/', espaco_delete, name='espaco-delete'),
     path('espaco/<int:my_id>/detail/', espaco_detail, name='espaco-detail'),
     path('espaco/<int:my_id>/', espaco_update, name='espaco-update'),
+    
 
     # EQUIPAMENTOS
     path('equip', equipamentos, name='equipamentos'),

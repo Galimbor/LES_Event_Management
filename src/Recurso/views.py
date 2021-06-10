@@ -4,9 +4,14 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib import messages
 from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
-    Universidade, EventoRecurso, Componente
+    Universidade, EventoRecurso, Componente, TimedateRecurso
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
+from Neglected.models import Timedate
+
+import json
+from django.http import HttpResponse
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -22,6 +27,101 @@ def recursos(request):
         'object': obj
     }
     return render(request, 'Recurso/recurso_list.html', context)
+
+def recurso_atribuir_list(request, my_id, tipo, time):
+    evento = Evento.objects.get(id=my_id)
+    recursos = Recurso.objects.all()
+    hora = Timedate.objects.get(id=time)
+
+    timedates = TimedateRecurso.objects.all()
+
+    rec_espacos = []
+    rec_equipamentos = []
+    rec_servicos = []
+
+
+    for item in recursos:
+        if item.espacoid is not None:
+            flag = True
+            for time in timedates:
+                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                    flag = False 
+                    break
+
+            if flag == True:
+                rec_espacos.append(item)
+
+
+        elif item.equipamentoid is not None:
+            flag = True
+            for time in timedates:
+                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                    flag = False 
+                    break
+
+            if flag == True:
+                rec_equipamentos.append(item)
+        elif item.servicoid is not None:
+            flag = True
+            for time in timedates:
+                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                    flag = False 
+                    break
+
+            if flag == True:
+                rec_servicos.append(item) 
+            
+
+    if tipo == 'espaco':
+        context = {
+            "rec": rec_espacos,
+            "evento": evento,
+            "hora": hora
+            }
+    elif tipo == 'servico':
+        context = {
+            "rec": rec_servicos,
+            "evento": evento,
+            "hora": hora
+            }
+    elif tipo == 'equipamento':
+        context = {
+            "rec": rec_equipamentos,
+            "evento": evento,
+            "hora": hora
+            }
+    else:
+        context = {
+
+        }
+    
+    return render(request, 'Recurso/recurso_atribuir.html', context)
+
+
+
+def recurso_atribuir(request, my_id, obj_id, time):
+    evento = Evento.objects.get(id=my_id)
+    recurso = Recurso.objects.get(id=obj_id)
+    hora = Timedate.objects.get(id=time)
+
+    rec_ev = EventoRecurso(eventoid=evento, recursoid=recurso)
+    rec_ev.save()
+
+    hora_rec = TimedateRecurso(recursoid=recurso, timedateid=hora)
+    hora_rec.save()
+    
+
+    return redirect("Evento:view-logistic", my_id)
+
+def recurso_atribuir_cancelar(request, my_id, obj_id):
+    evento = Evento.objects.get(id=my_id)
+    recurso = Recurso.objects.get(id=obj_id)
+
+    rec_ev = EventoRecurso.objects.get(eventoid=evento, recursoid=recurso)
+    rec_ev.delete()
+
+    return redirect("Recurso:recursos-2", my_id)
+
 
 
 def componentes(request):
@@ -76,12 +176,14 @@ def componente_delete(request, my_id):
 
 def recursosv2(request, my_id):
     obj = get_object_or_404(Evento, id=my_id)
+    evento = Evento.objects.get(id=my_id)
     eventoRecursos = EventoRecurso.objects.filter(eventoid__id=obj.id)
     recursos = []
     for i in eventoRecursos:
         recursos.append(i.recursoid)
     context = {
-        'object': recursos
+        'object': recursos,
+        'evento': evento
     }
     return render(request, 'Recurso/recurso_list_event.html', context)
 

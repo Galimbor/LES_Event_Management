@@ -29,14 +29,13 @@
                                 <ul>
                                     <li class="is-active">
                                         <a href="#" aria-current="page">
-                                            <span class="has-text-weight-bold">Recursos</span>
+                                            <span class="has-text-weight-bold">Atribuir Recurso - {{evento.nome}}</span>
                                         </a>
                                     </li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
-
 
                 </div>
             </nav>
@@ -45,7 +44,7 @@
                     {% for message in messages %}
                         <div class="message-header">
                             <p>Success</p>
-                            <button id="close-message " class="delete" aria-label="delete"></button>
+                            <button id="close-message" class="delete" aria-label="delete"></button>
                         </div>
                         <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
                             {{ message }}
@@ -53,43 +52,6 @@
                     {% endfor %}
                 </article>
             {% endif %}
-            <div class="columns">
-                <div class="column">
-                    <div class="tabs is-centered is-medium">
-                        <ul>
-                            <li class="is-active" data-column="1" data-filter="">
-                                <a>
-                                    <span class="icon is-small"><i class="fas fa-align-justify"
-                                                                   aria-hidden="true"></i></span>
-                                    <span>Todos</span>
-                                </a>
-                            </li>
-                            <li data-column="1" data-filter="Equipamento">
-                                <a>
-                                    <span class="icon is-small"><i class="fas fa-toolbox"
-                                                                   aria-hidden="true"></i></span>
-                                    <span>Equipamentos</span>
-                                </a>
-                            </li>
-                            <li data-column="1" data-filter="Espaço">
-                                <a>
-                                    <span class="icon is-small"><i class="fas fa-home"
-                                                                   aria-hidden="true"></i></span>
-                                    <span>Espaços</span>
-                                </a>
-                            </li>
-                            <li data-column="1" data-filter="Serviço">
-                                <a>
-                                    <span class="icon is-small"><i class="fas fa-cogs"
-                                                                   aria-hidden="true"></i></span>
-                                    <span>Serviços</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <div class="section" id="main-section-content">
@@ -107,7 +69,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for obj in object %}
+                        {% for obj in rec %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
                                 <td class="td">{{ obj.nome }}</td>
                                 {% if obj.espacoid is not None %}
@@ -118,19 +80,21 @@
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
-                                <td class="td"> {{ obj.empresaid }}</td>
+                                {% if obj.empresaid is not None %}
+                                    <td class="td"> {{ obj.empresaid }}</td>
+                                {% else %}
+                                    <td class="td"> --------</td>
+                                {% endif %}
                                 <td>
                                     <a href="#" class="button btn-atribuir"
-                                    data-id="{{ obj.id }}" data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                            data-tooltip="Eliminar recurso: {{ obj.nome }}">
-                                            Cancelar atribuicao
-                                        
+                                            data-id="{{ obj.id }}"
+                                            data-tooltip="Editar recurso: {{ obj.nome }}">
+                                            Atribuir
                                     </a>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -138,6 +102,9 @@
 
 
     </div>
+
+    </div>
+
 
 
 
@@ -149,6 +116,9 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
     <script>
+
+       
+
 
         //DATATABLES MANIPULATION
         $(document).ready(function () {
@@ -185,6 +155,12 @@
             message.addClass('is-hidden')
         });
 
+        $('.button-edit').click(function (e) {
+            e.stopPropagation();
+            let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
+            location.href = url.replace('123', $(this).data('id'))
+        });
+
 
 
         //Listen to atribuir 
@@ -197,8 +173,12 @@
                 e.stopPropagation();
                 evento_id = "{{evento.id}}";
                 obj_id = e.target.dataset.id;
-                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456  %}"
+                hora = "{{hora.id}}"
+                console.log(hora);
+                console.log(obj_id);
+                let url = "{% url 'Recurso:recurso-atribuir' my_id=123 obj_id=456 time=789 %}"
                 url = url.replace('456', obj_id)
+                url = url.replace('789', hora)
                 location.href = url.replace('123', evento_id)
                 
             })

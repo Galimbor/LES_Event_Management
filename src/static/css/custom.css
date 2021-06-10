@@ -45,7 +45,7 @@ select {
       font-size: 1.5rem;
       color: #3abb67;
       cursor: pointer;
-      margin-right: 2rem;
+      margin-right: 1rem;
   }
   
   .item-check .mdi-close {
@@ -112,6 +112,10 @@ select {
       color: white !important;
       padding: .5rem 1.5rem !important;
       font-weight: bold;
+  }
+
+  .is-danger {
+      padding: 1.5rem !important;
   }
   
   .title span {
@@ -251,7 +255,7 @@ select {
 
   .item-description
   {
-      width: 400px !important;
+      width: 300px !important;
   }
 
   .display-column .item-valid {
@@ -292,17 +296,20 @@ select {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 } 
 
 
 .container-modal {
     padding: 5rem;
     background-color: #DEDEDE;
+    border-top:  rgb(70, 116, 199) 18px solid;
+}
+
+.inside-container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    border-top:  rgb(70, 116, 199) 18px solid;
 }
 
 
@@ -319,4 +326,12 @@ select {
 
 .buttons {
     margin: 0 auto;
+}
+
+.btn-atribuir {
+    padding: 1.5rem 2rem;
+    background-color: rgb(70, 116, 199);
+    color: white;
+    cursor: pointer;
+    margin: 0 1rem;
 }

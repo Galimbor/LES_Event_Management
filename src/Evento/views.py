@@ -19,6 +19,10 @@ def ajax_finalizar_logistica(request):
         campo = Campo.objects.get(conteudo="Estado do evento")
         resposta_estado = Resposta.objects.filter(campoid=campo)
         reposta = None
+        logistica = Logistica.objects.get(eventoid=evento)
+        espacos = Tipoespaco.objects.filter(logisticaid=logistica)
+        equipamentos = Tipodeequipamento.objects.filter(logisticaid=logistica)
+        servicos = Tiposervico.objects.filter(logisticaid=logistica)
 
 
         for resp in resposta_estado:
@@ -29,6 +33,15 @@ def ajax_finalizar_logistica(request):
                     evento.save()
                     resposta.conteudo = "Pendente"
                     resposta.save()
+
+                    # Delete all logisticas
+                    for item in espacos:
+                        item.delete()
+                    for item in equipamentos:
+                        item.delete()
+                    for item in servicos:
+                        item.delete()
+
                 else:
                     evento.estado = "Logistica Validada"
                     evento.save()
@@ -232,7 +245,7 @@ def gerir(request, event_id):
     evento = Evento.objects.get(id=event_id)
 
     formulario = Formulario.objects.filter(tipoeventoid=evento.tipoeventoid, tipoformularioid=3)
-    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23))
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
     respostas = Resposta.objects.filter(eventoid=evento)
 
     context = {
@@ -258,7 +271,7 @@ def delete_event(request, event_id):
 def edit_event(request, event_id):
     evento = Evento.objects.get(id=event_id)
     formulario = Formulario.objects.filter(tipoeventoid=evento.tipoeventoid, tipoformularioid=3)
-    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23))
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
     respostas = Resposta.objects.filter(eventoid=evento)
     for pergunta in perguntas:
         if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
@@ -344,7 +357,7 @@ def create_event(request, type_id, type_evento):
     id_ext_i = user[0].proponente_externoid
 
     formulario = Formulario.objects.filter(id=type_id)
-    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23))
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
 
     for pergunta in perguntas:
         if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
@@ -501,7 +514,7 @@ def edit_espaco(request, event_id, espaco_id, tipo):
 
 
     formulario = Formulario.objects.filter(tipoformularioid=4)
-    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).order_by('campoid')
 
     horario = obj.horariorequisicao
 
@@ -646,9 +659,9 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
     # Logistic
     logistic = Logistica.objects.filter(eventoid=evento)
 
-    # Retrieve equip logistic form for the given event.
+    # Retrieve logistic form for the given event.
     formulario = Formulario.objects.filter(tipoformularioid=4)
-    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0])
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).order_by('campoid')
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
@@ -696,11 +709,9 @@ def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
         elif id_p == 17:
             hora_f = request.POST.get(f'{id_p}')
             horario.horafinal = hora_f
-        elif id_p == 24:
-            quantidade = request.POST.get(f'{id_p}')
-            tipo.quantidade = quantidade
 
     horario.save()
     tipo.horariorequisicao = horario
+    tipo.quantidade = 1
     tipo.logisticaid = logistica
     tipo.save()
