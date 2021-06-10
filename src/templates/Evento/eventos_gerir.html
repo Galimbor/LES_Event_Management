@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     {% for obj in eventos %}
-                    <tr  data-id="{{ obj.id }}" class="datatable-selector">
+                    <tr  data-state="{{ obj.estado }}" data-id="{{ obj.id }}" class="datatable-selector">
                         <td class="td">{{ obj.nome }}</td>
                         <td class="td">{{ obj.estado }}</td>
                     </tr>
@@ -33,20 +33,34 @@
         </div>
         <div class="column">
             <nav class="panel">
-                <p class="panel-heading">
-                  Filtros
-                </p>
-                <a class="panel-block is-filter-active">
-                  Validado
-                </a>
-                <a class="panel-block">
-                  Logistica Pendente
-                </a>
-                <a class="panel-block">
-                  Aceite
-                </a>
+              <p class="panel-heading">
+                Filtros
+              </p>
+              <a class="panel-block filter-item">
+                Pendente
+              </a>
+              <a class="panel-block filter-item">
+
+                Validado
+              </a>
+              <a class="panel-block filter-item">
+
+                Logistica Pendente
+              </a>
+              <a class="panel-block filter-item">
+
+                Logistica Validada
+              </a>
+              <a class="panel-block filter-item">
+
+                Submetido
+              </a>
+              <a class="panel-block filter-item">
+
+                Aceite
+              </a>
                 <div class="panel-block">
-                  <button class="button is-link is-outlined is-fullwidth">
+                  <button class="button is-link reset is-outlined is-fullwidth">
                     Reset all filters
                   </button>
                 </div>
@@ -79,6 +93,47 @@
         // Construct the full URL with "id"
         document.location.href = url.replace('123', id);
       })
+      });
+
+      //Get elements
+      const items = document.querySelectorAll('.filter-item');
+  
+      //Get rid of the active background of every element
+      const clearActive = function() {
+        items.forEach(element => {
+          element.classList.remove('is-filter-active');
+        })  
+      };
+
+      const clearEventsNone = function() {
+        event.forEach(e => e.classList.remove('none'));
+      }
+  
+      // Filter element
+      const parentEl = document.querySelector('.tbody');
+      items.forEach(element => {
+        element.addEventListener('click', e => {
+          clearActive();
+          element.classList.add('is-filter-active');
+          clearEventsNone();
+          event.forEach(e => {
+            const dataState = e.dataset.state;
+            if(dataState !== element.innerHTML.trim())
+            {
+              e.classList.add('none');
+            }
+            
+          })
+          
+        })
+      });
+  
+      //Reset filter
+      const resetBtn = document.querySelector('.reset');
+      console.log(resetBtn);
+      resetBtn.addEventListener('click', function(e) {
+        clearActive();
+        clearEventsNone();
       });
 
 

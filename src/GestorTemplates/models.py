@@ -147,9 +147,7 @@ class Resposta(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
     )  # Field name made lowercase.
-    conteudo = models.CharField(
-        db_column="Conteudo", max_length=255
-    )  # Field name made lowercase.
+    conteudo = models.TextField(db_column='Conteudo')
     campoid = models.ForeignKey(
         Campo, models.SET_NULL, db_column="CampoID", blank=True, null=True
     )  # Field name made lowercase.

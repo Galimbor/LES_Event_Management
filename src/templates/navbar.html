@@ -31,10 +31,11 @@
                         <a href="{% url 'Evento:meus-eventos' %}" class="navbar-item">
                             Meus Eventos
                         </a>
+                        <a href="{% url 'Evento:select_type' %}" class="navbar-item">
+                            Novo Evento
+                        </a>
                     {% endif %}
-                    <a href="{% url 'Evento:select_type' %}" class="navbar-item">
-                        Novo Evento
-                    </a>
+
 
                     {% if user_tipo == 'gcp' %}
                         <br>

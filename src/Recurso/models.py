@@ -171,8 +171,8 @@ class Tipoespaco(models.Model):
         return self.nome
 
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(unique=True, max_length=255)
-    quantidade = models.IntegerField(blank=True, null=True)
+    nome = models.CharField(db_column='Nome', max_length=255)
+    quantidade = models.IntegerField(db_column='Quantidade', blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
@@ -187,8 +187,8 @@ class Tiposervico(models.Model):
         return self.nome
 
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(unique=True, max_length=255)
-    quantidade = models.IntegerField(blank=True, null=True)
+    nome = models.CharField(db_column='Nome', max_length=255)
+    quantidade = models.IntegerField(db_column='Quantidade', blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
@@ -203,8 +203,8 @@ class Tipodeequipamento(models.Model):
         return self.nome
 
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    nome = models.CharField(unique=True, max_length=255)
-    quantidade = models.IntegerField(blank=True, null=True)
+    nome = models.CharField(db_column='Nome', max_length=255)
+    quantidade = models.IntegerField(db_column='Quantidade', blank=True, null=True)
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.

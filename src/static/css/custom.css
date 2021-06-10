@@ -294,3 +294,29 @@ select {
 .hidden {
     display: none;
 } 
+
+
+.container-modal {
+    padding: 5rem;
+    background-color: #DEDEDE;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border-top:  rgb(70, 116, 199) 18px solid;
+}
+
+
+.btn-test {
+    background-color: #cc0f35;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.modal-title {
+    margin-bottom: 3rem;
+    font-size: 1.2rem;
+}
+
+.buttons {
+    margin: 0 auto;
+}

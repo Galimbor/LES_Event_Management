@@ -10,14 +10,18 @@
           <div class="modal-content">
             {% if obj.estado == 'Validado' %}
               <div class="container-modal">
+                <h3 class="modal-title mb-3">O evento foi validado. Para continuar o processo, é necessario adicionar a logistica. Apos todos os pedidos forem adicionados, favor submeter logistica.</h3>
+
+                <div class="buttons">
                   <a class="button is-dark" href=
-                        "{% url 'Evento:create-event2' event_id=obj.id %}">
-                    Adicionar Logistica
-                </a>
-                <a class="button is-success" href=
-                        "{% url 'Evento:submit-logistic' event_id=obj.id %}">
-                    Submeter Logistica
-                </a>
+                  "{% url 'Evento:create-event2' event_id=obj.id %}">
+                      Adicionar Logistica
+                  </a>
+                  <a class="button is-success" href=
+                          "{% url 'Evento:submit-logistic' event_id=obj.id %}">
+                      Submeter Logistica
+                  </a>
+                </div>
               </div>
           {% elif obj.estado == 'Pendente' %}
               <div class="container-modal">
@@ -112,11 +116,23 @@
                       Filtros
                     </p>
                     <a class="panel-block filter-item">
+                      Pendente
+                    </a>
+                    <a class="panel-block filter-item">
+    
                       Validado
                     </a>
                     <a class="panel-block filter-item">
     
                       Logistica Pendente
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Logistica Validada
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Submetido
                     </a>
                     <a class="panel-block filter-item">
     
