@@ -115,6 +115,11 @@ class FormHandling():
         #                 campo_formulario.delete() 
 
 
+    def deleteSubCampos(self, subcampos_dict, formulario):
+        for subcampo in subcampos_dict:
+            if(subcampo.get("delete")):
+                Campo.objects.filter(pk = subcampo["pk"]).delete() 
+
     def saveCampos(self,  objects_dict, formulario):
         ## TODO fazer o eliminar, checkar no objeto campo delete=true --> elimin  
         campos = objects_dict['campos']
@@ -134,11 +139,12 @@ class FormHandling():
                     campo_formulario = CampoFormulario.objects.filter(campoid = campo['pk'], formularioid = formulario)
                     if(campo.get("delete")):
                         self.deleteCampos(updated_campo, campo, formulario)
-                    # TODO
+                   
+                    # TODO MISS UPDATE SUBCAMPOS
                     else:
                         updated_campo.update(**campos_dict_clean)
                         # self.saveSubCampos(subcampos,new_campo, formulario)
-                
+        self.deleteSubCampos(subcampos, formulario)     
         #trying to save empty form ##TODO CHECK BACK LATER ON
      
 

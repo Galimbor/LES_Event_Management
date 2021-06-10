@@ -221,14 +221,15 @@ var FormManager = class {
         //render subcampos
         var subCamposCount=0;
         self.form.subcampos.forEach(function(subcampo){
-            if(subcampo.fields.campo_relacionado==campoObj.pk){
-                if(!subCamposCount)
-                    campoHtml.find('.subcampos').html('');
-                subcampo.fields.position_index = campoPosicao+(subCamposCount+1)/10;
-                var subCampoHtml = form.createCampoHtml(subcampo, true);
-                campoHtml.find('.subcampos').append(subCampoHtml);
-                subCamposCount++;
-            }
+            if(!subcampo.delete)
+                if(subcampo.fields.campo_relacionado==campoObj.pk){
+                    if(!subCamposCount)
+                        campoHtml.find('.subcampos').html('');
+                    subcampo.fields.position_index = campoPosicao+(subCamposCount+1)/10;
+                    var subCampoHtml = form.createCampoHtml(subcampo, true);
+                    campoHtml.find('.subcampos').append(subCampoHtml);
+                    subCamposCount++;
+                }
         })
 
         camposContainer.append(campoHtml);
