@@ -235,9 +235,9 @@ class Tipodeequipamento(models.Model):
 
 
 class TimedateRecurso(models.Model):
-    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    timedateid = models.OneToOneField(Timedate, models.DO_NOTHING, db_column='TimeDateID')  # Field name made lowercase.
-    recursoid = models.OneToOneField(Recurso, models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    timedateid = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='TimeDateID')  # Field name made lowercase.
+    recursoid = models.ForeignKey(Recurso, models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
 
     class Meta:
         managed = False

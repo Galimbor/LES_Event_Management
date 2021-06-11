@@ -235,22 +235,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
     <script>
 
-        $('.dropdown').click(function () {
-            $(this).toggleClass('is-active')
-        });
-
-        //
-        function filtrarPorAttr(queryset, dataKey, dataValue) {
-            return queryset.filter(
-                (i, obj) => $(obj).data(dataKey) == dataValue ? $(obj) : null
-            );
-        }
-
-        function filtrarValueInAttr(queryset, dataKey, dataValue) {
-            return queryset.filter(
-                (i, obj) => String($(obj).data(dataKey)).toLowerCase().includes(dataValue) ? $(obj) : null
-            );
-        }
 
         // *************** CREATE FORM ***************
 
@@ -284,22 +268,6 @@
             category.addClass('is-active');
         }
 
-        // SEARCH BY NAME
-        $('.search #search-by-name').keyup(function () {
-                var active_category = $('.tipoFormulario.is-active');
-
-                var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
-                var tiposCampoFiltrados1 = tiposCampo;
-                //filtrar primeiro outra vez por categoria
-                if (active_category.data('id') != 'all') {
-                    tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id'));
-                }
-                tiposCampoFiltrados1.addClass('is-hidden');
-                var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase());
-                tiposCampoFiltrados.removeClass('is-hidden');
-
-            }
-        )
 
         // *************** DELETE FORM ***************
         var deleteFormModal = $('#confirm-delete-form-modal');
