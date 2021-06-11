@@ -5,6 +5,7 @@ from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
 from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta
 from Utilizadores.models import User
 from django.db.models import Q
+from django.contrib import messages
 import json
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -48,7 +49,7 @@ def ajax_finalizar_logistica(request):
                     resposta.conteudo = "Logistica Validada"
                     resposta.save()
 
-                    
+        messages.success(request, 'Logistica finalizada com sucesso.')
         data = {
             "msg": "200"
         }
@@ -153,7 +154,7 @@ def eventos_gerir(request):
         'eventos': events,
         'logistica': logistica,
     }
-
+    
     return render(request, 'Evento/eventos_gerir.html', context)
 
 def validar_evento(request, event_id):
@@ -161,6 +162,7 @@ def validar_evento(request, event_id):
     evento.estado = "Validado"
     evento.save()
 
+    messages.success(request, 'Evento validado com sucesso.')
     return redirect("Evento:eventos-gerir")
 
 
@@ -223,6 +225,7 @@ def submit_logistic(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Logistica Pendente'
     evento.save()
+    messages.success(request, 'Logistica submetida com sucesso. Favor aguardar a resposta do GCP')
     return redirect('Evento:meus-eventos')
 
 # Submit event to GCP
@@ -230,6 +233,7 @@ def submeter_event(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Submetido'
     evento.save()
+    messages.success(request, 'Evento submetido com sucesso. Favor aguardar a resposta final do GCP')
     return redirect('Evento:meus-eventos')
 
 # Aceitar Evento
@@ -237,6 +241,7 @@ def aceitar_event(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Aceite'
     evento.save()
+    messages.success(request, 'Evento aceite com sucesso.')
     return redirect('Evento:eventos-gerir')
 
 
@@ -263,6 +268,7 @@ def delete_event(request, event_id):
     for resposta in respostas:
         resposta.delete()
     evento.delete()
+    messages.success(request, 'Evento removido com sucesso')
     return redirect('Evento:meus-eventos')
 
 
@@ -337,6 +343,7 @@ def edit_event(request, event_id):
             
         horario.save()
         evento.save()
+        messages.success(request, 'Evento alterado com sucesso')
 
         return redirect('Evento:meus-eventos')
 
@@ -410,9 +417,9 @@ def create_event(request, type_id, type_evento):
         evento.horario = horario
         tipo_evento = Tipoevento.objects.get(id=type_evento)
         evento.tipoeventoid = tipo_evento
-        # TODO: gcp id
 
         evento.save()
+        messages.success(request, 'Evento criado com sucesso')
 
         for resp in respostas:
             resp.save()
@@ -479,6 +486,7 @@ def delete_logistica(request, event_id):
     logistica.delete()
     evento.estado = "Validado"
     evento.save()
+    messages.success(request, 'Logistica removida com sucesso')
     return redirect("Evento:meus-eventos")
 
 # Edit logistica
@@ -545,6 +553,8 @@ def edit_espaco(request, event_id, espaco_id, tipo):
         novaHora.save()
         obj.horariorequisicao = novaHora
         obj.save()
+
+        messages.success(request, 'Pedido alterado com sucesso')
         
         return redirect("Evento:edit-logistica", event_id)
 
@@ -675,7 +685,9 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
         get_data_from_form(request, obj, perguntas, horario, logistic[0], evento)
 
         # Redirect to eventos page
+        messages.success(request, 'Pedido adicionado com sucesso, podera adicionar mais ou se finalizado, favor submeter a logistica')
         return redirect('Evento:meus-eventos')
+        
     else:
         context = {
             'evento': evento,

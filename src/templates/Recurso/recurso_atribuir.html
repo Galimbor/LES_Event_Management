@@ -87,6 +87,7 @@
                                 {% endif %}
                                 <td>
                                     <a href="#" class="button btn-atribuir"
+                                            data-logisticaid="{{logistica.id}}"
                                             data-id="{{ obj.id }}"
                                             data-tooltip="Editar recurso: {{ obj.nome }}">
                                             Atribuir
@@ -171,14 +172,15 @@
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                evento_id = "{{evento.id}}";
-                obj_id = e.target.dataset.id;
-                hora = "{{hora.id}}"
-                console.log(hora);
-                console.log(obj_id);
-                let url = "{% url 'Recurso:recurso-atribuir' my_id=123 obj_id=456 time=789 %}"
+                const evento_id = "{{evento.id}}";
+                const obj_id = e.target.dataset.id;
+                const hora = "{{hora.id}}"
+                const logisticaid = e.target.dataset.logisticaid;
+
+                let url = "{% url 'Recurso:recurso-atribuir' my_id=123 obj_id=456 time=789 log=999%}"
                 url = url.replace('456', obj_id)
                 url = url.replace('789', hora)
+                url = url.replace('999', logisticaid)
                 location.href = url.replace('123', evento_id)
                 
             })

@@ -130,6 +130,21 @@
           <button class="modal-close is-large" aria-label="close"></button>
       </div>
       {% endfor %}
+
+      {% if messages %}
+      <article class="message is-success">
+          {% for message in messages %}
+              <div class="message-header">
+                  <p>Success</p>
+                  <button id="close-message" class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </article>
+    {% endif %}
+  
         <h1 class="title">Meus Eventos</h1>
         <div class="columns">
             <div class="is-three-quarters">
@@ -301,6 +316,11 @@
         clearActive();
         clearEventsNone();
       });
+
+      $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
   
       </script>
     {% endblock content %}

@@ -11,10 +11,30 @@
                     <h1 class="title">Logistica - {{ evento.nome }}</h1>
                 </div>
             </div>
+            {% if messages %}
+            <article class="message is-success">
+                {% for message in messages %}
+                    <div class="message-header">
+                        <p>Success</p>
+                        <button id="close-message" class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </article>
+          {% endif %}
             <h2 class="subtitle">Espaços</h2>
             <div class="columns is-full display-column">
                 {% for espaco in espacos %}
-                    <div class="item item-espaco">
+
+                    {% if espaco.isAttributed == 1 %}
+                        <div class="item item-espaco item-valid">
+                    {% else %} 
+                        <div class="item item-espaco">
+                    {% endif %}
+
+                    
                         <div class="item-description">
                             {{ espaco.nome }}
                         </div>
@@ -25,9 +45,12 @@
                         <div class="item-information">
                             Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
                         </div>
+                        {% if espaco.isAttributed != 1 %}
                         <div class="item-check">
-                            <span data-time={{espaco.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                            <span data-time={{espaco.horariorequisicao.id}} data-logisticaid="{{espaco.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
+                        {% endif %}
+
                     </div>
                     <br>
                 {% endfor %}
@@ -35,7 +58,14 @@
             <h2 class="subtitle">Equipamentos</h2>
             <div class="columns is-full display-column">
                 {% for equipamento in equipamentos %}
-                    <div class="item item-equipamento">
+
+
+                        {% if equipamento.isAttributed == 1 %}
+                            <div class="item item-equipamento item-valid">
+                        {% else %} 
+                            <div class="item item-equipamento">
+                        {% endif %}
+
                         <div class="item-description">
                             {{ equipamento.nome }}
                         </div>
@@ -46,9 +76,11 @@
                         <div class="item-information">
                             Hora: {{ equipamento.horariorequisicao.horainicial }} - {{ equipamento.horariorequisicao.horafinal }}
                         </div>
+                        {% if equipamento.isAttributed != 1 %}
                         <div class="item-check">
-                            <span data-time={{equipamento.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                            <span data-time={{equipamento.horariorequisicao.id}} data-logisticaid="{{equipamento.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
+                        {% endif %}
                     </div>
 
                     <br>
@@ -58,7 +90,14 @@
             <div class="columns is-full display-column">
 
                 {% for servico in servicos %}
-                    <div class="item item-servico">
+
+                    {% if servico.isAttributed == 1 %}
+                        <div class="item item-servico item-valid">
+                    {% else %} 
+                        <div class="item item-servico">
+                    {% endif %}
+
+
                         <div class="item-description">
                             {{ servico.nome }}
                         </div>
@@ -69,9 +108,11 @@
                         <div class="item-information">
                             Hora: {{ servico.horariorequisicao.horainicial }} - {{ servico.horariorequisicao.horafinal }}
                         </div>
+                        {% if servico.isAttributed != 1 %}
                         <div class="item-check">
-                            <span data-time={{servico.horariorequisicao.id}} data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                            <span data-time={{servico.horariorequisicao.id}} data-logisticaid="{{servico.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
+                        {% endif %}
                     </div>
                     <br>
                 {% endfor %}
@@ -113,25 +154,18 @@
 
         itemsEquipamento.forEach(item => {
             const parentEl = item.lastChild.previousSibling;
-            const atribuir = item.children[4].children[2];
+            const atribuir = item.children[3]?.children[0];
 
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
-            atribuir.addEventListener('click', function(e) {
+            atribuir?.addEventListener('click', function(e) {
                 const id = e.target.dataset.id;
                 const horarioid = e.target.dataset.time;
+                const logisticaid = e.target.dataset.logisticaid;
                 
-                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789%}`;
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
                 url = url.replace('456', 'equipamento')
                 url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
+                
                 document.location.href = url.replace('123', id);;
 
             });
@@ -139,25 +173,20 @@
 
         itemsEspaco.forEach(item => {
             const parentEl = item.lastChild.previousSibling;
-            const atribuir = item.children[4].children[2];
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
+            const atribuir = item.children[3]?.children[0];
+
+            
             //Listen to atribuir evento
-            atribuir.addEventListener('click', function(e) {
+            atribuir?.addEventListener('click', function(e) {
                 const id = e.target.dataset.id;
                 const horarioid = e.target.dataset.time;
-                
-                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789%}`;
+                const logisticaid = e.target.dataset.logisticaid;
+    
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
                 url = url.replace('456', 'espaco')
                 url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
+
                 document.location.href = url.replace('123', id);;
 
             });
@@ -165,24 +194,17 @@
 
         itemsServico.forEach(item => {
             const parentEl = item.lastChild.previousSibling;
-            const atribuir = item.children[4].children[2];
-            //Listen to check click event
-            check.addEventListener('click', function(e) {
-                item.classList.add('item-valid');
-                item.classList.remove('item-invalid');
-            });
-            //Listen to x click event
-            x.addEventListener('click', function(e) {
-                item.classList.add('item-invalid');
-                item.classList.remove('item-valid');
-            });
-            atribuir.addEventListener('click', function(e) {
+            const atribuir = item.children[3]?.children[0];
+            
+            atribuir?.addEventListener('click', function(e) {
                 const id = e.target.dataset.id;
                 const horarioid = e.target.dataset.time;
+                const logisticaid = e.target.dataset.logisticaid;
                 
-                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789%}`;
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789 log=999%}`;
                 url = url.replace('456', 'servico')
                 url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
                 document.location.href = url.replace('123', id);;
             });
         });
@@ -192,10 +214,10 @@
         // Listen to button submit
         const submitBtn = document.querySelector('.button-submit');
         submitBtn.addEventListener('click', function() {
-            let salaRecusada = false;
+            let salaRecusada = true;
 
             itemsEspaco.forEach(item => {
-                if(item.classList.contains('item-invalid')) salaRecusada = true;
+                if(item.classList.contains('item-valid')) salaRecusada = false;
             });
 
             $.ajax({
@@ -218,6 +240,12 @@
           }
         })
         });
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+  
 
     </script>
 

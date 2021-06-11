@@ -193,6 +193,7 @@ class Tipoespaco(models.Model):
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
+    isAttributed = models.IntegerField(db_column='IsAttributed', null=True)
 
     class Meta:
         managed = False
@@ -209,6 +210,7 @@ class Tiposervico(models.Model):
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
+    isAttributed = models.IntegerField(db_column='IsAttributed', null=True)
 
     class Meta:
         managed = False
@@ -225,7 +227,8 @@ class Tipodeequipamento(models.Model):
     logisticaid = models.ForeignKey(Logistica, models.DO_NOTHING, db_column='Logisticaid')  # Field name made lowercase.
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
-
+    isAttributed = models.IntegerField(db_column='IsAttributed', null=True)
+    
     class Meta:
         managed = False
         db_table = 'TipodeEquipamento'

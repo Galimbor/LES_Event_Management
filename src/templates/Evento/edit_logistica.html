@@ -11,6 +11,19 @@
                     <h1 class="title">Logistica - {{ evento.nome }}</h1>
                 </div>
             </div>
+            {% if messages %}
+            <article class="message is-success">
+                {% for message in messages %}
+                    <div class="message-header">
+                        <p>Success</p>
+                        <button id="close-message" class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </article>
+          {% endif %}
             <h2 class="subtitle">Espaços</h2>
             <div class="columns is-full display-column">
                 {% for espaco in espacos %}
@@ -124,6 +137,12 @@
                 document.location.href = url.replace('345', id);
             })
         })
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+  
     </script>
 
 {% endblock content %}

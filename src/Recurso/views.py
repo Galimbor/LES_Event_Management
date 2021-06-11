@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib import messages
 from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
-    Universidade, EventoRecurso, Componente, TimedateRecurso
+    Universidade, EventoRecurso, Componente, TimedateRecurso, Tipodeequipamento, Tipoespaco, Tiposervico
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
 from Neglected.models import Timedate
@@ -28,10 +28,12 @@ def recursos(request):
     }
     return render(request, 'Recurso/recurso_list.html', context)
 
-def recurso_atribuir_list(request, my_id, tipo, time):
+def recurso_atribuir_list(request, my_id, tipo, time, log):
+    print(log)
     evento = Evento.objects.get(id=my_id)
     recursos = Recurso.objects.all()
     hora = Timedate.objects.get(id=time)
+    
 
     timedates = TimedateRecurso.objects.all()
 
@@ -51,6 +53,7 @@ def recurso_atribuir_list(request, my_id, tipo, time):
             if flag == True:
                 rec_espacos.append(item)
 
+            
 
         elif item.equipamentoid is not None:
             flag = True
@@ -61,6 +64,8 @@ def recurso_atribuir_list(request, my_id, tipo, time):
 
             if flag == True:
                 rec_equipamentos.append(item)
+ 
+
         elif item.servicoid is not None:
             flag = True
             for time in timedates:
@@ -70,25 +75,35 @@ def recurso_atribuir_list(request, my_id, tipo, time):
 
             if flag == True:
                 rec_servicos.append(item) 
-            
+
+        
+        else:
+            logistica = None 
 
     if tipo == 'espaco':
+        print(log)
+        logistica = Tipoespaco.objects.get(id=log)
         context = {
             "rec": rec_espacos,
             "evento": evento,
-            "hora": hora
+            "hora": hora,
+            "logistica": logistica
             }
     elif tipo == 'servico':
+        logistica = Tiposervico.objects.get(id=log)
         context = {
             "rec": rec_servicos,
             "evento": evento,
-            "hora": hora
+            "hora": hora,
+            "logistica": logistica
             }
     elif tipo == 'equipamento':
+        logistica = Tipodeequipamento.objects.get(id=log)
         context = {
             "rec": rec_equipamentos,
             "evento": evento,
-            "hora": hora
+            "hora": hora,
+            "logistica": logistica
             }
     else:
         context = {
@@ -99,7 +114,7 @@ def recurso_atribuir_list(request, my_id, tipo, time):
 
 
 
-def recurso_atribuir(request, my_id, obj_id, time):
+def recurso_atribuir(request, my_id, obj_id, time, log):
     evento = Evento.objects.get(id=my_id)
     recurso = Recurso.objects.get(id=obj_id)
     hora = Timedate.objects.get(id=time)
@@ -109,8 +124,25 @@ def recurso_atribuir(request, my_id, obj_id, time):
 
     hora_rec = TimedateRecurso(recursoid=recurso, timedateid=hora)
     hora_rec.save()
-    
 
+    if recurso.espacoid is not None:
+        log_esp = Tipoespaco.objects.get(id=log)
+        log_esp.isAttributed = 1
+        log_esp.save()
+
+    
+    if recurso.servicoid is not None:
+        log_esp = Tiposervico.objects.get(id=log)
+        log_esp.isAttributed = 1
+        log_esp.save()
+
+    
+    if recurso.equipamentoid is not None:
+        log_esp = Tipodeequipamento.objects.get(id=log)
+        log_esp.isAttributed = 1
+        log_esp.save()
+    
+    messages.success(request, 'Recurso atribuido com sucesso.')
     return redirect("Evento:view-logistic", my_id)
 
 def recurso_atribuir_cancelar(request, my_id, obj_id):
