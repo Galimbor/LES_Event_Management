@@ -68,6 +68,7 @@
                   </span>
                 </button>
               </div>
+              {% if object.pk %}
               <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                 <div class="dropdown-content">
                   <div class="dropdown-item">
@@ -80,6 +81,7 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -168,7 +170,7 @@
 
     </section>
     <footer class="modal-card-foot">
-      <button class="button ">Cancelar</button>
+      <button class="button" onclick="$('#ver_form_publish').removeClass('is-active');"> Cancelar</button>
       <button class="button is-success publish">Publicar</button>
     </footer>
 

@@ -107,9 +107,7 @@ class FormHandling():
                 else:
                     campo_obj = Campo.objects.get(pk = subcampo["fields"]["campo_relacionado"])
                     subcampo_clean = self.clean_form(subcampo, campo_obj)
-                new_subcampo = Campo.objects.create(**subcampo_clean)    
-                new_subcampo = Campo.objects.create(**subcampo_clean)    
-                new_subcampo = Campo.objects.create(**subcampo_clean)    
+                new_subcampo = Campo.objects.create(**subcampo_clean)      
                 CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
 
 
@@ -215,9 +213,9 @@ class FormCreate(FormHandling, CreateView):
     def duplicate_form(self, form):
         todos_campos_form = self.get_campos(form.pk)
         form.pk = None #django create new object by deleting his pk and the clone it
-        form.is_template = 0
         form.save()
         form.created = timezone.now()
+        form.is_template = 0
         form.save()
         for campo in todos_campos_form:
             CampoFormulario.objects.create(campoid = campo, formularioid = form)
@@ -236,8 +234,12 @@ class FormCreate(FormHandling, CreateView):
             # create new based on the template            
             self.duplicate_form(form)
         #new empty form --> selecting type of form (evento, inscricao, ...)
-        elif template_formID and not formType:
-            form = Formulario.objects.create(tipoformularioid = formType, created = timezone.now())
+        elif not template_formID and formType:
+            printspecial("heree")
+            tipo_formulario = Tipoformulario.objects.get(id = formType)
+            gcp = Gcp.objects.get(id = self.request.user.id)
+            gcpid = gcp
+            form = Formulario.objects.create(gcpid = gcp, tipoformularioid = tipo_formulario, created = timezone.now())
         # create empty form without selecting type of form 
         else :
             gcp = Gcp.objects.get(id = self.request.user.id)
