@@ -53,6 +53,18 @@
                     </div>
                 </div>
 
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header card-header-error">
+                            <a class="mx-auto" href="{% url 'Evento:recusar-evento' event_id=id %}">
+                            <p class="card-header-title is-centered">
+                                    Recusar Evento
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
                 {% elif evento.estado == 'Logistica Pendente'%}
 
                 <div class="column is-3">

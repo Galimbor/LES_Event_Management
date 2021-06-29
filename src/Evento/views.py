@@ -43,13 +43,16 @@ def ajax_finalizar_logistica(request):
                     for item in servicos:
                         item.delete()
 
+                    messages.success(request, 'Logistica recusada, o evento voltou para o estado inicial')
+
                 else:
                     evento.estado = "Logistica Validada"
                     evento.save()
                     resposta.conteudo = "Logistica Validada"
                     resposta.save()
+                    messages.success(request, 'Logistica finalizada com sucesso.')
 
-        messages.success(request, 'Logistica finalizada com sucesso.')
+        
         data = {
             "msg": "200"
         }
@@ -163,6 +166,14 @@ def validar_evento(request, event_id):
     evento.save()
 
     messages.success(request, 'Evento validado com sucesso.')
+    return redirect("Evento:eventos-gerir")
+
+def recusar_evento(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    evento.estado = "Recusado"
+    evento.save()
+
+    messages.success(request, 'O evento foi recusado.')
     return redirect("Evento:eventos-gerir")
 
 
@@ -342,6 +353,7 @@ def edit_event(request, event_id):
                 resposta.save()
             
         horario.save()
+        evento.estado = 'Pendente'
         evento.save()
         messages.success(request, 'Evento alterado com sucesso')
 
@@ -634,6 +646,23 @@ def view_event(request, event_id):
         'hora_f': horario.horafinal,
     }
     return render(request, 'Evento/view_evento.html', context)
+
+
+# View a specific event
+def view_my_event(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+
+    formulario = Formulario.objects.filter(tipoeventoid=evento.tipoeventoid, tipoformularioid=3)
+    perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
+    respostas = Resposta.objects.filter(eventoid=evento)
+
+    context = {
+        'evento': Evento.objects.get(id=event_id),
+        'id': event_id,
+        'perguntas': perguntas,
+        'respostas': respostas
+    }
+    return render(request, 'Evento/view_my_event.html', context)
 
 
 
