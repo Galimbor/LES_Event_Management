@@ -15,18 +15,21 @@ def createFeedback(request, eventoid):
     evento = Evento.objects.get(id=eventoid)
 
 
-    # if not request.user.is_authenticated:
-    #     messages.error(request, f'Por favor autentique-se.')
-    #
-    #     return redirect('Evento:eventos')
+    if  request.user.is_authenticated:
+        user_django = request.user
+        user = User.objects.filter(email=user_django.email)[0]
 
-    # user = get_user(request)
+        if not Inscricao.objects.filter(eventoid=eventoid,userid=user.id).exists():
+            messages.error(request, f'Precisa de estar inscrito no evento.')
 
-    # if not Inscricao.objects.filter(eventoid=eventoid,userid=user).exists():
-    #     messages.error(request, f'Precisa de estar inscrito no evento.')
-    #
-    #     return redirect('Evento:eventos')
+            return redirect('Evento:eventos')
 
+        elif Feedback.objects.filter(userid=user.id, eventoid=eventoid).exists():
+            messages.error(request, f'Já preencheu o seu formulário de feedback para este evento.')
+
+            return redirect('Evento:eventos')
+    else:
+        user = None
 
 
     # Associado ao feedback
@@ -53,6 +56,7 @@ def createFeedback(request, eventoid):
             respostas.append(Resposta(conteudo=resposta, feedbackid=feedback, campoid=pergunta.campoid))
         feedback.descricao = f"Feedback para o evento número : {eventoid}"
         feedback.createdAt = timezone.now()
+        feedback.userid = user
         feedback.save()
         for resposta in respostas:
             resposta.save()

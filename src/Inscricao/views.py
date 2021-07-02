@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from eventoFormulario.models import EventoFormulario
 from datetime import date, datetime
-
+from Feedback.models import Feedback
 # -------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
 
 # TODO : fazer uma outra versão para utilizadores autenticados
@@ -215,7 +215,7 @@ class PartConsultarInscricoes(ListView):
                 eventoDataFinal = inscricao.eventoid.horario.datafinal
                 eventoHoraFinal = inscricao.eventoid.horario.horafinal
                 eventFinalDate = datetime.combine(eventoDataFinal,eventoHoraFinal)
-                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoFormulario__categoria=2).exists() :
+                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoFormulario__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
                     inscricao.hasFeedback = True
             return queryset
         else:
