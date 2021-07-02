@@ -133,7 +133,13 @@ def home_view(request):
 
 # Show all the events that has the final validation.
 def eventos(request):
-    events = Evento.objects.filter(estado='Aceite')
+    if request.user.is_anonymous:
+        events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
+    else:
+        events = Evento.objects.filter(estado='Aceite')
+        
+   
+    
     logistica = Logistica.objects.all()
     tipos = Tipoevento.objects.all()
 
@@ -452,13 +458,16 @@ def create_event(request, type_id, type_evento):
 
 def select_type(request):
     tipos = Tipoevento.objects.all()
+    formularios = Formulario.objects.filter(tipoformularioid=3)
 
     if request.method == 'POST':
+        form = request.POST['radio-form']
         tipo = request.POST['radio']
-        return redirect('Evento:select_form', tipo)
+        return redirect('Evento:create-event', form, tipo)
 
     context = {
-        'tipos': tipos
+        'tipos': tipos,
+        'formularios': formularios
     }
     return render(request, 'Evento/selecionar_tipo.html', context)
 
