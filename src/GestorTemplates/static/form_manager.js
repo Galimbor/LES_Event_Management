@@ -29,6 +29,7 @@ var FormManager = class {
 
             let selected_option = document.querySelector('input[name="answer"]:checked').dataset.id;
             // console.log( $('input[name="answer"]:checked').data('id'))
+            console.log(selected_option)
             form.publishForm(selected_option) //this is a HTML element   
         })
 
@@ -473,6 +474,7 @@ var FormManager = class {
         if(id){
             this.formulario.fields.visibilidade = id;
             this.saveRemotely();
+            
         }
         else {
             // this doesnt work #TODO

@@ -50,7 +50,12 @@ class CampoFormularioAdmin(admin.ModelAdmin):
 
 
     
+@admin.register(EventoFormulario)
+class EventoFormularioAdmin(admin.ModelAdmin):
+    list_display = ('eventoid', 'formularioid')
 
+
+    
 
 models = apps.get_models()
 for model in models:
