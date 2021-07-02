@@ -3,7 +3,7 @@ from .views import home_view, eventos, create_logistic, meus_eventos, gerir, sel
     eventos_gerir, equip_logistic, espaco_logistic, servico_logistic, submit_logistic, view_logisticas, \
     view_event, ajax_filter_type, ajax_filter_state, delete_event, edit_event, ajax_finalizar_logistica, \
     validar_evento, delete_logistica, edit_logistica, edit_espaco, edit_servico, edit_equipamento, \
-    select_form, submeter_event, aceitar_event
+    select_form, submeter_event, aceitar_event, view_my_event, recusar_evento
 
 app_name = 'Evento'
 
@@ -25,7 +25,9 @@ urlpatterns = [
     path('new2/submit_logistic/<int:event_id>', submit_logistic, name='submit-logistic'),
     path('gerir/view-logistic/<int:event_id>', view_logisticas, name='view-logistic'),
     path('gerir/validar-evento/<int:event_id>', validar_evento, name='validar-evento'),
+    path('gerir/recusar-evento/<int:event_id>', recusar_evento, name='recusar-evento'),
     path('view/<int:event_id>', view_event, name='view-event'),
+    path('view-my/<int:event_id>', view_my_event, name='view-my-event'),
     path('ajax/', ajax_filter_type, name='ajax-filter-type'),
     path('ajax/state', ajax_filter_state, name='ajax-filter-state'),
     path('ajax/finalizar_logistica', ajax_finalizar_logistica, name='ajax-finalizar-logistica'),
