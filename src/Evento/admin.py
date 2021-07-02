@@ -9,7 +9,7 @@ class LogisticaAdmin(admin.ModelAdmin):
 # Register your models here.
 models = apps.get_models()
 for model in models:
-    if not ('GestorTemplates' in str(model)):
+    if not ('GestorTemplates' in str(model) ):
         try:
             admin.site.register(model)
         except admin.sites.AlreadyRegistered:

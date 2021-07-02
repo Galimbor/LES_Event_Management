@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'Utilizadores',
     'Neglected',
     'Feedback',
+    'eventoFormulario',
 
 ]
 

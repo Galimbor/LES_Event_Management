@@ -40,6 +40,7 @@ class Tipoformulario(models.Model):
         return "{} : {}-{}".format(self.id,self.get_categoria_display(), self.nome)
 
 
+
 class Formulario(models.Model):
     id = models.AutoField(
         db_column="Id", primary_key=True
@@ -61,17 +62,14 @@ class Formulario(models.Model):
         default=0,
         verbose_name="É Template?",
     )
-    tipoeventoid = models.ForeignKey(
-        Tipoevento, models.DO_NOTHING, db_column="TipoEventoID", null=True
-    )
-    tipoformularioid = models.ForeignKey(
-        "Tipoformulario", models.DO_NOTHING, db_column="TipoFormularioID", null=True
-    )  # Field name made lowercase.
-    gcpid = models.ForeignKey(
+    gcpID = models.ForeignKey(
         Gcp, models.DO_NOTHING, db_column="GCPid"
     )  # Field name made lowercase.
+    tipoFormulario = models.ForeignKey(
+        "Tipoformulario" , models.DO_NOTHING, db_column="TipoFormularioID"
+    )  # Field name made lowercase.
 
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
+
 
     class Meta:
         managed = True
@@ -79,6 +77,7 @@ class Formulario(models.Model):
 
     def __str__(self):
         return self.nome
+
 
 
 class Tipocampo(models.Model):
@@ -129,7 +128,7 @@ class CampoFormulario(models.Model):
         Campo, models.CASCADE, db_column="CampoID"
     )  # Field name made lowercase.
     formularioid = models.ForeignKey(
-        "Formulario", models.CASCADE, db_column="FormularioId"
+        Formulario, models.CASCADE, db_column="FormularioId"
     )  # Field name made lowercase.
 
     class Meta:
@@ -142,16 +141,25 @@ class CampoFormulario(models.Model):
 
 
 
+class GcpFormulario(models.Model):
+    gcpid = models.OneToOneField(
+        Gcp, models.DO_NOTHING, db_column="GCPid", primary_key=True
+    )  # Field name made lowercase.
+    formularioid = models.ForeignKey(
+        Formulario, models.DO_NOTHING, db_column="FormularioId"
+    )  # Field name made lowercase.
 
+    class Meta:
+        managed = True
+        db_table = "GCP_Formulario"
+        unique_together = (("gcpid", "formularioid"),)
 
 
 class Resposta(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
     )  # Field name made lowercase.
-    conteudo = models.CharField(
-        db_column="Conteudo", max_length=255
-    )  # Field name made lowercase.
+    conteudo = models.TextField(db_column='Conteudo')
     campoid = models.ForeignKey(
         Campo, models.SET_NULL, db_column="CampoID", blank=True, null=True
     )  # Field name made lowercase.
@@ -168,23 +176,6 @@ class Resposta(models.Model):
     class Meta:
         managed = True
         db_table = "Resposta"
-    
+
     def __str__(self):
         return self.conteudo
-
-    def __str__(self):
-        return self.nome
-
-
-class GcpFormulario(models.Model):
-    gcpid = models.OneToOneField(
-        Gcp, models.DO_NOTHING, db_column="GCPid", primary_key=True
-    )  # Field name made lowercase.
-    formularioid = models.ForeignKey(
-        Formulario, models.DO_NOTHING, db_column="FormularioId"
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "GCP_Formulario"
-        unique_together = (("gcpid", "formularioid"),)

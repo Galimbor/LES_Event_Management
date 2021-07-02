@@ -1,0 +1,346 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+{% endblock %}
+{% block content %}
+{% load static %}
+<div>
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="{% url 'Evento:eventos-gerir'  %}">Eventos a gerir</a></li>
+                <li><a href="{% url 'Evento:gerir' event_id=request.resolver_match.kwargs.eventoid %}">Gerir evento</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Inscricões do evento</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+    <div class="columns">
+      <div class="column">
+        <div class="tabs is-centered is-medium">
+          <ul>
+            <li class="is-active" data-column="0" data-filter="">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Todas</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="Pendente">
+              <a>
+                <span class="icon is-small"><i class="ri-time-line " aria-hidden="true"></i></span>
+                <span>Pendentes</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="Inválida">
+              <a>
+                <span class="icon is-small"><i class="fas fa-times" aria-hidden="true"></i></span>
+                <span>Invalidadas</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="Válida">
+              <a>
+                <span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>
+                <span>Validadas</span>
+              </a>
+            </li>
+            
+          </ul>
+      </div>
+      </div>   
+  </div>
+  </section>
+
+  <div class="section" id="main-section-content">
+    <div class="columns">
+      <div class="column ">
+
+        <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+          <thead>
+            <tr>
+              <th>estado</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telemóvel</th>
+              <th>Idade</th>
+              <th>Profissão</th>
+                <th> Estado</th>
+              <th></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
+              <td>{{obj.estado}}</td>
+              <td> {{obj.nome}}</td>
+              <td> {{obj.email}}</td>
+              <td> {{obj.telemovel}}</td>
+              <td> {{obj.idade}}</td>
+              <td> {{obj.profissao}}</td>
+{#                <td> {{ obj.estado }}</td>#}
+                <td class="td-flex"> {% if obj.estado == "Inválida" %}<span class="ins-detail-red"> {{ obj.estado }}
+                     {% elif obj.estado == "Válida" %}<span class="ins-detail-green"> {{ obj.estado }}
+                    {% else %} <span class="ins-detail-yellow">{{ obj.estado }}
+                    {% endif %}</span>
+                </td>
+              <td>
+                      <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom validate-ins-btn"  data-update-url="{% url 'Inscricao:prop_alterar_inscricao' obj.pk %}" data-tooltip="Validar Inscrição: {{obj.nome}}">
+                      <span class="icon">
+                        <i class="fas fa-check" ></i>
+                      </span>
+                    </button>
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom update-ins-btn"  data-update-url="{% url 'Inscricao:prop_alterar_inscricao' obj.pk %}" data-tooltip="Alterar Inscrição: {{obj.nome}}">
+                      <span class="icon">
+                        <i class="far fa-edit" ></i>
+                      </span>
+                    </button>
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-ins-btn"  data-delete-url="{% url 'Inscricao:prop_delete_inscricao' obj.pk %}" data-tooltip="Eliminar Inscrição: {{obj.nome}}">
+                      <span class="icon">
+                        <i class="far fa-trash-alt"></i>
+                      </span>
+                    </button>
+
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar esta inscrição ?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal">Cancelar</button>
+    </footer>
+  </div>
+</div>
+
+
+<div class="modal" id="validate_modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Validação da inscrição</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+     <div class="field">
+        <label class="field" for="{{ 27}}"> Escolha um dos três estados : </label>
+            <div class="select is-small">
+              <select name="{{ 27 }}" id="estado" >
+                      <option name="Pendente"  > Pendente </option>
+                      <option name="Válida"  > Válida </option>
+                      <option name="Inválida"  > Inválida </option>
+              </select>
+            </div>
+        </div>
+    </section>
+    <div class="field">
+
+    <footer class="modal-card-foot">
+      <a class="button is-success btn-confirm" href="#">Confirmar</a>
+      <button class="button close-modal">Cancelar</button>
+    </footer>
+  </div>
+</div>
+</div>
+
+
+
+{% endblock content%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+<script>
+
+  $('.dropdown').click(function () {
+    $(this).toggleClass('is-active')
+  });
+
+  // ************ UPDATE INSCRICAO ******************8
+
+  var updateInsBitton = $('.update-ins-btn');
+updateInsBitton.click(function (e) {
+    e.stopPropagation();
+    location.href= $(this).data('update-url');
+});
+
+  // ************ VALIDATE INSCRICAO ******************8
+
+  var validateFormModal = $('#validate_modal');
+
+  $('.validate-ins-btn').click(function (e) {
+      e.stopPropagation();
+            validate_btn = $(this)
+            console.log(validate_btn)
+            let id = validate_btn.parent().parent().data('id')
+          {#console.log(id);#}
+            $.ajax({
+                 url :`/Inscricao/getInsEstado/${id}`,
+                type: "GET",
+                beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                 },
+                success: function (data) {
+                    let estado = data['estado'];
+                    {#console.log(estado);#}
+                    {#console.log($(`option[name=${estado}]`));#}
+                    $(`option[name=${estado}]`).attr("selected", "selected");
+                    validateFormModal.addClass('is-active'); //shows modal
+                    validateFormModal.attr('data-id', id)
+                },
+                error: function (error) {
+                {#console.log(error);#}
+                }
+
+            })
+
+    //todo add warning when deleting templates
+  });
+
+
+     function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+
+      $('.btn-confirm').click(function (e)
+      {
+          {#console.log(e)#}
+     const selected = document.querySelector("#estado").value;
+    e.stopPropagation(); //para a propagacao do evento javascript
+          confirm_btn = $(this)
+          {#console.log(confirm_btn.parent().parent().parent().parent());#}
+          let id = confirm_btn.parent().parent().parent().parent().data('id')
+      console.log(id);
+        $.ajax({
+             url :`/Inscricao/updateEstado/${id}`,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                selectedEstado: selected
+            },
+            beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+             },
+            success: function (data) {
+                validateFormModal.removeClass('is-active'); //shows modal
+                location.reload();
+            },
+            error: function (error) {
+            console.log(error);
+            }
+
+        })
+
+  })
+
+  // *************** DELETE INCRICAO ***************
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-ins-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript 
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
+
+
+//DATATABLES MANIPULATION
+
+    var table = $('#form-list-table').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+      "columnDefs": [ { "orderable": false, "targets": 7 },
+      {
+                "targets": [ 0 ],
+                "visible": false
+            }
+    ],
+    });
+
+  $(document).ready(function () {
+
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+      {#console.log(table.column($(this).data('column')).search($(this).data('filter')).draw())#}
+      table.column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
+    })
+  });
+
+
+
+  $('.datatable-row').click(function () {
+    let url = "{% url 'Inscricao:consultar_inscricao_prop' inscricaoid=123  %}"
+    location.href= url.replace('123',  $(this).data('id'))
+
+  });
+
+
+</script>
+{% endblock %}

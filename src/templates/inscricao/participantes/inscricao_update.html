@@ -5,6 +5,25 @@
 
 {% block content %}
 {% load static %}
+
+          <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="{% url 'Inscricao:part_list_inscricao'  %}">As minhas inscrições</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Alterar inscrição</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
 <div>
   <div class="section">
     <div class="columns">

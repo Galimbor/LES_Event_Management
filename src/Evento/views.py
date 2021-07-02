@@ -9,8 +9,7 @@ from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
 from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta
 from Utilizadores.models import User
 from django.db.models import Q
-
-
+from datetime import datetime
 # Homepage.
 def home_view(request):
     return render(request, 'inicio.html')
@@ -19,6 +18,13 @@ def home_view(request):
 # Show all the events that has the final validation.
 def eventos(request):
     events = Evento.objects.filter(estado='Aceite')
+    for event in events:
+        today = datetime.today()
+        eventoDataFinal = event.horario.datafinal
+        eventoHoraFinal = event.horario.horafinal
+        eventFinalDate = datetime.combine(eventoDataFinal, eventoHoraFinal)
+        if event.inscritos < event.maxparticipantes and eventFinalDate > today:
+            event.hasInscricao = True
     logistica = Logistica.objects.all()
 
     context = {
@@ -245,7 +251,7 @@ def view_event(request, event_id):
 def create_csv_certificates(request, evento_id):
     # todos os incritos do evento
     # TODO - verificar apenas os com o check-in a true
-    inscritos = Inscricao.objects.filter(eventoid=evento_id)
+    inscritos = Inscricao.objects.filter(eventoid=evento_id, checkin=1)
     print(inscritos)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="certificados{Evento.objects.get(id=evento_id).nome}.csv"'

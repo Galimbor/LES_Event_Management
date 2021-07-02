@@ -3,6 +3,9 @@ from Utilizadores.models import User
 
 def add_variable_to_context(request):
     tipo = None
+    if request.user.is_superuser:
+        return {}
+
     if request.user.is_authenticated:
         user_django = request.user
         user = User.objects.filter(email=user_django.email)

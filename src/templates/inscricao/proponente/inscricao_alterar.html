@@ -6,14 +6,15 @@
 {% block content %}
 {% load static %}
 
-
               <div class="navbar-menu is-white" id="form-menu-buttons">
         <div class="navbar-start">
           <!-- navbar items on the left side -->
           <div class="column">
             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
               <ul>
-                <li><a href="{% url 'Inscricao:part_list_inscricao'  %}">As minhas inscrições</a></li>
+                  <li><a href="{% url 'Evento:eventos'  %}">Eventos</a></li>
+                  <li><a href="{% url 'Evento:gerir' event_id=evento.id %}">Gerir evento</a></li>
+                  <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id %}"> Inscrições no evento</a></li>
                 <li class="is-active">
                   <a href="#" aria-current="page">
                     <span class="has-text-weight-bold">Alterar inscrição</span>
@@ -53,12 +54,11 @@
                         <div class="radio-label">
                         {% for opcao in pergunta.respostas %}
                             <label class="radio" for="{{ pergunta.id }}">
-                                <input type="radio" class="" id="{{ pergunta.id }}"  name="{{ pergunta.id }}" value="{{ opcao.conteudo }}" {% if resposta.conteudo == opcao.conteudo %} checked {% endif %}>
+                                <input type="radio" class="" id="{{ pergunta.id }}"  name="{{ pergunta.id }}" value="{{ opcao.conteudo }}" {% if  resposta.conteudo == opcao.conteudo %} checked {% endif %}>
                                     {{ opcao.conteudo }}
                             </label>
                         {% endfor %}
                         </div>
-
                         </div>
 
                 {% elif pergunta.tipocampoid.nome == 'Dropdown' %}
@@ -66,7 +66,7 @@
                     <div class="select is-small">
                       <select name="{{ pergunta.id }}" id="{{ pergunta.id }}" >
                          {% for opcao in pergunta.respostas %}
-                            <option name="{{ opcao.conteudo}}" {% if resposta.conteudo == opcao.conteudo %} selected {% endif %} >{{ opcao.conteudo}}</option>
+                            <option name="{{ opcao.conteudo}}" {% if resposta.conteudo == opcao.conteudo %} selected {% endif %} >{{ opcao.conteudo }}</option>
                           {% endfor %}
                       </select>
                     </div>
