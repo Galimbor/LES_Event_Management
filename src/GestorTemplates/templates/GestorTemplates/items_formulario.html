@@ -207,9 +207,29 @@
               <div class="field is-narrow">
                 <div class="control">
                   <div class="select is-fullwidth tipo_formulario">
-                    <select>
+                    <select class="escolher_tipo_formulario">
                       {% for tipoformulario in categorias %}
-                      <option data-tipoformulario={{tipoformulario.0}} >{{tipoformulario.1}}</option>
+                      <option data-tipoformulario={{tipoformulario.id}} >{{tipoformulario}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="field is-horizontal tipo-evento-options is-hidden">
+            <div class="field-label is-normal">
+              <label class="label">Tipo de Evento</label>
+            </div>
+            <div class="field-body">
+              <div class="field is-narrow">
+                <div class="control">
+                  <div class="select is-fullwidth tipo_evento_formulario">
+                    <select>
+                      {% for tipo in tipos_evento %}
+                      <option data-tipo-evento={{tipo.id}} >{{tipo}}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -278,3 +298,5 @@
 
     </div>
   </div> -->
+
+  

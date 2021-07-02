@@ -9,6 +9,7 @@
 */
 
 const ESCOLHA_MULTIPLA = 12; //Primary Key na base de dados de uma pergunta de escolha multipla
+var NEW_CAMPO_COUNTER = 0;
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
@@ -258,8 +259,28 @@ var FormManager = class {
         //*********************** */
         // ***** SETTINGS *******
         // ***********************
-        let tipo_formulario = this.tipo_formulario;
-        let istemplate = this.formulario.fields.is_template;
+        let tipo_formulario_before = this.formulario.fields.tipoformularioid
+        let istemplate_before = this.formulario.fields.is_template;
+        let tipo_evento_before = this.formulario.fields.tipoeventoid;
+        
+        
+        function selectEventType(){
+            let tipo_form = $('.tipo_formulario option:selected').data("tipoformulario")
+            if (tipo_form == 3){ //bad practice, must check later, ID can change
+                $('.tipo-evento-options').removeClass('is-hidden')
+                $('.tipo_evento_formulario option').each(function()
+                {
+                    if($(this).data("tipo-evento") == tipo_evento_before )
+                        $(this).attr("selected" , "selected")                
+                })
+            }
+            else
+                $('.tipo-evento-options').addClass('is-hidden')
+        }
+        $('.escolher_tipo_formulario').change(
+            selectEventType
+        )
+
         $('.button.ver_form_config').click(e => {
             
             $('.modal.ver_form_config').addClass('is-active')
@@ -267,14 +288,16 @@ var FormManager = class {
             $('.tipo_formulario option').removeAttr("selected")
             $('.tipo_formulario option').each(function()
             {
-                if($(this).data("tipoformulario") == tipo_formulario)
+                if($(this).data("tipoformulario") == tipo_formulario_before )
                     $(this).attr("selected" , "selected")                
             })
            
+            selectEventType()
+
             //Tornar template
             $('.is_template_option input').prop("checked", false)
             $('.is_template_option input').each(function(){
-                if($(this).data("id") == istemplate)
+                if($(this).data("id") == istemplate_before)
                     $(this).prop("checked" , true)      
             })       
         })
@@ -284,10 +307,18 @@ var FormManager = class {
 
             // Tipo de Formulario
             form.formulario.fields.tipoformularioid = $('.tipo_formulario option:selected').data("tipoformulario")
-                       
+            
+
+
+            // Tipo de Evento
+            if (form.formulario.fields.tipoformularioid == 3){
+                form.formulario.fields.tipoeventoid = $('.tipo-evento-options option:selected').data("tipo-evento")
+            }
             //Tornar template
             form.formulario.fields.is_template= $('.is_template_option input:checked').data("id") 
             
+            this.saveRemotely();
+
             $('.ver_form_config').removeClass('is-active')
 
         })
@@ -389,7 +420,7 @@ var FormManager = class {
         // this way it will always be in sync with the database
         var campoObj = {
             "model": "forms_manager.campo",
-            "pk":  (campos.length+1)*-1,
+            "pk":  --NEW_CAMPO_COUNTER,
             "fields": {
                 "conteudo": "",
                 "tipocampoid": tipocampo,
@@ -434,18 +465,32 @@ var FormManager = class {
     */
     deleteCampo(campoID, campoRelacionado=null) {
         let campos, campoObj;
+        let isParent = (campoRelacionado==null);
         this.activeCampo = null; 
-        if (campoRelacionado){
-            campoObj = form.getCampoById(campoID, this.subcampos)
-            campos = this.subcampos;
-        }
-        else{
+        if (isParent){
             campoObj = form.getCampoById(campoID, this.campos)
             campos = this.campos
+        }
+        else{
+            campoObj = form.getCampoById(campoID, this.subcampos)
+            campos = this.subcampos;
         }
         // if not saved in db yet, deletes normally
         if (campoObj && campoObj.pk < 0) {
             campos.splice(campoObj.array_index, 1);
+            
+            //delete subcampos
+            
+            if (isParent){
+                let camposRelacionados = this.subcampos.filter(
+                    e => e.fields.campo_relacionado==campoID
+                ) 
+                let form = this;
+                camposRelacionados.forEach(function(element){
+                    let index = form.subcampos.indexOf(element);
+                    form.subcampos.splice(index, 1)
+                })
+            }
             this.renderAll();
         }
         // else, marks for deletion

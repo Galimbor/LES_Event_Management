@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from .models import *
+from Evento.models import Tipoevento
 from Utilizadores.models import User, Gcp
 from django.core import serializers
 import json
@@ -38,11 +39,13 @@ class FormList(ListView):
         template = Formulario.objects.filter(is_template = 1)
         categoria = Tipoformulario.objects.all()[:3] #TODO
         context['tiposForm'] = template
-        # context['categorias'] = caterogias_tipo_formulario
+        # context['categorias'] = CATEGORIAS_TIPO_FORMULARIO
         context['categorias'] = categoria
 
         return context
 
+
+# TODO USER FORMS!!!
     # def get_queryset(self):
     #     qs = super().get_queryset()
     #     user = get_user(self.request)
@@ -177,19 +180,12 @@ class FormHandling():
                 formulario['fields']['updated']=timezone.now()
 
                 f  = Formulario.objects.filter(pk=formulario['pk'])
-                #  #editar formularios nao pode ser possivel quando esta a ser usado TODO
-                eventos_deste_form = EventoFormulario.objects.filter(formularioid=f[0]).values_list('eventoid')
-                if eventos_deste_form:
-                    printspecial(eventos_deste_form)
-
-                    messages.add_message(self.request, messages.WARNING, 'Não é possível eliminar formulários associados a eventos')
-                    return redirect(reverse_lazy('form-list'))
-                else:                
-                    f.update(**formulario['fields'])
-                    ## 2. Save Campos fields
-                    # printspecial(objects_dict)
-                    self.saveCampos(objects_dict, f[0])
-                return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
+                           
+                f.update(**formulario['fields'])
+                ## 2. Save Campos fields
+                # printspecial(objects_dict)
+                self.saveCampos(objects_dict, f[0])
+            return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
         return super().post(*args, **kwargs)
     
@@ -197,9 +193,9 @@ class FormHandling():
 
     def get(self, *args, **kwargs):
         form = self.get_object()
+        #  #editar formularios nao pode ser possivel quando esta a ser usado 
         eventos_deste_form = EventoFormulario.objects.filter(formularioid=form).values_list('eventoid')
         if eventos_deste_form:
-            printspecial(eventos_deste_form)
             messages.add_message(self.request, messages.WARNING, 'Não é possível editar formulários associados a eventos')
             return redirect(reverse_lazy('form-list'))
         campos_deste_form = CampoFormulario.objects.filter(formularioid=form).values_list('campoid')
@@ -212,7 +208,11 @@ class FormHandling():
 
     def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categorias'] = caterogias_tipo_formulario
+        # context['categorias'] = CATEGORIAS_TIPO_FORMULARIO
+        categoria = Tipoformulario.objects.all()[:3] #TODO
+        context['categorias'] = categoria
+
+        context['tipos_evento'] = Tipoevento.objects.all()
 
         return context
 

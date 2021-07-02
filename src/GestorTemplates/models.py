@@ -8,7 +8,7 @@ from Inscricao.models import Inscricao
 from Utilizadores.models import Gcp
 from Feedback.models import Feedback
 
-caterogias_tipo_formulario = [
+CATEGORIAS_TIPO_FORMULARIO = [
     ("0", "Evento"),
     ("1", "Inscrição"),
     ("2", "Feedback"),
@@ -28,7 +28,7 @@ class Tipoformulario(models.Model):
     categoria = models.CharField(
         db_column="Categoria",
         max_length=255,
-        choices=caterogias_tipo_formulario,
+        choices=CATEGORIAS_TIPO_FORMULARIO,
         default="0",
     )
 
