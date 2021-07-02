@@ -68,7 +68,7 @@ def ajax_filter_type(request):
         for e in events:
             hora = Timedate.objects.get(id=e.horario.id)
             eventos.append({
-                "nome": e.nome,
+                "nome": e.Nome,
                 "hora": f"{e.horario.horainicial}-{e.horario.horafinal}",
                 "data": f"{e.horario.datainicial.day}/{e.horario.datainicial.month}/{e.horario.datainicial.year} - {e.horario.datafinal.day}/{e.horario.datafinal.month}/{e.horario.datafinal.year}",
             })
@@ -109,7 +109,7 @@ def ajax_filter_state(request):
    
             hora = Timedate.objects.get(id=e.horario.id)
             eventos.append({
-                "nome": e.nome,
+                "nome": e.Nome,
                 "estado": e.estado,
                 "data": f"{e.horario.datainicial.day}/{e.horario.datainicial.month}/{e.horario.datainicial.year} {e.horario.horainicial} - {e.horario.datafinal.day}/{e.horario.datafinal.month}/{e.horario.datafinal.year} {e.horario.horafinal}",
                 
@@ -280,9 +280,9 @@ def edit_event(request, event_id):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
     respostas = Resposta.objects.filter(eventoid=evento)
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
     horario = evento.horario
     if request.method == 'POST':
@@ -290,7 +290,7 @@ def edit_event(request, event_id):
             id = pergunta.campoid.id
             if id == 10:
                 nome = request.POST.get(f'{id}')
-                evento.nome = nome
+                evento.Nome = nome
                 resposta = Resposta.objects.get(eventoid=evento, campoid=pergunta.campoid)
                 resposta.conteudo = nome
                 resposta.save()
@@ -367,9 +367,9 @@ def create_event(request, type_id, type_evento):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
     evento = Evento()
     horario = Timedate()
@@ -533,13 +533,13 @@ def edit_espaco(request, event_id, espaco_id, tipo):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
 
     if request.method == 'POST':
-        obj.nome = request.POST.get("desc")
+        obj.Nome = request.POST.get("desc")
         obj.quantidade = request.POST.get("quantidade")
         dataI = request.POST.get("data_i")
         dataF = request.POST.get("data_f")
@@ -675,9 +675,9 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
     horario = Timedate()
 
@@ -708,7 +708,7 @@ def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
         id_p = pergunta.campoid.id
         if id_p == 11:
             desc = request.POST.get(f'{id_p}')
-            tipo.nome = desc
+            tipo.Nome = desc
         elif id_p == 14:
             data_i = request.POST.get(f'{id_p}')
             horario.datainicial = data_i

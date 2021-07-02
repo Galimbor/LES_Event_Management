@@ -9,20 +9,24 @@
         <div class="section">
             <div class="columns is-align-items-center">
                 <div class="column">
-                    <h1 class="title has-text-centered">{{ obj.nome }}</h1>
+                    <h1 class="title has-text-centered">{{ obj.Nome }}</h1>
                     <div class="event-group">
                         <span class="span-header">Descrição:</span>
-                        <p class="event-body long-text">{{ obj.descricao }} </p>
+                        <p class="event-body long-text">{{ obj.Descricao }} </p>
                     </div>
                     <div class="event-group">
                         <span class="span-header">Unidade Orgânica:</span>
                         {% if obj.unidadeorganicaid is not None %}
-                        <p class="event-body long-text">{{ obj.unidadeorganicaid }} </p>
+                            <p class="event-body long-text">{{ obj.unidadeorganicaid }} </p>
                         {% else %}
-                        <p class="event-body long-text">--------</p>
+                            <p class="event-body long-text">--------</p>
                         {% endif %}
                     </div>
                 </div>
+            </div>
+            <div class="control">
+                <a class="button is-link" href="{% url 'Recurso:recursos' %}"> Voltar
+                    atrás </a>
             </div>
         </div>
     </div>

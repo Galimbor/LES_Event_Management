@@ -1,13 +1,14 @@
 from django import forms
 
 from .models import Recurso, Espaco, Equipamento, Servico, Empresa, Edificio, Unidadeorganica, Universidade, Campus
+from django.core.exceptions import NON_FIELD_ERRORS
 
 
 class RecursoForm(forms.ModelForm):
     class Meta:
         model = Recurso
         fields = [
-            'nome',
+            'Nome',
             'fonte',
             'empresaid',
 
@@ -19,16 +20,25 @@ class EspacoForm(forms.ModelForm):
     class Meta:
         model = Espaco
         fields = [
-            'nome',
+            'Nome',
             'tipo',
             'capacidade',
             'mobilidade',
             'edificioid'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
             'tipo': forms.TextInput(attrs={'class': "input-clean"}),
             'capacidade': forms.TextInput(attrs={'class': "input-clean"}),
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Já existe um Espaço com este nome no Edifício selecionado",
+            },
+            'capacidade': {
+                'invalid': 'A capacidade tem que ser um número inteiro positivo'
+            }
+
         }
 
 
@@ -36,14 +46,21 @@ class EquipamentoForm(forms.ModelForm):
     class Meta:
         model = Equipamento
         fields = [
-            'nome',
+            'Nome',
             'descricao',
             'unidadeorganicaid',
             'espacoid',
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
             'descricao': forms.TextInput(attrs={'class': "input-clean"}),
+        }
+        error_messages = {
+            'Nome': {
+                "unique": "O nome para este equipmaneto já foi atribuído a outro equipamento",
+            },
+            'descricao': {
+            },
         }
 
 
@@ -51,13 +68,20 @@ class ServicoForm(forms.ModelForm):
     class Meta:
         model = Servico
         fields = [
-            'nome',
-            'descricao',
+            'Nome',
+            'Descricao',
             'unidadeorganicaid',
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
-            'descricao': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean", "placeholder": "Nome do Serviço"}),
+            'Descricao': forms.TextInput(attrs={'class': "input-clean", "placeholder": "Descrição do Serviço"}),
+        }
+        error_messages = {
+            'Nome': {
+                "unique": "O nome para este serviço já foi atribuído a outro serviço",
+            },
+            'Descricao': {
+            },
         }
 
 
@@ -65,7 +89,7 @@ class EmpresaForm(forms.ModelForm):
     class Meta:
         model = Empresa
         fields = [
-            'nome',
+            'Nome',
             'descricao',
             'email',
             'telefone',
@@ -75,7 +99,7 @@ class EmpresaForm(forms.ModelForm):
             'faturacao'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
             'descricao': forms.TextInput(attrs={'class': "input-clean"}),
             'email': forms.TextInput(attrs={'class': "input-clean"}),
             'telefone': forms.TextInput(attrs={'class': "input-clean"}),
@@ -84,19 +108,45 @@ class EmpresaForm(forms.ModelForm):
             'codigopostal': forms.TextInput(attrs={'class': "input-clean"}),
             'faturacao': forms.TextInput(attrs={'class': "input-clean"}),
         }
+        error_messages = {
+            'Nome': {
+                'unique': "Já existe uma Empresa com este nome",
+            },
+            'email': {
+                'invalid': "O endereço de email introduzido é inválido"
+            },
+            'telefone': {
+                'invalid': "O número de telefone introduzido é inválido"
+            },
+            'codigopostal': {
+                'invalid': "O código postal introduzido é inválido, deve ter o formato XXXX-XXX"
+            },
+            'faturacao': {
+                'invalid': "O Número de Contribuinte introduzido é inválido"
+            },
+            'endereco': {
+                'invalid': "O Endereço introduzido é inválido"
+            },
+
+        }
 
 
 class EdificioForm(forms.ModelForm):
     class Meta:
         model = Edificio
         fields = [
-            'nome',
+            'Nome',
             'localizacao',
             'campusid'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
             'localizacao': forms.TextInput(attrs={'class': "input-clean"}),
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Já existe um Edifício com este nome no Campus selecionado",
+            }
         }
 
 
@@ -104,11 +154,16 @@ class UnidadeOrganicaForm(forms.ModelForm):
     class Meta:
         model = Unidadeorganica
         fields = [
-            'nome',
+            'Nome',
             'universidadeid'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Já existe uma Unidade Orgânica com este nome na Universidade selecionada",
+            }
         }
 
 
@@ -116,11 +171,11 @@ class UniversidadeForm(forms.ModelForm):
     class Meta:
         model = Universidade
         fields = [
-            'nome',
+            'Nome',
             'localizacao'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
             'localizacao': forms.TextInput(attrs={'class': "input-clean"}),
         }
 
@@ -129,9 +184,14 @@ class CampusForm(forms.ModelForm):
     class Meta:
         model = Campus
         fields = [
-            'nome',
+            'Nome',
             'universidadeid'
         ]
         widgets = {
-            'nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Já existe um Campus com este nome na Universidade selecionada",
+            }
         }

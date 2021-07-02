@@ -121,7 +121,7 @@
                                 <td class="td"> {{ obj.empresaid }}</td>
                                 <td>
                                     <a href="#" class="button btn-atribuir"
-                                    data-id="{{ obj.id }}" data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
+                                    data-id="{{ obj.id }}"  data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
                                             data-tooltip="Eliminar recurso: {{ obj.nome }}">
                                             Cancelar atribuicao
                                         
@@ -197,8 +197,10 @@
                 e.stopPropagation();
                 evento_id = "{{evento.id}}";
                 obj_id = e.target.dataset.id;
-                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456  %}"
+                time = e.target.dataset.time;
+                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456 time=789 %}"
                 url = url.replace('456', obj_id)
+                url = url.replace('789', time)
                 location.href = url.replace('123', evento_id)
                 
             })

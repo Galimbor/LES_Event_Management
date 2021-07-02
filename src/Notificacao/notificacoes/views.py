@@ -198,7 +198,7 @@ def enviar_notificacao_automatica(request, sigla, id):
     elif sigla == "confirmarAtividade":
         atividade = Atividade.objects.get(id=id)
         titulo = "Confirmação da atividade proposta"
-        descricao = "A sua proposta de atividade \""+atividade.nome+"\" foi aceite."
+        descricao = "A sua proposta de atividade \"" + atividade.Nome + "\" foi aceite."
         user_recipient = Utilizador.objects.get(
             id=atividade.professoruniversitarioutilizadorid.id)
         notify.send(sender=user_sender, recipient=user_recipient, verb=descricao, action_object=None,
@@ -207,7 +207,7 @@ def enviar_notificacao_automatica(request, sigla, id):
     elif sigla == "rejeitarAtividade":
         atividade = Atividade.objects.get(id=id)
         titulo = "Rejeição da atividade proposta"
-        descricao = "A sua proposta de atividade "+atividade.nome+" foi rejeitada."
+        descricao = "A sua proposta de atividade " + atividade.Nome + " foi rejeitada."
         user_recipient = Utilizador.objects.get(
             id=atividade.professoruniversitarioutilizadorid.id)
         notify.send(sender=user_sender, recipient=user_recipient, verb=descricao, action_object=None,
@@ -243,7 +243,7 @@ def enviar_notificacao_automatica(request, sigla, id):
     elif sigla == "atividadeApagada":
         titulo = "Foi apagada uma atividade"
         atividade = Atividade.objects.get(id=id)
-        descricao = "Foi apagada a atividade \""+atividade.nome+"\""
+        descricao = "Foi apagada a atividade \"" + atividade.Nome + "\""
         user_recipient = Utilizador.objects.get(
             id=atividade.get_coord().id)
         notify.send(sender=user_sender, recipient=user_recipient, verb=descricao, action_object=None,
@@ -252,7 +252,7 @@ def enviar_notificacao_automatica(request, sigla, id):
     elif sigla == "atividadeAlterada":
         titulo = "Foi alterada uma atividade"
         atividade = Atividade.objects.get(id=id)
-        descricao = "Foi feita uma alteração na atividade \""+atividade.nome+"\""
+        descricao = "Foi feita uma alteração na atividade \"" + atividade.Nome + "\""
         user_recipient = Utilizador.objects.get(
             id=atividade.get_coord().id)
         notify.send(sender=user_sender, recipient=user_recipient, verb=descricao, action_object=None,

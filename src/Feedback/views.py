@@ -37,9 +37,9 @@ def createFeedback(request, eventoid):
     for pergunta in perguntas:
 
 
-        if pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
 
     if request.method == 'POST':
@@ -104,7 +104,7 @@ def viewStatistics(request, eventoid):
 
     for pergunta in perguntas:
         respostasxpto = Resposta.objects.filter(campoid=pergunta, feedbackid__eventoid__id=eventoid)
-        respostaspossiveis = respostasxpto[0].campoid.respostapossivelid.nome.split(",")
+        respostaspossiveis = respostasxpto[0].campoid.respostapossivelid.Nome.split(",")
         labels = []
         data = []
         for respostapossivel in respostaspossiveis:

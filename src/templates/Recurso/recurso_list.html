@@ -56,10 +56,10 @@
                 <article class="message is-success">
                     {% for message in messages %}
                         <div class="message-header">
-                            <p>Success</p>
+                            <p>Sucesso</p>
                             <button id="close-message" class="delete" aria-label="delete"></button>
                         </div>
-                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                        <div class="message-body {% if message.tags %} {% endif %}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -165,12 +165,25 @@
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
-                                <td class="td">{{ obj.nome }}</td>
                                 {% if obj.espacoid is not None %}
+                                    {% if obj.espacoid.edificioid is not None %}
+                                        <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.espacoid.edificioid.Nome }}
+                                            - {{ obj.espacoid.edificioid.campusid.Nome }})
+                                        </td>
+                                    {% else %}
+                                        <td class="td"><b>{{ obj.Nome }}</b></td>
+                                    {% endif %}
                                     <td class="td"> Espaço</td>
-                                {% elif obj.equipamentoid.nome is not None %}
+                                {% elif obj.equipamentoid.Nome is not None %}
+                                   {% if obj.equipamentoid.espacoid is not None %}
+                                       <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.equipamentoid.espacoid.Nome }})
+                                        </td>
+                                    {% else %}
+                                       <td class="td"><b>{{ obj.Nome }}</b></td>
+                                    {% endif %}
                                     <td class="td"> Equipamento</td>
-                                {% elif obj.servicoid.nome is not None %}
+                                {% elif obj.servicoid.Nome is not None %}
+                                    <td class="td"><b>{{ obj.Nome }}</b></td>
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
@@ -182,14 +195,14 @@
                                 <td>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
-                                            data-tooltip="Editar recurso: {{ obj.nome }}">
+                                            data-tooltip="Editar recurso: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                            data-tooltip="Eliminar recurso: {{ obj.nome }}">
+                                            data-tooltip="Eliminar recurso: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-trash-alt"></i>
                       </span>

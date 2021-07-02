@@ -97,7 +97,7 @@ class FormHandling():
                 f  = Formulario.objects.filter(pk=formulario['pk'])
                 f.update(**formulario['fields'])
                 ##TODO campos, tipo de campos, relacao campoformulario
-                print(f[0].nome)
+                print(f[0].Nome)
         return JsonResponse({'foo': 'bar'})
 
         return super().post(*args, **kwargs)

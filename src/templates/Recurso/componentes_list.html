@@ -154,7 +154,7 @@
             <span class="panel-icon ">
               <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
             </span>
-                            Campuss
+                            Campus
                         </a>
                     </article>
                 </section>
@@ -177,29 +177,40 @@
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
-                                <td class="td">{{ obj.nome }}</td>
                                 {% if obj.empresaid is not None %}
+                                    <td class="td"><b>{{ obj.Nome }}</b></td>
                                     <td class="td">Empresa</td>
                                 {% elif obj.edificioid is not None %}
+                                    {% if obj.edificioid.campusid is not None %}
+                                        <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.edificioid.campusid.Nome }}
+                                            - {{ obj.edificioid.campusid.universidadeid.Nome }})
+                                        </td>
+                                    {% else %}
+                                        <td class="td"><b>{{ obj.Nome }}</b></td>
+                                    {% endif %}
                                     <td class="td">Edificio</td>
                                 {% elif obj.universidadeid is not None %}
+                                    <td class="td"><b>{{ obj.Nome }}</b></td>
                                     <td class="td">Universidade</td>
                                 {% elif obj.campusid is not None %}
+                                    <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.campusid.universidadeid.Nome }})</td>
                                     <td class="td">Campus</td>
                                 {% elif obj.unidade_organicaid is not None %}
+                                    <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.unidade_organicaid.universidadeid.Nome }})
+                                    </td>
                                     <td class="td">Unidade Orgânica</td>
                                 {% endif %}
                                 <td>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
-                                            data-tooltip="Editar componente: {{ obj.nome }}">
+                                            data-tooltip="Editar componente: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
                                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:componente-delete' obj.id %}"
-                                            data-tooltip="Eliminar componente: {{ obj.nome }}">
+                                            data-tooltip="Eliminar componente: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-trash-alt"></i>
                       </span>
@@ -235,7 +246,6 @@
     </div>
 
 
-
 {% endblock content %}
 
 {% block scripts %}
@@ -244,6 +254,13 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
     <script>
+
+
+        var newFormModal = $('#modal-newForm');
+        $('#openModal-newForm').click(function () {
+            newFormModal.addClass('is-active'); //shows modal
+        });
+
 
         // *************** DELETE  ***************
         var deleteFormModal = $('#confirm-delete-form-modal');

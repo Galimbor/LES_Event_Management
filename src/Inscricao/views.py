@@ -32,9 +32,9 @@ def CriarInscricao(request, eventoid):
         campoid_id=27)
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.nome == 'RadioBox' or \
-                pergunta.campoid.tipocampoid.nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.nome.split(",")
+        if pergunta.campoid.tipocampoid.Nome == 'RadioBox' or \
+                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
+            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
 
     if request.method == 'POST':
 
@@ -160,7 +160,7 @@ def PartInscricaoCheckin(request, id):
         perguntas.append(resposta.campoid)
         if resposta.campoid.id == 28:
             checkin = resposta
-            checkin.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+            checkin.respostas = resposta.campoid.respostapossivelid.Nome.split(",")
 
     QAA = zip(perguntas, respostas)
 
@@ -203,9 +203,9 @@ def PartAlterarInscricao(request, id):
     perguntas = []
 
     for resposta in respostas:
-        if resposta.campoid.tipocampoid.nome == 'RadioBox' or \
-                resposta.campoid.tipocampoid.nome == 'Dropdown':
-            resposta.campoid.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+        if resposta.campoid.tipocampoid.Nome == 'RadioBox' or \
+                resposta.campoid.tipocampoid.Nome == 'Dropdown':
+            resposta.campoid.respostas = resposta.campoid.respostapossivelid.Nome.split(",")
         perguntas.append(resposta.campoid)
 
     QAA = zip(perguntas, respostas)
@@ -218,7 +218,7 @@ def PartAlterarInscricao(request, id):
             resposta_get = request.POST.get(f"{perguntaid}")
 
             if perguntaid == 1:  # NOME
-                inscricao.nome = resposta_get
+                inscricao.Nome = resposta_get
             elif perguntaid == 2:  # IDADE
                 print("im here")
                 inscricao.idade = resposta_get
@@ -303,7 +303,7 @@ def PropAlterarEstadoInscricao(request, id):
         perguntas.append(resposta.campoid)
         if resposta.campoid.id == 27:
             estado = resposta
-            estado.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+            estado.respostas = resposta.campoid.respostapossivelid.Nome.split(",")
 
     QAA = zip(perguntas, respostas)
 

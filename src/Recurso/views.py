@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse_lazy
-from django.views.generic.list import ListView
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
+
 from django.contrib import messages
 from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
     Universidade, EventoRecurso, Componente, TimedateRecurso, Tipodeequipamento, Tipoespaco, Tiposervico
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
 from Neglected.models import Timedate
+
 
 import json
 from django.http import HttpResponse
@@ -28,12 +28,12 @@ def recursos(request):
     }
     return render(request, 'Recurso/recurso_list.html', context)
 
+
 def recurso_atribuir_list(request, my_id, tipo, time, log):
     print(log)
     evento = Evento.objects.get(id=my_id)
     recursos = Recurso.objects.all()
     hora = Timedate.objects.get(id=time)
-
 
     timedates = TimedateRecurso.objects.all()
 
@@ -41,42 +41,45 @@ def recurso_atribuir_list(request, my_id, tipo, time, log):
     rec_equipamentos = []
     rec_servicos = []
 
-
     for item in recursos:
         if item.espacoid is not None:
             flag = True
             for time in timedates:
-                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                if (
+                        hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (
+                        hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (
+                        item == time.recursoid):
                     flag = False
                     break
 
-            if flag == True:
+            if flag:
                 rec_espacos.append(item)
-
-
 
         elif item.equipamentoid is not None:
             flag = True
             for time in timedates:
-                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                if (
+                        hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (
+                        hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (
+                        item == time.recursoid):
                     flag = False
                     break
 
-            if flag == True:
+            if flag:
                 rec_equipamentos.append(item)
-
 
         elif item.servicoid is not None:
             flag = True
             for time in timedates:
-                if (hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (item == time.recursoid):
+                if (
+                        hora.datainicial >= time.timedateid.datainicial and time.timedateid.datafinal <= hora.datafinal) and (
+                        hora.horainicial >= time.timedateid.horainicial and time.timedateid.horafinal <= hora.horafinal) and (
+                        item == time.recursoid):
                     flag = False
                     break
 
-            if flag == True:
+            if flag:
                 rec_servicos.append(item)
-
-
         else:
             logistica = None
 
@@ -88,7 +91,7 @@ def recurso_atribuir_list(request, my_id, tipo, time, log):
             "evento": evento,
             "hora": hora,
             "logistica": logistica
-            }
+        }
     elif tipo == 'servico':
         logistica = Tiposervico.objects.get(id=log)
         context = {
@@ -96,7 +99,7 @@ def recurso_atribuir_list(request, my_id, tipo, time, log):
             "evento": evento,
             "hora": hora,
             "logistica": logistica
-            }
+        }
     elif tipo == 'equipamento':
         logistica = Tipodeequipamento.objects.get(id=log)
         context = {
@@ -104,14 +107,13 @@ def recurso_atribuir_list(request, my_id, tipo, time, log):
             "evento": evento,
             "hora": hora,
             "logistica": logistica
-            }
+        }
     else:
         context = {
 
         }
 
     return render(request, 'Recurso/recurso_atribuir.html', context)
-
 
 
 def recurso_atribuir(request, my_id, obj_id, time, log):
@@ -130,12 +132,10 @@ def recurso_atribuir(request, my_id, obj_id, time, log):
         log_esp.isAttributed = 1
         log_esp.save()
 
-
     if recurso.servicoid is not None:
         log_esp = Tiposervico.objects.get(id=log)
         log_esp.isAttributed = 1
         log_esp.save()
-
 
     if recurso.equipamentoid is not None:
         log_esp = Tipodeequipamento.objects.get(id=log)
@@ -145,15 +145,17 @@ def recurso_atribuir(request, my_id, obj_id, time, log):
     messages.success(request, 'Recurso atribuido com sucesso.')
     return redirect("Evento:view-logistic", my_id)
 
-def recurso_atribuir_cancelar(request, my_id, obj_id):
+
+def recurso_atribuir_cancelar(request, my_id, obj_id, time):
     evento = Evento.objects.get(id=my_id)
     recurso = Recurso.objects.get(id=obj_id)
 
     rec_ev = EventoRecurso.objects.get(eventoid=evento, recursoid=recurso)
+    rec_date = TimedateRecurso.objects.filter(recursoid=recurso, timedateid=time)
+    print(rec_date)
     rec_ev.delete()
 
     return redirect("Recurso:recursos-2", my_id)
-
 
 
 def componentes(request):
@@ -195,13 +197,13 @@ def componente_detail(request, my_id):
 def componente_delete(request, my_id):
     obj = get_object_or_404(Componente, id=my_id)
     if obj.empresaid is not None:
-        return redirect('Recurso:empresa-delete', obj.empresaid)
+        return redirect('Recurso:empresa-delete', obj.empresaid.id)
     elif obj.edificioid is not None:
-        return redirect('Recurso:edificio-delete', obj.edificioid)
+        return redirect('Recurso:edificio-delete', obj.edificioid.id)
     elif obj.universidadeid is not None:
-        return redirect('Recurso:universidade-delete', obj.universidadeid)
+        return redirect('Recurso:universidade-delete', obj.universidadeid.id)
     elif obj.unidade_organicaid is not None:
-        return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid)
+        return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid.id)
     else:
         return redirect('Recurso:campus-delete', obj.campusid)
 
@@ -255,6 +257,7 @@ def recurso_delete(request, my_id):
         j.delete()
     obj.delete()
     innerObj.delete()
+    messages.success(request, 'Recurso eliminado com sucesso')
     return redirect('Recurso:recursos')
 
 
@@ -270,18 +273,21 @@ def equipamento_create(request):
     form = EquipamentoForm(request.POST or None)
     form2 = RecursoForm(request.POST or None)
     if form.is_valid():
-        form.save()
-        empresa = request.POST.get('empresaid')
-        if empresa is not None:
+        empresaid = request.POST.get('empresaid')
+        if empresaid != '':
+            empresa = Empresa.objects.get(id=empresaid)
             fonte = 'Externa'
-            recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, equipamentoid=form.instance)
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, empresaid=empresa,
+                              equipamentoid=form.instance)
         else:
             fonte = 'Interna'
-            recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, empresaid=empresa,
-                              equipamentoid=form.instance)
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, equipamentoid=form.instance)
+        form.save()
         recurso.save()
         messages.success(request, 'Equipamento criado com sucesso')
         return redirect('Recurso:recursos')
+    else:
+        messages.error(request, form.errors)
     context = {
         'form': form,
         'form2': form2
@@ -291,13 +297,31 @@ def equipamento_create(request):
 
 def equipamento_update(request, my_id):
     obj = get_object_or_404(Equipamento, id=my_id)
+    recurso = Recurso.objects.get(equipamentoid=my_id)
     form = EquipamentoForm(request.POST or None, instance=obj)
+    form2 = RecursoForm(request.POST or None, instance=recurso)
     if form.is_valid():
+        empresaid = request.POST.get('empresaid')
+        if empresaid != '':
+            fonte = 'Externa'
+            empresa = Empresa.objects.get(id=empresaid)
+            recurso.Nome = request.POST.get("Nome")
+            recurso.empresaid = empresa
+            recurso.fonte = fonte
+        else:
+            fonte = 'Interna'
+            recurso.Nome = request.POST.get("Nome")
+            recurso.fonte = fonte
+            recurso.empresaid = None
         form.save()
+        recurso.save()
         messages.success(request, 'Equipamento editado com sucesso')
         return redirect("Recurso:recursos")
+    else:
+        messages.error(request, form.errors)
     context = {
         'form': form,
+        'form2': form2,
         'detail': 1
     }
     return render(request, "Recurso/equip_create.html", context)
@@ -327,29 +351,63 @@ def espacos(request):
 
 def espaco_create(request):
     form = EspacoForm(request.POST or None)
+    form2 = RecursoForm(request.POST or None)
     if form.is_valid():
+        empresaid = request.POST.get('empresaid')
+        if empresaid != '':
+            empresa = Empresa.objects.get(id=empresaid)
+            fonte = 'Externa'
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, empresaid=empresa,
+                              espacoid=form.instance)
+        else:
+            fonte = 'Interna'
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, espacoid=form.instance)
         form.save()
-        recurso = Recurso(nome=request.POST.get("nome"), fonte='Interna', espacoid=form.instance)
         recurso.save()
         messages.success(request, 'Espaço criado com sucesso')
         return redirect('Recurso:recursos')
     else:
-        print(form.errors)
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
+        if error.get("capacidade"):
+            messages.error(request, error.get("capacidade"))
     context = {
-        'form': form
+        'form': form,
+        'form2': form2
     }
     return render(request, 'Recurso/espaco_create.html', context)
 
 
 def espaco_update(request, my_id):
     obj = get_object_or_404(Espaco, id=my_id)
+    recurso = Recurso.objects.get(espacoid=my_id)
     form = EspacoForm(request.POST or None, instance=obj)
+    form2 = RecursoForm(request.POST or None, instance=recurso)
     if form.is_valid():
+        empresaid = request.POST.get('empresaid')
+        if empresaid != '':
+            fonte = 'Externa'
+            empresa = Empresa.objects.get(id=empresaid)
+            recurso.Nome = request.POST.get("Nome")
+            recurso.empresaid = empresa
+            recurso.fonte = fonte
+        else:
+            fonte = 'Interna'
+            recurso.Nome = request.POST.get("Nome")
+            recurso.fonte = fonte
+            recurso.empresaid = None
         form.save()
+        recurso.save()
         messages.success(request, 'Espaço editado com sucesso')
         return redirect("Recurso:recursos")
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
+        'form2': form2,
         'detail': 1
     }
     return render(request, "Recurso/espaco_create.html", context)
@@ -381,17 +439,26 @@ def servico_create(request):
     form = ServicoForm(request.POST or None)
     form2 = RecursoForm(request.POST or None)
     if form.is_valid():
-        form.save()
         empresaid = request.POST.get('empresaid')
-        empresa = Empresa.objects.get(id=empresaid)
-        if empresa is not None:
+        if empresaid != '':
+            empresa = Empresa.objects.get(id=empresaid)
             fonte = 'Externa'
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, servicoid=form.instance, empresaid=empresa)
         else:
             fonte = 'Interna'
-        recurso = Recurso(nome=request.POST.get("nome"), fonte=fonte, servicoid=form.instance, empresaid=empresa)
+            recurso = Recurso(Nome=request.POST.get("Nome"), fonte=fonte, servicoid=form.instance)
+            messages.success(request, 'Serviço criado com sucesso')
+        form.save()
         recurso.save()
-        messages.success(request, 'Serviço criado com sucesso')
         return redirect('Recurso:recursos')
+    else:
+
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        elif error.get("Descrição"):
+            messages.error(request, error.get("Nome"))
+
     context = {
         'form': form,
         'form2': form2
@@ -401,13 +468,35 @@ def servico_create(request):
 
 def servico_update(request, my_id):
     obj = get_object_or_404(Servico, id=my_id)
+    recurso = Recurso.objects.get(servicoid=my_id)
     form = ServicoForm(request.POST or None, instance=obj)
+    form2 = RecursoForm(request.POST or None, instance=recurso)
+    empresaid = request.POST.get('empresaid')
     if form.is_valid():
+        if empresaid != '':
+            fonte = 'Externa'
+            empresa = Empresa.objects.get(id=empresaid)
+            recurso.Nome = request.POST.get("Nome")
+            recurso.empresaid = empresa
+            recurso.fonte = fonte
+        else:
+            fonte = 'Interna'
+            recurso.Nome = request.POST.get("Nome")
+            recurso.empresaid = None
+            recurso.fonte = fonte
         form.save()
+        recurso.save()
         messages.success(request, 'Serviço editado com sucesso')
         return redirect("Recurso:recursos")
+    else:
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        elif error.get("Descrição"):
+            messages.error(request, error.get("Nome"))
     context = {
         'form': form,
+        'form2': form2,
         'detail': 1
     }
     return render(request, "Recurso/servico_create.html", context)
@@ -424,7 +513,7 @@ def servico_detail(request, my_id):
 def servico_delete(request, my_id):
     obj = get_object_or_404(Servico, id=my_id)
     obj.delete()
-    return redirect('Recurso:servicos')
+    return redirect('Recurso:recursos')
 
 
 def empresas(request):
@@ -438,11 +527,25 @@ def empresas(request):
 def empresa_create(request):
     form = EmpresaForm(request.POST or None)
     if form.is_valid():
+        componente = Componente(Nome=request.POST.get("Nome"), empresaid=form.instance)
         form.save()
-        recurso = Componente(nome=request.POST.get("nome"), empresaid=form.instance)
-        recurso.save()
+        componente.save()
         messages.success(request, 'Empresa criada com sucesso')
         return redirect('Recurso:componentes')
+    else:
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        if error.get("email"):
+            messages.error(request, error.get("email"))
+        if error.get("telefone"):
+            messages.error(request, error.get("telefone"))
+        if error.get("codigopostal"):
+            messages.error(request, error.get("codigopostal"))
+        if error.get("faturacao"):
+            messages.error(request, error.get("faturacao"))
+        if error.get("endereco"):
+            messages.error(request, error.get("endereco"))
     context = {
         'form': form,
     }
@@ -452,17 +555,34 @@ def empresa_create(request):
 def empresa_delete(request, my_id):
     obj = get_object_or_404(Empresa, id=my_id)
     obj.delete()
+    messages.success(request, 'Empresa eliminada com sucesso')
     return redirect('Recurso:componentes')
 
 
 def empresa_update(request, my_id):
     obj = get_object_or_404(Empresa, id=my_id)
     form = EmpresaForm(request.POST or None, instance=obj)
-    print(form.fields)
     if form.is_valid():
+        componente = Componente.objects.get(empresaid=my_id)
+        componente.Nome = request.POST.get("Nome")
         form.save()
+        componente.save()
         messages.success(request, 'Empresa editada com sucesso')
         return redirect("Recurso:componentes")
+    else:
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        if error.get("email"):
+            messages.error(request, error.get("email"))
+        if error.get("telefone"):
+            messages.error(request, error.get("telefone"))
+        if error.get("codigopostal"):
+            messages.error(request, error.get("codigopostal"))
+        if error.get("faturacao"):
+            messages.error(request, error.get("faturacao"))
+        if error.get("endereco"):
+            messages.error(request, error.get("endereco"))
     context = {
         'form': form,
         'detail': 1
@@ -489,11 +609,15 @@ def edificios(request):
 def edificio_create(request):
     form = EdificioForm(request.POST or None)
     if form.is_valid():
+        componente = Componente(Nome=request.POST.get("Nome"), edificioid=form.instance)
         form.save()
-        componente = Componente(nome=request.POST.get("nome"), edificioid=form.instance)
         componente.save()
         messages.success(request, 'Edifício criado com sucesso')
         return redirect('Recurso:componentes')
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
     }
@@ -503,17 +627,24 @@ def edificio_create(request):
 def edificio_delete(request, my_id):
     obj = get_object_or_404(Edificio, id=my_id)
     obj.delete()
-    return redirect('Recurso:edificios')
+    messages.success(request, 'Edifício eliminado com sucesso')
+    return redirect('Recurso:componentes')
 
 
 def edificio_update(request, my_id):
     obj = get_object_or_404(Edificio, id=my_id)
     form = EdificioForm(request.POST or None, instance=obj)
-    print(form.fields)
     if form.is_valid():
+        componente = Componente.objects.get(edificioid=my_id)
+        componente.Nome = request.POST.get("Nome")
         form.save()
+        componente.save()
         messages.success(request, 'Edifício editado com sucesso')
         return redirect("Recurso:componentes")
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
         'detail': 1
@@ -540,11 +671,15 @@ def unidadesorganicas(request):
 def unidadeorganica_create(request):
     form = UnidadeOrganicaForm(request.POST or None)
     if form.is_valid():
+        componente = Componente(Nome=request.POST.get("Nome"), unidade_organicaid=form.instance)
         form.save()
-        componente = Componente(nome=request.POST.get("nome"), unidade_organicaid=form.instance)
         componente.save()
         messages.success(request, 'Unidade Orgânica criada com sucesso')
         return redirect('Recurso:componentes')
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
     }
@@ -554,7 +689,8 @@ def unidadeorganica_create(request):
 def unidadeorganica_delete(request, my_id):
     obj = get_object_or_404(Unidadeorganica, id=my_id)
     obj.delete()
-    return redirect('Recurso:unidades-organicas')
+    messages.success(request, 'Unidade Orgânica eliminada com sucesso')
+    return redirect('Recurso:componentes')
 
 
 def unidadeorganica_update(request, my_id):
@@ -562,9 +698,16 @@ def unidadeorganica_update(request, my_id):
     form = UnidadeOrganicaForm(request.POST or None, instance=obj)
     print(form.fields)
     if form.is_valid():
+        componente = Componente.objects.get(unidadeorganicaid=my_id)
+        componente.Nome = request.POST.get("Nome")
         form.save()
+        componente.save()
         messages.success(request, 'Unidade orgânica editada com sucesso')
         return redirect("Recurso:componentes")
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
         'detail': 1
@@ -591,11 +734,15 @@ def universidades(request):
 def universidade_create(request):
     form = UniversidadeForm(request.POST or None)
     if form.is_valid():
+        componente = Componente(Nome=request.POST.get("Nome"), universidadeid=form.instance)
         form.save()
-        componente = Componente(nome=request.POST.get("nome"), universidadeid=form.instance)
         componente.save()
         messages.success(request, 'Universidade criada com sucesso')
         return redirect('Recurso:componentes')
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
     }
@@ -606,9 +753,16 @@ def universidade_update(request, my_id):
     obj = get_object_or_404(Universidade, id=my_id)
     form = UniversidadeForm(request.POST or None, instance=obj)
     if form.is_valid():
+        componente = Componente.objects.get(universidadeid=my_id)
+        componente.Nome = request.POST.get("Nome")
         form.save()
+        componente.save()
         messages.success(request, 'Universidade editada com sucesso')
         return redirect("Recurso:componentes")
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
         'detail': 1
@@ -627,7 +781,8 @@ def universidade_detail(request, my_id):
 def universidade_delete(request, my_id):
     obj = get_object_or_404(Universidade, id=my_id)
     obj.delete()
-    return redirect('Recurso:universidades')
+    messages.success(request, 'Universidade eliminada com sucesso')
+    return redirect('Recurso:componentes')
 
 
 def campis(request):
@@ -641,11 +796,17 @@ def campis(request):
 def campus_create(request):
     form = CampusForm(request.POST or None)
     if form.is_valid():
+        componente = Componente(Nome=request.POST.get("Nome"), campusid=form.instance)
         form.save()
-        componente = Componente(nome=request.POST.get("nome"), campusid=form.instance)
         componente.save()
         messages.success(request, 'Campus criado com sucesso')
         return redirect('Recurso:componentes')
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
+            messages.error(request, error.get("__all__"))
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
     }
@@ -656,9 +817,16 @@ def campus_update(request, my_id):
     obj = get_object_or_404(Campus, id=my_id)
     form = CampusForm(request.POST or None, instance=obj)
     if form.is_valid():
+        componente = Componente.objects.get(campusid=my_id)
+        componente.Nome = request.POST.get("Nome")
         form.save()
+        componente.save()
         messages.success(request, 'Campus editado com sucesso')
         return redirect("Recurso:componentes")
+    else:
+        error = form.errors
+        if error.get("__all__"):
+            messages.error(request, error.get("__all__"))
     context = {
         'form': form,
         'detail': 1
@@ -677,4 +845,5 @@ def campus_detail(request, my_id):
 def campus_delete(request, my_id):
     obj = get_object_or_404(Campus, id=my_id)
     obj.delete()
-    return redirect('Recurso:campis')
+    messages.success(request, 'Campus eliminado com sucesso')
+    return redirect('Recurso:componentes')

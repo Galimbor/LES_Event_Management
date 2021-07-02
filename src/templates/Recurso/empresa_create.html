@@ -6,6 +6,19 @@
 {% block content %}
     {% load static %}
     <div>
+        {% if messages %}
+            <article class="message is-warning">
+                <div class="message-header">
+                    <p>Corrija os seguintes erros, por favor:</p>
+                    <button class="close-message delete" aria-label="delete"></button>
+                </div>
+                {% for message in messages %}
+                    <div class="message-body">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </article>
+        {% endif %}
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
@@ -21,7 +34,7 @@
 
                         <div class="form-group-c">
                             <label class="label" for="nome"> Nome: </label>
-                            {{ form.nome }}
+                            {{ form.Nome }}
                         </div>
 
                         <div class="form-group-c">
@@ -59,16 +72,25 @@
                             <label class="label" for="">Nº Contribuinte: </label>
                             {{ form.faturacao }}
                         </div>
-
-                        {% if detail %}
-                            <input class="button is-primary" type='Submit' value='Guardar'>
-                        {% else %}
-                            <input class="button is-primary" type='Submit' value='Criar'>
-                        {% endif %}
+                        <div class="control">
+                            <a class="button is-link" href="{% url 'Recurso:componentes' %}"> Voltar
+                                atrás </a>
+                            {% if detail %}
+                                <input class="button is-primary" type='Submit' value='Guardar'>
+                            {% else %}
+                                <input class="button is-primary" type='Submit' value='Criar'>
+                            {% endif %}
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $('.close-message').click(function () {
+            let message = $(this).parent().parent();
+            message.addClass('is-hidden')
+        });
+    </script>
 {% endblock content %}
 
