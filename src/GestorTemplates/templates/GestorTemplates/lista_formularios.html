@@ -284,7 +284,9 @@
   var deleteFormModal = $('#confirm-delete-form-modal');
   $('.delete-form-btn').click(function (e) {
     e.stopPropagation(); //para a propagacao do evento javascript 
-    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    let confirm = deleteFormModal.find('.confirm')
+    confirm.attr('href', $(this).data('delete-url')); //passes obj id to modal
+    confirm.click(e => confirm.addClass('is-loading'))
     deleteFormModal.addClass('is-active'); //shows modal
     //todo add warning when deleting templates
   });
