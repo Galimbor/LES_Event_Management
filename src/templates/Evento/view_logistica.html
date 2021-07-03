@@ -11,17 +11,46 @@
                     <h1 class="title">Logistica - {{ evento.nome }}</h1>
                 </div>
             </div>
+            {% if messages %}
+            <article class="message is-success">
+                {% for message in messages %}
+                    <div class="message-header">
+                        <p>Success</p>
+                        <button id="close-message" class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </article>
+          {% endif %}
             <h2 class="subtitle">Espaços</h2>
             <div class="columns is-full display-column">
                 {% for espaco in espacos %}
-                    <div class="item">
+
+                    {% if espaco.isAttributed == 1 %}
+                        <div class="item item-espaco item-valid">
+                    {% else %} 
+                        <div class="item item-espaco">
+                    {% endif %}
+
+                    
                         <div class="item-description">
                             {{ espaco.nome }}
                         </div>
-                        <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
+                        
+                        <div class="item-information">
+                            Data: {{ espaco.horariorequisicao.datainicial }} - {{ espaco.horariorequisicao.datafinal }}
                         </div>
+                        <div class="item-information">
+                            Hora: {{ espaco.horariorequisicao.horainicial }} - {{ espaco.horariorequisicao.horafinal }}
+                        </div>
+                        {% if espaco.isAttributed != 1 %}
+                        <div class="item-check">
+                            <span data-time={{espaco.horariorequisicao.id}} data-logisticaid="{{espaco.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                        </div>
+                        {% endif %}
+
                     </div>
                     <br>
                 {% endfor %}
@@ -29,14 +58,29 @@
             <h2 class="subtitle">Equipamentos</h2>
             <div class="columns is-full display-column">
                 {% for equipamento in equipamentos %}
-                    <div class="item">
+
+
+                        {% if equipamento.isAttributed == 1 %}
+                            <div class="item item-equipamento item-valid">
+                        {% else %} 
+                            <div class="item item-equipamento">
+                        {% endif %}
+
                         <div class="item-description">
                             {{ equipamento.nome }}
                         </div>
-                        <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
+                        
+                        <div class="item-information">
+                            Data: {{ equipamento.horariorequisicao.datainicial }} - {{ equipamento.horariorequisicao.datafinal }}
                         </div>
+                        <div class="item-information">
+                            Hora: {{ equipamento.horariorequisicao.horainicial }} - {{ equipamento.horariorequisicao.horafinal }}
+                        </div>
+                        {% if equipamento.isAttributed != 1 %}
+                        <div class="item-check">
+                            <span data-time={{equipamento.horariorequisicao.id}} data-logisticaid="{{equipamento.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <br>
@@ -46,21 +90,163 @@
             <div class="columns is-full display-column">
 
                 {% for servico in servicos %}
-                    <div class="item">
+
+                    {% if servico.isAttributed == 1 %}
+                        <div class="item item-servico item-valid">
+                    {% else %} 
+                        <div class="item item-servico">
+                    {% endif %}
+
+
                         <div class="item-description">
                             {{ servico.nome }}
                         </div>
-                        <div class="item-check">
-                            <span class="mdi mdi-check"></span>
-                            <span class="mdi mdi-close"></span>
+                        
+                        <div class="item-information">
+                            Data: {{ servico.horariorequisicao.datainicial }} - {{ servico.horariorequisicao.datafinal }}
                         </div>
+                        <div class="item-information">
+                            Hora: {{ servico.horariorequisicao.horainicial }} - {{ servico.horariorequisicao.horafinal }}
+                        </div>
+                        {% if servico.isAttributed != 1 %}
+                        <div class="item-check">
+                            <span data-time={{servico.horariorequisicao.id}} data-logisticaid="{{servico.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                        </div>
+                        {% endif %}
                     </div>
                     <br>
                 {% endfor %}
 
             </div>
-
+            
+            <div class="buttons mt-3">
+                <a href="#" class="button-submit">Finalizar Logísticas</a>
+            </div>
         </div>
     </div>
+
+    <script>
+
+            //CSRF Token
+            function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+
+        const itemsEspaco = document.querySelectorAll('.item-espaco');
+        const itemsEquipamento = document.querySelectorAll('.item-equipamento');
+        const itemsServico = document.querySelectorAll('.item-servico');
+        const checkBtn = document.querySelector('.mdi-check');
+        const closeBtn = document.querySelector('.mdi-check');
+
+        itemsEquipamento.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[3]?.children[0];
+
+            atribuir?.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                const logisticaid = e.target.dataset.logisticaid;
+                
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
+                url = url.replace('456', 'equipamento')
+                url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
+                
+                document.location.href = url.replace('123', id);;
+
+            });
+        });
+
+        itemsEspaco.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[3]?.children[0];
+
+            
+            //Listen to atribuir evento
+            atribuir?.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                const logisticaid = e.target.dataset.logisticaid;
+    
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
+                url = url.replace('456', 'espaco')
+                url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
+
+                document.location.href = url.replace('123', id);;
+
+            });
+        });
+
+        itemsServico.forEach(item => {
+            const parentEl = item.lastChild.previousSibling;
+            const atribuir = item.children[3]?.children[0];
+            
+            atribuir?.addEventListener('click', function(e) {
+                const id = e.target.dataset.id;
+                const horarioid = e.target.dataset.time;
+                const logisticaid = e.target.dataset.logisticaid;
+                
+                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789 log=999%}`;
+                url = url.replace('456', 'servico')
+                url = url.replace('789', horarioid)
+                url = url.replace('999', logisticaid)
+                document.location.href = url.replace('123', id);;
+            });
+        });
+
+
+
+        // Listen to button submit
+        const submitBtn = document.querySelector('.button-submit');
+        submitBtn.addEventListener('click', function() {
+            let salaRecusada = true;
+
+            itemsEspaco.forEach(item => {
+                if(item.classList.contains('item-valid')) salaRecusada = false;
+            });
+
+            $.ajax({
+          url: '/Evento/ajax/finalizar_logistica',
+          type: 'POST',
+          data: {
+            myData: salaRecusada,
+            id: `{{evento.id}}`,
+          },        
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            let url = `{% url 'Evento:eventos-gerir' %}`;
+            document.location.href = url;
+            }
+          ,
+          error: function (error) {
+            console.log(error);
+          }
+        })
+        });
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+  
+
+    </script>
 
 {% endblock content %}

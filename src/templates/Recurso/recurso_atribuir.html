@@ -1,0 +1,191 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+
+{% block page_css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
+{% block content %}
+    {% load static %}
+    <div>
+        <section id="subnavbar">
+            <nav class="" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a role="button" class="navbar-burger burger"
+                       onclick="$('#form-menu-buttons').toggleClass('is-active')">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div class="navbar-menu is-white" id="form-menu-buttons">
+                    <div class="navbar-start">
+                        <!-- navbar items on the left side -->
+                        <div class="column">
+                            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+                                <ul>
+                                    <li class="is-active">
+                                        <a href="#" aria-current="page">
+                                            <span class="has-text-weight-bold">Atribuir Recurso - {{evento.nome}}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </nav>
+            {% if messages %}
+                <article class="message is-success">
+                    {% for message in messages %}
+                        <div class="message-header">
+                            <p>Success</p>
+                            <button id="close-message" class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </article>
+            {% endif %}
+        </section>
+
+        <div class="section" id="main-section-content">
+            <div class="columns">
+                <div class="column ">
+
+                    <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Fonte</th>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in rec %}
+                            <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
+                                <td class="td">{{ obj.nome }}</td>
+                                {% if obj.espacoid is not None %}
+                                    <td class="td"> Espaço</td>
+                                {% elif obj.equipamentoid.nome is not None %}
+                                    <td class="td"> Equipamento</td>
+                                {% elif obj.servicoid.nome is not None %}
+                                    <td class="td"> Serviço</td>
+                                {% endif %}
+                                <td class="td"> {{ obj.fonte }}</td>
+                                {% if obj.empresaid is not None %}
+                                    <td class="td"> {{ obj.empresaid }}</td>
+                                {% else %}
+                                    <td class="td"> --------</td>
+                                {% endif %}
+                                <td>
+                                    <a href="#" class="button btn-atribuir"
+                                            data-logisticaid="{{logistica.id}}"
+                                            data-id="{{ obj.id }}"
+                                            data-tooltip="Editar recurso: {{ obj.nome }}">
+                                            Atribuir
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+{% endblock content %}
+
+{% block scripts %}
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+    <script>
+
+       
+
+
+        //DATATABLES MANIPULATION
+        $(document).ready(function () {
+            var table = $('#form-list-table').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+                },
+                "columnDefs": [{"orderable": false, "targets": 4},
+                    {
+                        "targets": [0],
+                        "visible": true
+                    }
+                ],
+            });
+            //tabs filters
+            let tabs = $('.tabs li')
+            tabs.click(function () {
+                tabs.removeClass('is-active')
+                $(this).addClass('is-active');
+                table.column($(this).data('column'))
+                    .search($(this).data('filter'))
+                    .draw();
+            })
+        });
+
+
+        $('.datatable-row').click(function () {
+            let url = "{% url 'Recurso:recurso-detail' my_id=123  %}"
+            location.href = url.replace('123', $(this).data('id'))
+        });
+
+        $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+
+        $('.button-edit').click(function (e) {
+            e.stopPropagation();
+            let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
+            location.href = url.replace('123', $(this).data('id'))
+        });
+
+
+
+        //Listen to atribuir 
+        const attrBtns = document.querySelectorAll('.btn-atribuir');
+        console.log(attrBtns);
+
+        attrBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const evento_id = "{{evento.id}}";
+                const obj_id = e.target.dataset.id;
+                const hora = "{{hora.id}}"
+                const logisticaid = e.target.dataset.logisticaid;
+
+                let url = "{% url 'Recurso:recurso-atribuir' my_id=123 obj_id=456 time=789 log=999%}"
+                url = url.replace('456', obj_id)
+                url = url.replace('789', hora)
+                url = url.replace('999', logisticaid)
+                location.href = url.replace('123', evento_id)
+                
+            })
+        })
+
+
+    </script>
+{% endblock %}

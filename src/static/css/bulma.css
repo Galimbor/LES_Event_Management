@@ -2162,7 +2162,7 @@ a.box:active {
   background-color: #48c774;
   border-color: transparent;
   color: #fff;
-  padding: 1.5rem 2rem !important;
+  /*padding: 1.5rem 2rem !important;*/
 }
 .button.is-success:hover, .button.is-success.is-hovered {
   background-color: #3ec46d;

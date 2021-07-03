@@ -1,0 +1,30 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+    <div>
+        <div class="section">
+            <div class="columns is-align-items-center">
+                <div class="column">
+                    <h1 class="title has-text-centered">{{ obj.Nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Localização:</span>
+                        <p class="event-body long-text">{{ obj.localizacao }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Campus:</span>
+                        <p class="event-body long-text">{{ obj.campusid }} </p>
+                    </div>
+                </div>
+            </div>
+                                <div class="control">
+                        <a class="button is-link" href="{% url 'Recurso:componentes' %}"> Voltar
+                            atrás </a>
+                    </div>
+        </div>
+    </div>
+
+{% endblock content %}

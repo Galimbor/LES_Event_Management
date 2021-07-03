@@ -27,7 +27,6 @@
                         <div class="column">
                             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
                                 <ul>
-                                    <li><a href="{% url 'home' %}">Página inicial</a></li>
                                     <li class="is-active">
                                         <a href="#" aria-current="page">
                                             <span class="has-text-weight-bold">Recursos</span>
@@ -38,18 +37,6 @@
                         </div>
                     </div>
 
-                    <div class="navbar-end">
-                        <!-- navbar items on the right side -->
-
-                        <div class="navbar-item buttons has-tooltip-bottom">
-                            <button class="button is-success" id="openModal-newForm">
-              <span class="icon">
-                <i class="fas fa-plus"></i>
-              </span>
-                                <span>Novo</span>
-                            </button>
-                        </div>
-                    </div>
 
                 </div>
             </nav>
@@ -57,10 +44,10 @@
                 <article class="message is-success">
                     {% for message in messages %}
                         <div class="message-header">
-                            <p>Sucesso</p>
-                            <button id="close-message" class="delete" aria-label="delete"></button>
+                            <p>Success</p>
+                            <button id="close-message " class="delete" aria-label="delete"></button>
                         </div>
-                        <div class="message-body {% if message.tags %} {% endif %}">
+                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -104,38 +91,6 @@
                 </div>
             </div>
         </section>
-        <div class="modal" id="modal-newForm">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Selecione o tipo de Recurso</p>
-                    <button class="close-modal delete" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <article class="panel is-primary" id="tipos-formulario">
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:equipamento-create' %}">
-            <span class="panel-icon ">
-              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-            </span>
-                            Equipamentos
-                        </a>
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:espaco-create' %}">
-            <span class="panel-icon ">
-              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-            </span>
-                            Espaço
-                        </a>
-                        <a class="panel-block is-active " id="empty" href="{% url 'Recurso:servico-create' %}">
-            <span class="panel-icon ">
-              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-            </span>
-                            Serviço
-                        </a>
-                    </article>
-                </section>
-
-            </div>
-        </div>
 
         <div class="section" id="main-section-content">
             <div class="columns">
@@ -154,76 +109,35 @@
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
+                                <td class="td">{{ obj.nome }}</td>
                                 {% if obj.espacoid is not None %}
-                                    {% if obj.espacoid.edificioid is not None %}
-                                        <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.espacoid.edificioid.Nome }}
-                                            - {{ obj.espacoid.edificioid.campusid.Nome }})
-                                        </td>
-                                    {% else %}
-                                        <td class="td"><b>{{ obj.Nome }}</b></td>
-                                    {% endif %}
                                     <td class="td"> Espaço</td>
-                                {% elif obj.equipamentoid.Nome is not None %}
-                                    {% if obj.equipamentoid.espacoid is not None %}
-                                        <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.equipamentoid.espacoid.Nome }})
-                                        </td>
-                                    {% else %}
-                                        <td class="td"><b>{{ obj.Nome }}</b></td>
-                                    {% endif %}
+                                {% elif obj.equipamentoid.nome is not None %}
                                     <td class="td"> Equipamento</td>
-                                {% elif obj.servicoid.Nome is not None %}
-                                    <td class="td"><b>{{ obj.Nome }}</b></td>
+                                {% elif obj.servicoid.nome is not None %}
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
-                                {% if obj.empresaid is not None %}
-                                    <td class="td"> {{ obj.empresaid }}</td>
-                                {% else %}
-                                    <td class="td"> --------</td>
-                                {% endif %}
-                                <td class="td">
-                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom button-edit"
-                                            data-id="{{ obj.id }}"
-                                            data-tooltip="Editar recurso: {{ obj.Nome }}">
-                      <span class="icon">
-                        <i class="far fa-edit"></i>
-                      </span>
-                                    </button>
-                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom delete-form-btn"
-                                            data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                            data-tooltip="Eliminar recurso: {{ obj.Nome }}">
-                      <span class="icon">
-                        <i class="far fa-trash-alt"></i>
-                      </span>
-                                    </button>
+                                <td class="td"> {{ obj.empresaid }}</td>
+                                <td>
+                                    <a href="#" class="button btn-atribuir"
+                                       data-id="{{ obj.id }}"
+                                       data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
+                                       data-tooltip="Eliminar recurso: {{ obj.nome }}">
+                                        Cancelar atribuicao
+
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
+
                     </table>
                 </div>
             </div>
         </div>
 
 
-    </div>
-
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este recurso?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
     </div>
 
 
@@ -236,21 +150,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
     <script>
-
-
-        // *************** CREATE FORM ***************
-
-
-        var newFormModal = $('#modal-newForm');
-        $('#openModal-newForm').click(function () {
-            newFormModal.addClass('is-active'); //shows modal
-        });
-
-
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
-
 
         //DATATABLES MANIPULATION
         $(document).ready(function () {
@@ -276,15 +175,6 @@
             })
         });
 
-        // *************** DELETE ***************
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function (e) {
-            e.stopPropagation(); //para a propagacao do evento javascript
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
-            //todo add warning when deleting templates
-        });
-
 
         $('.datatable-row').click(function () {
             let url = "{% url 'Recurso:recurso-detail' my_id=123  %}"
@@ -296,11 +186,34 @@
             message.addClass('is-hidden')
         });
 
-        $('.button-edit').click(function (e) {
-            e.stopPropagation();
-            let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
-            location.href = url.replace('123', $(this).data('id'))
+
+        //Listen to atribuir
+        const attrBtns = document.querySelectorAll('.btn-atribuir');
+        console.log(attrBtns);
+
+        // *************** DELETE ***************
+        var deleteFormModal = $('#confirm-delete-form-modal');
+        $('.delete-form-btn').click(function (e) {
+            e.stopPropagation(); //para a propagacao do evento javascript
+            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+            deleteFormModal.addClass('is-active'); //shows modal
+            //todo add warning when deleting templates
         });
+
+        attrBtns.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                evento_id = "{{evento.id}}";
+                obj_id = e.target.dataset.id;
+                time = e.target.dataset.time;
+                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456 time=789 %}"
+                url = url.replace('456', obj_id)
+                url = url.replace('789', time)
+                location.href = url.replace('123', evento_id)
+
+            })
+        })
 
 
     </script>

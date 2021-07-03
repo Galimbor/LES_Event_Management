@@ -8,9 +8,9 @@
         <div class="section">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Equipamentos</h1>
+                    <h1 class="title">Empresa</h1>
                 </div>
-                <a class="button is-success" href="{% url 'Recurso:equipamento-create' %}">
+                <a class="button is-success" href="{% url 'Recurso:empresa-create' %}">
         <span class="icon">
           <i class="fas fa-plus"></i>
         </span>
@@ -33,9 +33,9 @@
                                 </div>
                             </div>
                             <footer class="card-footer">
-                                <a href="#" class="card-footer-item">Editar</a>
+                                <a href="{% url 'Recurso:empresa-detail' obj.id %}" class="card-footer-item">Editar</a>
                                 <a href="#" class="card-footer-item delete-form-btn"
-                                   data-delete-url="{% url 'Recurso:equipamento-delete' obj.id %}">Eliminar</a>
+                                   data-delete-url="{% url 'Recurso:empresa-delete' obj.id %}">Eliminar</a>
                             </footer>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este equipamento?</p>
+                <p class="modal-card-title">Tem a certeza que deseja eliminar esta Empresa?</p>
                 <button class="close-modal delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">

@@ -1,0 +1,59 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+<div class="section">
+        <div class="columns">
+            <div class="column is-is-four-fifths">
+                <h1 class="title mb-3">Recurso {{tipo}} - Editar</h1>
+                <br>
+                <h2 class="subtitle">Evento: {{ evento.nome }}</h2>
+                {{ type }} 
+
+                
+                <form class="box mt-3" id="form" method="post">
+                    {% csrf_token %}
+                    {{ form.media }}
+
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Descrição:</label>
+                                <textarea name="desc" class="input-clean" cols="30" rows="10">{{obj.nome}}</textarea>
+                            </div>
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Quantidade:</label>
+                                <input class="input-clean" value="{{obj.quantidade}}" name="quantidade" type="number">
+                            </div>
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Data inicial:</label>
+                                <input class="input-clean" name="data_i" value="{{data_i|lower}}" type="date">
+                            </div>
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Data final:</label>
+                                <input class="input-clean" name="data_f" value="{{data_f|lower}}" type="date">
+                            </div>
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Hora inicial:  </label>
+                                <input class="input-clean" name="hora_i" value="{{hora_i|lower}}" type="time">
+                            </div>
+
+                            <div class="form-group-c">
+                                <label class="label" for="">Hora final:</label>
+                                <input class="input-clean" name="hora_f" value="{{hora_f|lower}}" type="time">
+                            </div>
+                    <input class="button-submit" type='Submit' value='Save'>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}

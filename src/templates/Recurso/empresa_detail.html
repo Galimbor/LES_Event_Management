@@ -1,0 +1,50 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+    <div>
+        <div class="section">
+            <div class="columns is-align-items-center">
+                <div class="column">
+                    <h1 class="title has-text-centered">{{ obj.Nome }}</h1>
+                    <div class="event-group">
+                        <span class="span-header">Descrição:</span>
+                        <p class="event-body long-text">{{ obj.descricao }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Email:</span>
+                        <p class="event-body long-text">{{ obj.email }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Telefone:</span>
+                        <p class="event-body long-text">{{ obj.telefone }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Cidade:</span>
+                        <p class="event-body long-text">{{ obj.cidade }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Endereco:</span>
+                        <p class="event-body long-text">{{ obj.endereco }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Código Postal:</span>
+                        <p class="event-body long-text">{{ obj.codigopostal }} </p>
+                    </div>
+                    <div class="event-group">
+                        <span class="span-header">Faturação:</span>
+                        <p class="event-body long-text">{{ obj.faturacao }} </p>
+                    </div>
+                </div>
+            </div>
+                                <div class="control">
+                        <a class="button is-link" href="{% url 'Recurso:componentes' %}"> Voltar
+                            atrás </a>
+                    </div>
+        </div>
+    </div>
+
+{% endblock content %}

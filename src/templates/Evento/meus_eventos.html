@@ -4,102 +4,401 @@
 
 {% block content %}
     {% load static %}
-    <div>
-        <div class="section">
-            <div class="columns">
-                <div class="column">
-                    <h1 class="title">Meus Eventos</h1>
+        {% for obj in eventos %}
+        <div class="modal my-modal modal-{{obj.id}}">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+            {% if obj.estado == 'Validado' %}
+              <div class="container-modal">
+                <div class="inside-container">
+                  <h3 class="modal-title mb-3">O evento foi validado. Para continuar o processo, é necessario adicionar a logistica. Apos todos os pedidos forem adicionados, favor submeter logistica.</h3>
+
+                <div class="buttons">
+                  <a class="button is-dark" href=
+                  "{% url 'Evento:create-event2' event_id=obj.id %}">
+                      Adicionar Logistica
+                  </a>
+                  <a class="button is-success" href=
+                          "{% url 'Evento:submit-logistic' event_id=obj.id %}">
+                      Submeter Logistica
+                  </a>
                 </div>
-                <a class="button is-success"
-                   href="{% url 'Evento:select_type' %}">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
-        </span>
-                    <span>Novo Evento</span>
+
+                <div class="buttons">
+                  <a class="button is-dark" href=
+                  "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                      Visualizar pedido de evento
+                  </a>
+                </div>
+                </div>
+              </div>
+          {% elif obj.estado == 'Pendente' %}
+              <div class="container-modal">
+                <div class="inside-container cancel-1">
+                  <h3 class="modal-title mb-3">O evento encontra-se no estado Pendente. Apos a validacao pelo GCP, recursos poderao ser adicionados.</h3>
+                <div class="buttons">
+                  <a class="button is-dark" href=
+                "{% url 'Evento:edit-event' event_id=obj.id %}">
+                  Alterar Evento
                 </a>
+                <a class="button is-danger button-cancel" href=
+                "#">
+                  Cancelar Evento
+                </a>
+                </div>
+                <div class="buttons">
+                  <a class="button is-dark" href=
+                  "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                      Visualizar pedido de evento
+                  </a>
+                </div>
+                </div>
 
+
+                <div class="hidden inside-container cancel-2">
+                  <h3 class="modal-title mb-3">Tem certeza que deseja cancelar o evento?</h3>
+                  <div class="buttons">
+                    <a class="button is-danger " href=
+                  "{% url 'Evento:delete-event' event_id=obj.id %}">
+                    Cancelar Evento
+                  </a>
+                  <a class="button is-dark button-voltar" href=
+                  "{% url 'Evento:meus-eventos' %}">
+                    Voltar
+                  </a>
+                  </div>
+                </div>
+              </div>
+              
+            
+          {% elif obj.estado == 'Recusado' %}
+
+          <div class="container-modal">
+            <div class="inside-container cancel-1">
+              <h3 class="modal-title mb-3">O evento foi recusado. Favor alterar o mesmo e reenviar o pedido ou caso nao queria, favor cancelar o evento.</h3>
+            <div class="buttons">
+              <a class="button is-dark" href=
+            "{% url 'Evento:edit-event' event_id=obj.id %}">
+              Alterar Evento
+            </a>
+            <a class="button is-danger button-cancel" href=
+            "#">
+              Cancelar Evento
+            </a>
             </div>
-            <div class="columns is-multiline">
-                {% for obj in eventos %}
-                    <div class="column is-half">
-                        <div class="card" style="min-height: 10px;">
-                            <header class="card-header has-text-centered">
-                                <p class="card-header-title is-centered">
-                                    {{ obj.nome }}
-                                </p>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    <p><strong>Estado:</strong></p>
-                                    <p>{{ obj.estado }}</p>
-                                    <br>
-                                    <p><strong>Data:</strong></p>
-                                    <time datetime="">
-                                        {{ obj.horario.datainicial }}
-                                        {{ obj.horario.horainicial }}  </time>
-                                    -
-                                    <time datetime="">
-                                        {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
-                                    <br>
-                                    <br>
-                                    {% if obj.estado == 'Validado' %}
-                                        <a class="button is-dark" href=
-                                                "{% url 'Evento:create-event2' event_id=obj.id %}">
-                                            Adicionar Logistica
-                                        </a>
-                                        <a class="button is-success" href=
-                                                "{% url 'Evento:submit-logistic' event_id=obj.id %}">
-                                            Submeter Logistica
-                                        </a>
-                                    {% else %}
-                                        <br>
-                                    {% endif %}
-                                </div>
+            <div class="buttons">
+              <a class="button is-dark" href=
+              "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                  Visualizar pedido de evento
+              </a>
+            </div>
+            </div>
 
-                            </div>
-                        </div>
+
+            <div class="hidden inside-container cancel-2">
+              <h3 class="modal-title mb-3">Tem certeza que deseja cancelar o evento?</h3>
+              <div class="buttons">
+                <a class="button is-danger " href=
+              "{% url 'Evento:delete-event' event_id=obj.id %}">
+                Cancelar Evento
+              </a>
+              <a class="button is-dark button-voltar" href=
+              "{% url 'Evento:meus-eventos' %}">
+                Voltar
+              </a>
+              </div>
+            </div>
+          </div>
+              
+
+          {% elif obj.estado == 'Logistica Pendente' %}
+          <div class="container-modal">
+            <div class="inside-container cancel-1">
+              <h3 class="modal-title mb-3">A logistica foi submetida com successo. Enquanto nao for aprovada, podera alterar ou cancelar.</h3>
+              <div class="buttons">
+                <a class="button is-dark" href=
+            "{% url 'Evento:edit-logistica' event_id=obj.id %}">
+              Alterar Logística
+            </a>
+            <a class="button is-danger button-cancel" href=
+            "#">
+              Cancelar Logística
+            </a>
+              </div>
+              <div class="buttons">
+                <a class="button is-dark" href=
+                "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                    Visualizar pedido de evento
+                </a>
+              </div>
+            </div>
+
+            <div class="inside-container cancel-2 hidden">
+              <h3 class="modal-title mb-3">Tem certeza que deseja cancelar a logistica?</h3>
+              <div class="buttons">
+                <a class="button is-danger  " href=
+            "{% url 'Evento:delete-logistica' event_id=obj.id %}">
+              Cancelar Logistica
+            </a>
+            <a class="button is-dark button-voltar" href=
+            "#">
+              Voltar
+            </a>
+              </div>
+            </div>
+            
+          </div>
+
+          {% elif obj.estado == 'Logistica Validada' %}
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Para finalizar o processo da criacao do evento, favor submeter o mesmo. Apos ser aprovado pelo GCP, recebera uma notificacao de sucesso</h3>
+              <div class="buttons">
+                <a class="button is-dark " href=
+          "{% url 'Evento:submeter-event' event_id=obj.id %}">
+            Submeter Evento
+          </a>
+              </div>
+              <div class="buttons">
+                <a class="button is-dark" href=
+                "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                    Visualizar pedido de evento
+                </a>
+              </div>
+            </div>
+          </div>
+          {% elif obj.estado == 'Submetido' %}
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Apos ser aprovado pelo GCP, recebera uma notificacao de sucesso</h3>
+              <div class="buttons">
+                <a class="button is-dark" href=
+                "{% url 'Evento:view-my-event' event_id=obj.id %}">
+                    Visualizar pedido de evento
+                </a>
+              </div>
+            </div>
+          </div>
+          {% elif obj.estado == 'Aceite' %}
+          <div class="container-modal">
+            <div class="inside-container">
+              <h3 class="modal-title mb-3">Evento aprovado!</h3>
+              <div class="buttons">
+                <a class="button is-dark " href=
+          "{% url 'Evento:view-event' event_id=obj.id %}">
+            Visualizar Evento
+          </a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          </div>
+          ￼Reset all filters
+          
+          <button class="modal-close is-large" aria-label="close"></button>
+      </div>
+      {% endfor %}
+
+      {% if messages %}
+      <article class="message is-success">
+          {% for message in messages %}
+              <div class="message-header">
+                  <p>Success</p>
+                  <button id="close-message" class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </article>
+    {% endif %}
+  
+        <h1 class="title">Meus Eventos</h1>
+        <div class="columns">
+            <div class="is-three-quarters">
+                <table id="example" class="table is-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Estado</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        {% for obj in eventos %}
+                        <tr  data-state="{{ obj.estado }}" data-id="{{ obj.id }}" class="datatable-selector">
+                            <td class="td">{{ obj.nome }}</td>
+                            <td class="td">{{ obj.estado }}</td>
+                            <td class="td">{{ obj.horario.datainicial }} {{ obj.horario.horainicial }} - {{ obj.horario.datafinal }} {{ obj.horario.horafinal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Título</th>
+                            <th>Estado</th>
+                            <th>Data</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="column">
+                <nav class="panel">
+                    <p class="panel-heading">
+                      Filtros
+                    </p>
+                    <a class="panel-block filter-item">
+                      Pendente
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Validado
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Logistica Pendente
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Logistica Validada
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Submetido
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Aceite
+                    </a>
+                    <a class="panel-block filter-item">
+    
+                      Recusado
+                    </a>
+                    <div class="panel-block">
+                      <button class="button is-link reset is-outlined is-fullwidth">
+                        Reset all filters
+                      </button>
                     </div>
-                {% endfor %}
+                  </nav>
             </div>
         </div>
 
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar
-                    este formulário?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
-    </div>
-
-    <script>
-
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function () {
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
 
 
+    
+    
+    
+        <script>
+          $(document).ready(function () {
+          $('#example').DataTable({
+            "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+            }
+          });
         });
 
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
+        
+
+
+    
+    
+    
+        //   Get event clicable
+          const event = document.querySelectorAll('.datatable-selector');
+          event.forEach(element => {
+            element.addEventListener('click', e => {
+              const id = element.dataset.id;
+              const modal = document.querySelector(`.modal-${id}`);
+                e.preventDefault();
+            modal.classList.add("is-active");
+          })
+          });
+
+          //Listen to delete event
+          const buttonCancel = document.querySelectorAll('.button-cancel');
+          buttonCancel.forEach(button => {
+              button.addEventListener('click', function(e) {
+              e.preventDefault();
+              const btn = e.target.closest('.button-cancel');
+              const container = e.target.closest('.container-modal');
+              console.log(container.children);
+              container.children[0].classList.add('hidden');
+              container.children[1].classList.remove("hidden");
+            })
+          })
+
+
+
+
+          
+        
+
+          //Listen to close event in modal
+          const close = document.querySelector('.modal-close');
+          
+          const modals = document.querySelectorAll('.modal');
+          modals.forEach(modal => {
+            modal.childNodes[5]?.addEventListener('click', function(e) {
+              modal.classList.remove('is-active');
+              console.log(e.target.parentElement.children[1].children[0].children[0]);
+              e.target.parentElement.children[1].children[0].children[0].classList.remove('hidden')
+              if(!e.target.parentElement.children[1].children[0].children[1].classList.contains('hidden'))
+                e.target.parentElement.children[1].children[0].children[1].classList.add('hidden')
+            })
+          })
+  
+  
+      //Get elements
+      const items = document.querySelectorAll('.filter-item');
+  
+      //Get rid of the active background of every element
+      const clearActive = function() {
+        items.forEach(element => {
+          element.classList.remove('is-filter-active');
+        })  
+      };
+
+      const clearEventsNone = function() {
+        event.forEach(e => e.classList.remove('none'));
+      }
+  
+      // Filter element
+      const parentEl = document.querySelector('.tbody');
+      items.forEach(element => {
+        element.addEventListener('click', e => {
+          clearActive();
+          element.classList.add('is-filter-active');
+          clearEventsNone();
+          event.forEach(e => {
+            const dataState = e.dataset.state;
+            if(dataState !== element.innerHTML.trim())
+            {
+              e.classList.add('none');
+            }
+            
+          })
+          
+        })
+      });
+  
+      //Reset filter
+      const resetBtn = document.querySelector('.reset');
+      console.log(resetBtn);
+      resetBtn.addEventListener('click', function(e) {
+        clearActive();
+        clearEventsNone();
+      });
+
+      $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
         });
-
-        function deleteForm(id) {
-            deleteFormModal.data(id).hide();
-        }
-
-
-    </script>
-{% endblock content %}
+  
+      </script>
+    {% endblock content %}
+    
+    {% block scripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+    {% endblock %}

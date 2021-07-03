@@ -8,9 +8,9 @@
         <div class="section">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Campis</h1>
+                    <h1 class="title">Espaços</h1>
                 </div>
-                <a class="button is-success" href="{% url 'Recurso:campus-create' %}">
+                <a class="button is-success" href="{% url 'Recurso:espaco-create' %}">
         <span class="icon">
           <i class="fas fa-plus"></i>
         </span>
@@ -29,13 +29,16 @@
                             </header>
                             <div class="card-content">
                                 <div class="content">
-                                    {{ obj.descricao }}
+                                    {{ obj.tipo }}
+                                </div>
+                                <div class="content">
+                                    Capacidade: {{ obj.capacidade }} pessoas
                                 </div>
                             </div>
                             <footer class="card-footer">
-                                <a href="#" class="card-footer-item">Editar</a>
+                                <a href="{% url 'Recurso:espaco-detail' obj.id %}" class="card-footer-item">Editar</a>
                                 <a href="#" class="card-footer-item delete-form-btn"
-                                   data-delete-url="{% url 'Recurso:campus-delete' obj.id %}">Eliminar</a>
+                                   data-delete-url="{% url 'Recurso:espaco-delete' obj.id %}">Eliminar</a>
                             </footer>
                         </div>
                     </div>
@@ -48,7 +51,7 @@
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar este Campus?</p>
+                <p class="modal-card-title">Tem a certeza que deseja eliminar este espaço?</p>
                 <button class="close-modal delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">

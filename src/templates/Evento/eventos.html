@@ -4,107 +4,198 @@
 
 {% block content %}
     {% load static %}
+    <h1 class="title">Todos Eventos</h1>
+    <div class="columns">
 
+        <div class="is-three-quarters">
+            <table id="example" class="table is-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                    {% for obj in eventos %}
+                    <tr  data-id="{{ obj.id }}" class="datatable-selector">
+                        <td class="td">{{ obj.nome }}</td>
+                        <td class="td">{{ obj.horario.datainicial }} - {{ obj.horario.datafinal }}</td>
+                        <td class="td">{{ obj.horario.horainicial }} - {{ obj.horario.horafinal }}</td>
+                        <td>{% if obj.hasInscricao %}
 
-
-
-
-    <div>
-        <div class="section">
-            <div class="columns">
-                <div class="column">
-                    <h1 class="title">Eventos</h1>
-                </div>
-                <div class="column">
-
-                </div>
-            </div>
-            <div class="columns is-multiline">
-                {% for obj in eventos %}
-                    <div class="column is-half">
-                        <div class="card pointer" style="min-height: 10px;">
-                            <header class="card-header has-text-centered">
-                                <p class="card-header-title is-centered">
-                                    {{ obj.nome }}
-                                </p>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    <p><strong>Descrição: </strong></p>
-                                    <p>{{ obj.descricaogeral | truncatechars:255 }}</p>
-                                    <br>
-                                    <p><strong>Data: </strong></p>
-                                    <time datetime="2016-1-1">
-                                        {{ obj.horario.datainicial }}
-                                        {{ obj.horario.horainicial }}  </time>
-                                    -
-                                    <time datetime="2016-1-1">
-                                        {{ obj.horario.datafinal }} {{ obj.horario.horafinal }} </time>
-                                    <br>
-                                    <br>
-                                    {% if obj.estado == 'Logistica Pendente' %}
-                                        <strong>Logisticas:</strong>
-                                        {% for obj_l in logistica %}
-
-                                            {% if obj_l.eventoid == obj %}
-                                                <br>
-                                                - {{ obj_l.nome }}
-                                                <br>
-                                            {% endif %}
-                                        {% endfor %}
-
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <footer class="card-footer">
-                                {% if obj.hasInscricao %}
                                 <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
                                    class="card-footer-item dark-a">Inscrever</a>
-                                {% endif %}
-                            </footer>
-                        </div>
-                    </div>
+                                {% endif %} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Título</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="column">
+            <nav class="panel">
+                <p class="panel-heading">
+                  Filtros
+                </p>
+                {% for tipo in tipos %}
+                <a class="panel-block filter-item">
+                  {{tipo.nome}}
+                </a>
                 {% endfor %}
-            </div>
+                <div class="panel-block">
+                  <button class="button reset is-link is-outlined is-fullwidth">
+                    Reset all filters
+                  </button>
+                </div>
+              </nav>
         </div>
+    </div>
 
-    </div>
-    <div class="modal" id="confirm-delete-form-modal" data-id="">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Tem a certeza que deseja eliminar
-                    este formulário?</p>
-                <button class="close-modal delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <!-- Content ... -->
-            </section>
-            <footer class="modal-card-foot">
-                <a class="button is-danger confirm" href="#">Eliminar</a>
-                <button class="button close-modal">Cancel</button>
-            </footer>
-        </div>
-    </div>
+
+
 
     <script>
-
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function () {
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
-
-
+        $(document).ready(function () {
+        $('#example').DataTable({
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+          }
         });
+      });
 
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
 
-        function deleteForm(id) {
-            deleteFormModal.data(id).hide();
+
+    //   Get event clicable
+      const event = document.querySelectorAll('.datatable-selector');
+      event.forEach(element => {
+        element.addEventListener('click', e => {
+        let url = `{% url 'Evento:view-event' event_id=123 %}`;
+        let id = element.dataset.id;
+
+        // Construct the full URL with "id"
+        document.location.href = url.replace('123', id);
+      })
+      });
+
+
+
+
+    //Get elements
+    const items = document.querySelectorAll('.filter-item');
+
+    //Get rid of the active background of every element
+    const clearActive = function() {
+      items.forEach(element => {
+        element.classList.remove('is-filter-active');
+      })
+    };
+
+
+    //CSRF Token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
 
+    // Filter element
+    const parentEl = document.querySelector('.tbody');
+    items.forEach(element => {
+      element.addEventListener('click', e => {
+        clearActive();
+        element.classList.add('is-filter-active');
+        $.ajax({
+          url: '/Evento/ajax/',
+          type: 'POST',
+          data: {
+            myData: element.textContent.trim()
+          },
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            const eventos = data.eventos;
+            parentEl.innerHTML = "";
+            //Populate DOM
+            eventos.forEach(evento => {
+              const markUp = `
+                    <tr  data-id="" class="datatable-selector">
+                        <td class="td">${evento.nome}</td>
+                        <td class="td">${evento.data}</td>
+                        <td class="td">${evento.hora}</td>
+                    </tr>
+              `;
+              parentEl.insertAdjacentHTML("afterbegin", markUp);
+            })
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+
+
+      })
+    });
+
+    //Reset filter
+    const resetBtn = document.querySelector('.reset');
+    resetBtn.addEventListener('click', function(e) {
+      $.ajax({
+          url: '/Evento/ajax/',
+          type: 'POST',
+          data: {
+            myData: "reset"
+          },
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          },
+          success: function(data) {
+            const eventos = data.eventos;
+            clearActive();
+            parentEl.innerHTML = "";
+            //Populate DOM
+            eventos.forEach(evento => {
+              const markUp = `
+                    <tr  data-id="" class="datatable-selector">
+                        <td class="td">${evento.nome}</td>
+                        <td class="td">${evento.data}</td>
+                        <td class="td">${evento.hora}</td>
+                    </tr>
+              `;
+              parentEl.insertAdjacentHTML("afterbegin", markUp);
+            })
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+    });
 
     </script>
 {% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock %}

@@ -7,27 +7,84 @@
     {% load static %}
     <div>
         <div class="section">
+            <div class="column">
+                <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+                    <ul>
+                        <li><a href="{% url 'home' %}">Página inicial</a></li>
+                        <li><a href="{% url 'Recurso:componentes' %}">Componentes</a></li>
+                        <li class="is-active">
+                            <a href="#" aria-current="page">
+                                            <span class="has-text-weight-bold">
+                                                {% if detail %}
+                                                    Editar Edifício
+                                                {% else %}
+                                                    Criar Edifício
+                                                {% endif %}
+                                            </span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% if messages %}
+            <article class="message is-danger">
+                <div class="message-header">
+                    <p>Corrija os seguintes erros, por favor:</p>
+                    <button class="close-message delete" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </div>
+            </article>
+        {% endif %}
+        <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
-                    <h1 class="title">Criar Edifício</h1>
+                    <h1 class="title">
+                        {% if detail %}
+                            Editar Edifício
+                        {% else %}
+                            Criar Edifício
+                        {% endif %}
+                    </h1>
 
                     <form class="box" id="form" method="post">
                         {% csrf_token %}
 
                         <div class="form-group-c">
                             <label class="label" for="nome"> Nome: </label>
-                            {{ form.nome }}
+                            {{ form.Nome }}
 
-                             <div class="form-group-c">
-                            <label class="label" for="campus"> Campus: </label>
-                            {{ form.campusid }}
-                        </div>
-
-                        <input class="button is-primary" type='Submit' value='Save'>
+                            <div class="form-group-c">
+                                <label class="label" for="campus"> Campus: </label>
+                                {{ form.campusid }}
+                            </div>
+                            <div class="control ">
+                                {% if detail %}
+                                    <input class="button is-primary" type='Submit' value='Guardar'>
+                                {% else %}
+                                    <input class="button is-primary" type='Submit' value='Criar'>
+                                {% endif %}
+                            </div>
                     </form>
+                </div>
+
+                    <div class="control">
+                        <a class="button is-warning" href="{% url 'Recurso:componentes' %}"> Voltar
+                            atrás </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $('.close-message').click(function () {
+            let message = $(this).parent().parent();
+            message.addClass('is-hidden')
+        });
+    </script>
 {% endblock content %}
 
