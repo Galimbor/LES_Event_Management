@@ -63,6 +63,16 @@ class Formulario(models.Model):
         default=0,
         verbose_name="É Template?",
     )
+    ARQUIVADO_LIST = [
+            (0, "Não"),
+            (1, "Sim"),
+    ]
+    is_arquivado = models.IntegerField(
+        db_column="IsArquivado",
+        choices=ARQUIVADO_LIST,
+        default=0,
+        verbose_name="Está Arquivado?",
+    )
     created = models.DateTimeField(db_column="DataCriado", default = timezone.now)
     updated = models.DateTimeField(db_column="DataAtualizado", null=True, blank=True)
     tipoeventoid = models.ForeignKey(
