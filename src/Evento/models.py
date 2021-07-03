@@ -13,6 +13,9 @@ class Tipoevento(models.Model):
         managed = False
         db_table = 'TipoEvento'
 
+    def __str__(self):
+        return self.nome
+
 
 class Templatecertificado(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
