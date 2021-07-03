@@ -3,7 +3,7 @@ from django.urls import path
 import Inscricao.views
 from .views import CriarInscricao, PartConsultarInscricoes, PartInscricaoCancelar,\
     PropAlterarEstadoInscricao, PropConsultarInscricoes, PropRemoverInscricao,  PartInscricaoCheckin,\
-    PartAlterarInscricao,  returnCurrentEstado, updateEstado, PropConsultarCheckIns, doCheckin, PropAlterarInscricao, consultarInscricaoProp, consultarInscricaoPart
+    PartAlterarInscricao,  returnCurrentEstado, updateEstado, PropConsultarCheckIns, doCheckin, PropAlterarInscricao, consultarInscricaoProp, consultarInscricaoPart, create_csv_certificates
 
 app_name = 'Inscricao'
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path('checkIns/<int:eventoid>', PropConsultarCheckIns.as_view(), name='consultar_checkins' ),
     path('doCheckin/<int:id>', doCheckin),
     path('alterarProp/<int:id>', PropAlterarInscricao, name='prop_alterar_inscricao'),
+    path('certificados/<int:evento_id>', create_csv_certificates, name='certificates_csv'),
 
     #URL'S para os proponentes
 

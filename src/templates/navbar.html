@@ -46,9 +46,11 @@
 
                 </div>
             </div>
+        {% if user.is_authenticated %}
             <a href="{% url 'Inscricao:part_list_inscricao' %}" class="navbar-item">
                 As minhas Inscrições
             </a>
+        {% endif %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Recursos

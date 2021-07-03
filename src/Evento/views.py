@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
-from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta
+from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta, EventoFormulario
 from Utilizadores.models import User
 from django.db.models import Q
 from datetime import datetime
@@ -141,7 +141,7 @@ def eventos(request):
         eventoDataFinal = event.horario.datafinal
         eventoHoraFinal = event.horario.horafinal
         eventFinalDate = datetime.combine(eventoDataFinal, eventoHoraFinal)
-        if event.inscritos < event.maxparticipantes and eventFinalDate > today:
+        if event.inscritos < event.maxparticipantes and eventFinalDate > today and EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists():
             event.hasInscricao = True
     logistica = Logistica.objects.all()
     tipos = Tipoevento.objects.all()

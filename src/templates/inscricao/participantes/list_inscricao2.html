@@ -107,7 +107,7 @@
               <td> {{obj.telemovel}}</td>
               <td> {{obj.idade}}</td>
               <td> {{obj.profissao}}</td>
-            <td> {{ obj.hasFeedback }}</td>
+            <td> {% if obj.hasFeedback  %} True {% else %} False {% endif %}</td>
               <td>
                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom update-ins-btn"  data-update-url="{% url 'Inscricao:part_alterar_inscricao' obj.pk %}" data-tooltip="Alterar Inscrição: {{obj.nome}}">
                       <span class="icon">
@@ -120,7 +120,7 @@
                       </span>
                     </button>
                   {% if obj.hasFeedback %}
-                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-ins-btn"  data-delete-url="{% url 'Feedback:create_feedback' eventoid=obj.eventoid.id %}" data-tooltip="Enviar feedback: {{obj.nome}}">
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom feedback-ins-btn"  data-feedback-url="{% url 'Feedback:create_feedback' eventoid=obj.eventoid.id %}" data-tooltip="Enviar feedback: {{obj.nome}}">
                       <span class="icon">
                         <i class="fa fa-bullhorn"></i>
                       </span>
@@ -180,7 +180,12 @@ updateInsBitton.click(function (e) {
     location.href= $(this).data('update-url');
 });
 
-
+  var feedbackInsBitton = $('.feedback-ins-btn');
+feedbackInsBitton.click(function (e) {
+    e.stopPropagation();
+    console.log("I did something");
+    location.href= $(this).data('feedback-url');
+});
 
 
   // *************** DELETE INCRICAO ***************
@@ -205,7 +210,7 @@ updateInsBitton.click(function (e) {
       },
       "columnDefs": [ { "orderable": false, "targets": 8 },
       {
-                "targets": [ 0,7 ],
+                "targets": [ 0, 7 ],
                 "visible": false
             }
     ],      
@@ -215,7 +220,15 @@ updateInsBitton.click(function (e) {
     tabs.click(function(){
       tabs.removeClass('is-active')
       $(this).addClass('is-active');
-      console.log(table.column($(this).data('column')).search($(this).data('filter')).draw())
+      {#console.log(table.column($(this).data('column')).search($(this).data('filter')).draw())#}
+      {#        table.DataTable().search('').draw();#}
+        if($(this).data('column') !== "7")
+        {
+            console.log($(this).data('column'));
+            table.column('7')
+            .search('')
+            .draw();
+        }
       table.column($(this).data('column'))
         .search($(this).data('filter'))
         .draw();

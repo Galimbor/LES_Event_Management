@@ -38,6 +38,29 @@
                         </header>
                     </div>
                 </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Inscricao:consultar_checkins' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Check-ins
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Feedback:list_feedback' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Feedback
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
 
                 {% if evento.estado == 'Pendente'%}
 
@@ -78,28 +101,7 @@
                         </header>
                     </div>
                 </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <a class="mx-auto" href="{% url 'Inscricao:consultar_checkins' eventoid=id %}">
-                            <p class="card-header-title is-centered">
-                                    Check-ins
-                            </p>
-                            </a>
-                        </header>
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <a class="mx-auto" href="{% url 'Feedback:list_feedback' eventoid=id %}">
-                            <p class="card-header-title is-centered">
-                                    Feedback
-                            </p>
-                            </a>
-                        </header>
-                    </div>
-                </div>
+
 {#                <div class="column is-3">#}
 {#                    <div class="card" style="min-height: 10px;">#}
 {#                        <header class="card-header">#}
@@ -131,7 +133,7 @@
             </div>
 
             <section class="pedido mt-5">
-                <h2 class="sub-title">Dados do evento proposto</h1>
+                <h2 class="sub-title">Dados do evento proposto</h2>
                 
                 {% for pergunta in perguntas %}
                     {% for resposta in respostas %}

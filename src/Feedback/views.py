@@ -32,7 +32,7 @@ def createFeedback(request, eventoid):
 
 
     # Associado ao feedback
-    formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id, formularioid__tipoFormulario__categoria=2)
+    formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id, formularioid__tipoformularioid__categoria=2)
 
     formularioFeedback = formularioEvento[0].formularioid
 
@@ -101,7 +101,7 @@ def viewFeedback(request, feedbackid):
 
 def viewStatistics(request, eventoid):
 
-    formularioEvento = EventoFormulario.objects.filter(eventoid=eventoid, formularioid__tipoFormulario__categoria=2)
+    formularioEvento = EventoFormulario.objects.filter(eventoid=eventoid, formularioid__tipoformularioid__categoria=2)
 
     formulario = formularioEvento[0].formularioid
 

@@ -1,3 +1,5 @@
+import csv
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
@@ -33,7 +35,7 @@ def CriarInscricao(request, eventoid):
             return redirect('Evento:eventos')
 
         formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id,
-                                                           formularioid__tipoFormulario__categoria=1)
+                                                           formularioid__tipoformularioidid__categoria=1)
 
         formularioInscricao = formularioEvento[0].formularioid
 
@@ -48,7 +50,7 @@ def CriarInscricao(request, eventoid):
 
     else :
         formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id,
-                                                           formularioid__tipoFormulario__categoria=1)
+                                                           formularioid__tipoFormularioid__categoria=1)
 
         formularioInscricao = formularioEvento[0].formularioid
 
@@ -100,7 +102,7 @@ def CriarInscricao(request, eventoid):
             if evento.val_inscritos:
                 estado = "Pendente"
             else:
-                estado = "Confirmado"
+                estado = "Válida"
 
 
 
@@ -154,7 +156,7 @@ def CriarInscricao(request, eventoid):
             if evento.val_inscritos:
                 estado = "Pendente"
             else:
-                estado = "Confirmado"
+                estado = "Válida"
 
 
             userid = None
@@ -215,7 +217,7 @@ class PartConsultarInscricoes(ListView):
                 eventoDataFinal = inscricao.eventoid.horario.datafinal
                 eventoHoraFinal = inscricao.eventoid.horario.horafinal
                 eventFinalDate = datetime.combine(eventoDataFinal,eventoHoraFinal)
-                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoFormulario__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
+                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoformularioid__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
                     inscricao.hasFeedback = True
             return queryset
         else:
@@ -591,3 +593,19 @@ def doCheckin(request, id):
             check = "Check out"
         messages.success(request, f"{check} realizado com successo.")
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
+
+
+## CERTIFICADOS
+
+def create_csv_certificates(request, evento_id):
+    # todos os incritos do evento
+    # TODO - verificar apenas os com o check-in a true
+    inscritos = Inscricao.objects.filter(eventoid=evento_id, checkin=1)
+    print(inscritos)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="certificados{Evento.objects.get(id=evento_id).nome}.csv"'
+    writer = csv.writer(response)
+    # TODO - Profissao should be switched with institution but we dont save that..
+    for inscrito in inscritos:
+        writer.writerow([f'{inscrito.nome} {inscrito.profissao}'])
+    return response
