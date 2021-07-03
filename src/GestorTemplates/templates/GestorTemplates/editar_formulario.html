@@ -9,37 +9,58 @@
 
 <!-- *****************************  PAGE CONTENT ***************************** -->
 <div id="gestor-templates-wrapper">
-  
-    <section class="form-menu">
-     
-      <div class="columns is-mobile">
-        <div class="column">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-file-alt"></i>
-            </span>
-            <span class="has-text-weight-bold	formulario__nome">Formulário sem título</span> - <span>Guardado automaticamente</span>
-          </span>
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="{% url 'form-list' %}">Formulários</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold	formulario__nome">Formulário sem título</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
-        <div class="column">
-          <div class="buttons is-pulled-right">
-            <button class="button is-text has-text-grey ver_form_config" data-tooltip="Definições do formulário">
+      
+        <div class="navbar-end">
+          <!-- navbar items on the right side -->
+          
+          <div class="navbar-item buttons has-tooltip-bottom">
+            <a class="button is-text has-text-grey has-tooltip-bottom" data-tooltip="Expandir/comprimir perguntas" onclick="form.toggleSubCampos($(this))">
+                <span class="icon">
+                  <i class="fas fa-compress fa-lg"></i>
+                </span>
+            </a>
+            <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom" data-tooltip="Definições do formulário">
               <span class="icon">
                 <i class="fas fa-cog fa-lg"></i>
               </span>
             </button>
-            <button class="button is-text has-text-grey save-form" data-tooltip="Guarda alterações">
+            <button class="button is-text has-text-grey save-form" >
               <span class="icon">
                 <i class="fas fa-save fa-lg"></i>
               </span>
             </button>
             
-            <a class="button is-primary" data-tooltip="Coloca o formulário visível">
+            <a class="button is-primary ver_form_publish publish-form  has-tooltip-bottom" data-tooltip="Coloca o formulário visível">
               <span class="icon is-small"><i class="fas fa-share" aria-hidden="true"></i></span>
               <span>Publicar</span>
             </a>
 
-            <div class="dropdown is-hoverable is-right">
+            <div class="dropdown is-hoverable is-right has-tooltip-bottom">
               <div class="dropdown-trigger">
                 <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
                   <span class="icon is-small">
@@ -47,50 +68,116 @@
                   </span>
                 </button>
               </div>
+              {% if object.pk %}
               <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                 <div class="dropdown-content">
                   <div class="dropdown-item">
-                    <p>Outras opções como fazer cópia, guardar como template, eliminar etc,</p>
+                    <button class="button is-text has-text-grey  has-tooltip-bottom delete-form-btn"  data-delete-url="{% url 'delete-form' object.pk %}" data-tooltip="Eliminar formulário: {{object.nome}}">
+                      <span class="icon">
+                        <i class="far fa-trash-alt"></i>
+                      </span>
+                      <span>Eliminar formulário </span>
+                    </button> 
                   </div>
                 </div>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
+       
       </div>
-      </section>
-  
-    <div class="section">
-        <div class="columns">
-            <div class="column main-form is-10  is-offset-1">
-                <div class="tabs is-centered is-medium">
-                    <ul>
-                      <li class="is-active">
-                        <a>
-                          <span class="icon is-small"><i class="fas fa-question" aria-hidden="true"></i></span>
-                          <span>Perguntas</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a>
-                          <span class="icon is-small"><i class="fas fa-table" aria-hidden="true"></i></span>
-                          <span>Respostas</span>
-                        </a>
-                      </li>
-                      
-                    </ul>
-                </div>
-                
-                <form id="form" method="post">
-                    {% csrf_token %}
-                    <div id="form-wrapper" class="block"></div>         
-                </form>
-
-            </div>
-
+    </nav>
+    <div class="columns">
+        <div class="column  is-10 is-offset-1">
+          <div class="tabs is-centered is-medium">
+            <ul>
+              <li class="is-active">
+                <a>
+                  <span class="icon is-small"><i class="fas fa-question" aria-hidden="true"></i></span>
+                  <span>Perguntas</span>
+                </a>
+              </li>
+              <li>
+                <a>
+                  <span class="icon is-small"><i class="fas fa-table" aria-hidden="true"></i></span>
+                  <span>Respostas</span>
+                </a>
+              </li>
+              
+            </ul>
         </div>
+        </div>   
     </div>
+    
+   
+  </section>
+  
+  <div class="section" id="main-section-content">
+      <div class="columns">
+          <div class="column main-form is-10  is-offset-1">
+              <form id="form" method="post">
+                  {% csrf_token %}
+                  <div id="form-wrapper" class="block"></div>         
+              </form>
 
+          </div>
+
+      </div>
+  </div>
+
+</div>
+
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar este formulário?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal">Cancel</button>
+    </footer>
+  </div>
+</div>
+
+
+
+
+<!--FORM PUBLISH MODAL-->
+<div id="ver_form_publish" class="ver_form_publish modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Publicar Formulário</p>
+
+      <button onclick="$('#ver_form_publish').removeClass('is-active');" class="delete"></button>
+
+    </header>
+    <section class="modal-card-body">
+      <p><b> Escolha a opção de visualização do seu formulário:  </b></p>
+
+      <div class="control form-visibility">
+        {% for choices in formulario.VISIBILIDADE_list %}
+          <label class="radio">
+          <input type="radio" name="answer" data-id="{{choices.0}}"  {% if  formulario.visibilidade == choices.0  %} checked="checked" {% endif %} >
+            {{ choices.1 }} 
+          </label>  <br>
+          {% endfor %}
+          
+      </div>
+
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button" onclick="$('#ver_form_publish').removeClass('is-active');"> Cancelar</button>
+      <button class="button is-success publish">Publicar</button>
+    </footer>
+
+  </div>
 </div>
 {% endblock content%}
 
@@ -100,6 +187,9 @@
 {% csrf_token %}
 <script>
 
+// <!-- FORM CONFIG -->
+
+
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     var formulario_raw = '{{formulario_json | safe}}';
@@ -107,53 +197,93 @@
     var campos_raw = '{{campos_json | safe}}';
     var subcampos_raw = '{{subcampos_json | safe}}';
     // var tiposcampo_raw = '{{ tipos_campo_json | safe }}'
-    var form = new FormManager(formulario_raw, campos_raw, subcampos_raw);
+    let success_url ='{{ success_url | safe }}'
+    let tipo_formulario = '{{ formulario.tipoformularioid.categoria }}'
+    var form = new FormManager(formulario_raw, tipo_formulario, campos_raw, subcampos_raw, success_url);
     form.renderAll();
+
+      // *************** DELETE FORM ***************
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-form-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript 
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
 
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script> 
+<script type="text/javascript" src="https://elasticbeanstalk-eu-west-1-482533445157.s3-eu-west-1.amazonaws.com/LES/parsley_pt_pt.js"></script>
 <script type="text/javascript">
   $(function () {
-    $('#form').parsley().on('field:validated', function() {
-      var ok = $('.parsley-error').length === 0;
-      $('.bs-callout-info').toggleClass('hidden', !ok);
-      $('.bs-callout-warning').toggleClass('hidden', ok);
-    })
-    .on('form:submit', function() {
-      return false; // Don't submit form for this demo
-    });
+    $('#form').parsley()
   });
 </script>
+  
 {% endblock %}
 
 {% block page_css%}
 <style>
-    .campos-item {
+  .campos-item-parent {
       margin-bottom:20px;
       border-left: 5px solid #ffffff;
     }
+  .campos-item-child {
+    padding-bottom: 0%;
+    padding-left: 3%;
+  }
+  .campos-config {
+    margin-bottom: auto;
+  }
 
-    .campos-item:hover {
-      background-color: #fafafa;
-      cursor: pointer;
-    }
+  #gestor-templates-wrapper .section{
+    margin-top: 0px;
+    padding-top:0px
+  }
+  .campos-item-collapsed:not(.campos-item-active) .card-content {
+    padding: 0rem 1.5rem;
+  }
+  .campos-item-collapsed:not(.campos-item-active) .subcampos {
+    display: none;
+  }
+  .campos-item .column  {
+    padding: 0.5rem 1.5rem;
+  }
+  .campos-item.columns, .campos-item .column {
+    margin-bottom: 0rem;
+  }
 
-    .campos-item-active {
-      background-color: #fafafa;
-      border-left: 5px solid #0275d8;
-    }
-    .form-header .card-content{
-      padding-bottom: 0px;
-    }
-    .form-header .input{
-      margin-bottom: 5px;
-    }
-    
-    @media screen and (max-width: 768px) {
-        .section{
-            padding: 0rem;
-        }
-    }
+  .campos-item:hover {
+    background-color: #fafafa;
+    cursor: pointer;
+  }
+
+  .campos-item-active {
+    background-color: #fafafa;
+    border-left: 5px solid #0275d8;
+  }
+  .form-header .card-content{
+    padding-bottom: 0px;
+  }
+  .form-header .input{
+    margin-bottom: 5px;
+  }
+
+  .parsley-errors-list {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    color: #f14668;
+  }
+
+  .input.parsley-error {
+    border-color: #f14668;
+  }
+ 
 </style>
 {% endblock %}

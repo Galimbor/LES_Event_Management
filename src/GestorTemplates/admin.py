@@ -12,12 +12,14 @@ class QuestionInline(admin.TabularInline):
     model = CampoFormulario
 
 
-
 @admin.register(Formulario)
 class FormAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'updated','created')
+
     inlines = [
-        QuestionInline,
-    ]
+         QuestionInline,
+     ]
+
 
 @admin.register(Tipocampo)
 class TipoCampoAdmin(admin.ModelAdmin):
@@ -33,7 +35,7 @@ class TipoCampoAdmin(admin.ModelAdmin):
 @admin.register(Campo)
 class CampoAdmin(admin.ModelAdmin):
     list_filter = ('tipocampoid',)
-    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado', 'get_obrigatorio')
+    list_display = ('id', 'conteudo', 'tipocampoid', 'campo_relacionado','position_index' , 'get_obrigatorio')
 
     def get_obrigatorio(self, obj):
         exist = False
@@ -49,9 +51,16 @@ class CampoFormularioAdmin(admin.ModelAdmin):
 
 
 
+@admin.register(EventoFormulario)
+class EventoFormularioAdmin(admin.ModelAdmin):
+    list_display = ('eventoid', 'formularioid')
+
+
+
+
 models = apps.get_models()
 for model in models:
-    if ('GestorTemplates' in str(model) ):
+    if ('GestorTemplates' in str(model)):
         try:
             admin.site.register(model)
         except admin.sites.AlreadyRegistered:
