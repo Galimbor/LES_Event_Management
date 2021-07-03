@@ -8,7 +8,6 @@ from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, Empres
     UniversidadeForm, UnidadeOrganicaForm
 from Neglected.models import Timedate
 
-
 import json
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -266,7 +265,7 @@ def equipamentos(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/equip_list.html', context)
+    return render(request, 'Recurso/old/equip_list.html', context)
 
 
 def equipamento_create(request):
@@ -287,7 +286,11 @@ def equipamento_create(request):
         messages.success(request, 'Equipamento criado com sucesso')
         return redirect('Recurso:recursos')
     else:
-        messages.error(request, form.errors)
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        elif error.get("Descrição"):
+            messages.error(request, error.get("Descrição"))
     context = {
         'form': form,
         'form2': form2
@@ -318,7 +321,11 @@ def equipamento_update(request, my_id):
         messages.success(request, 'Equipamento editado com sucesso')
         return redirect("Recurso:recursos")
     else:
-        messages.error(request, form.errors)
+        error = form.errors
+        if error.get("Nome"):
+            messages.error(request, error.get("Nome"))
+        elif error.get("Descrição"):
+            messages.error(request, error.get("Nome"))
     context = {
         'form': form,
         'form2': form2,
@@ -346,7 +353,7 @@ def espacos(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/espaco_list.html', context)
+    return render(request, 'Recurso/old/espaco_list.html', context)
 
 
 def espaco_create(request):
@@ -452,7 +459,6 @@ def servico_create(request):
         recurso.save()
         return redirect('Recurso:recursos')
     else:
-
         error = form.errors
         if error.get("Nome"):
             messages.error(request, error.get("Nome"))
@@ -521,7 +527,7 @@ def empresas(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/empresa_list.html', context)
+    return render(request, 'Recurso/old/empresa_list.html', context)
 
 
 def empresa_create(request):
@@ -603,7 +609,7 @@ def edificios(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/edificio_list.html', context)
+    return render(request, 'Recurso/old/edificio_list.html', context)
 
 
 def edificio_create(request):
@@ -665,7 +671,7 @@ def unidadesorganicas(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/unidade-organica_list.html', context)
+    return render(request, 'Recurso/old/unidade-organica_list.html', context)
 
 
 def unidadeorganica_create(request):
@@ -728,7 +734,7 @@ def universidades(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/universidade_list.html', context)
+    return render(request, 'Recurso/old/universidade_list.html', context)
 
 
 def universidade_create(request):
@@ -790,7 +796,7 @@ def campis(request):
     context = {
         'object': obj
     }
-    return render(request, 'Recurso/campus_list.html', context)
+    return render(request, 'Recurso/old/campus_list.html', context)
 
 
 def campus_create(request):
@@ -804,8 +810,6 @@ def campus_create(request):
     else:
         error = form.errors
         if error.get("__all__"):
-            messages.error(request, error.get("__all__"))
-            messages.error(request, error.get("__all__"))
             messages.error(request, error.get("__all__"))
     context = {
         'form': form,

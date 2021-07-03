@@ -56,7 +56,7 @@ class EquipamentoForm(forms.ModelForm):
         }
         error_messages = {
             'Nome': {
-                "unique": "O nome para este equipmaneto já foi atribuído a outro equipamento",
+                "unique": "O nome selecionado já foi atribuído a outro equipamento",
             },
             'descricao': {
             },
@@ -72,8 +72,8 @@ class ServicoForm(forms.ModelForm):
             'unidadeorganicaid',
         ]
         widgets = {
-            'Nome': forms.TextInput(attrs={'class': "input-clean", "placeholder": "Nome do Serviço"}),
-            'Descricao': forms.TextInput(attrs={'class': "input-clean", "placeholder": "Descrição do Serviço"}),
+            'Nome': forms.TextInput(attrs={'class': "input-clean"}),
+            'Descricao': forms.TextInput(attrs={'class': "input-clean"}),
         }
         error_messages = {
             'Nome': {

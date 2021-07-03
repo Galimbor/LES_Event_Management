@@ -7,7 +7,6 @@ from Utilizadores.models import Servicostecnicos
 from django.core.validators import RegexValidator
 
 
-
 class Unidadeorganica(models.Model):
     def __str__(self):
         return self.Nome
@@ -23,13 +22,12 @@ class Unidadeorganica(models.Model):
         unique_together = ('Nome', 'universidadeid')
 
 
-
 class Universidade(models.Model):
     def __str__(self):
         return self.Nome
 
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    Nome = models.CharField(db_column='Nome', max_length=255,unique=True)  # Field name made lowercase.
+    Nome = models.CharField(db_column='Nome', max_length=255, unique=True)  # Field name made lowercase.
     localizacao = models.CharField(db_column='Localizacao', max_length=255, blank=True,
                                    null=True)  # Field name made lowercase.
 
@@ -52,9 +50,11 @@ class Empresa(models.Model):
                                 null=True)  # Field name made lowercase.
     cidade = models.CharField(db_column='Cidade', max_length=255)  # Field name made lowercase.
     endereco_regex = RegexValidator(regex=r"^(?=[^A-Za-z]*[A-Za-z])[ -~]*$")
-    endereco = models.CharField(db_column='Endereço', validators=[endereco_regex], max_length=255)  # Field name made lowercase.
+    endereco = models.CharField(db_column='Endereço', validators=[endereco_regex],
+                                max_length=255)  # Field name made lowercase.
     codigopostal_regex = RegexValidator(regex=r'^\d{4}-\d{3}?$')
-    codigopostal = models.CharField(db_column='CodigoPostal', validators=[codigopostal_regex], max_length=255)  # Field name made lowercase.
+    codigopostal = models.CharField(db_column='CodigoPostal', validators=[codigopostal_regex],
+                                    max_length=255)  # Field name made lowercase.
     faturacao_regex = RegexValidator(regex=r'^\d*$')
     faturacao = models.CharField(db_column='Faturacao', validators=[faturacao_regex], max_length=255, blank=True,
                                  null=True)  # Field name made lowercase.
@@ -105,7 +105,6 @@ class Campus(models.Model):
         unique_together = ('Nome', 'universidadeid')
 
 
-
 class Edificio(models.Model):
     def __str__(self):
         return self.Nome
@@ -116,11 +115,11 @@ class Edificio(models.Model):
                                    null=True)  # Field name made lowercase.
     campusid = models.ForeignKey(Campus, models.DO_NOTHING, db_column='CampusID', blank=True,
                                  null=True)  # Field name made lowercase.
+
     class Meta:
         managed = False
         db_table = 'Edificio'
         unique_together = ('Nome', 'campusid')
-
 
 
 class Espaco(models.Model):
@@ -147,7 +146,8 @@ class Equipamento(models.Model):
 
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     Nome = models.CharField(db_column='Nome', unique=True, max_length=255)  # Field name made lowercase.
-    descricao = models.CharField(db_column='Descricao', max_length=255)  # Field name made lowercase.
+    descricao = models.CharField(db_column='Descricao', max_length=255, null=True,
+                                 blank=True)  # Field name made lowercase.
     unidadeorganicaid = models.ForeignKey('Unidadeorganica', models.DO_NOTHING,
                                           db_column='UnidadeOrganicaID', blank=True,
                                           null=True)  # Field name made lowercase.
@@ -241,7 +241,7 @@ class Tipodeequipamento(models.Model):
     horariorequisicao = models.ForeignKey(Timedate, models.DO_NOTHING,
                                           db_column='HorarioRequisicao')  # Field name made lowercase.
     isAttributed = models.IntegerField(db_column='IsAttributed', null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'TipodeEquipamento'

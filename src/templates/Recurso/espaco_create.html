@@ -6,17 +6,38 @@
 {% block content %}
     {% load static %}
     <div>
-              {% if messages %}
-            <article class="message is-warning">
+        <div class="section">
+            <div class="column">
+                <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+                    <ul>
+                        <li><a href="{% url 'home' %}">Página inicial</a></li>
+                        <li><a href="{% url 'Recurso:recursos' %}">Recursos</a></li>
+                        <li class="is-active">
+                            <a href="#" aria-current="page">
+                                            <span class="has-text-weight-bold">
+                                                {% if detail %}
+                                                    Editar Espaço
+                                                {% else %}
+                                                    Criar Espaço
+                                                {% endif %}
+                                            </span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% if messages %}
+            <article class="message is-danger">
                 <div class="message-header">
-                    <p>Erro</p>
+                    <p>Corrija os seguintes erros, por favor:</p>
                     <button class="close-message delete" aria-label="delete"></button>
                 </div>
-                {% for message in messages %}
-                    <div class="message-body">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+                <div class="message-body">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </div>
             </article>
         {% endif %}
         <div class="section">
@@ -61,15 +82,19 @@
                             <label class="label" for=""> Edificio: </label>
                             {{ form.edificioid }}
                         </div>
-                        <div class="control">
-                            <a class="button is-link" href="{% url 'Recurso:recursos' %}"> Voltar
-                                atrás </a>
+                         <div class="control ">
                             {% if detail %}
                                 <input class="button is-primary" type='Submit' value='Guardar'>
                             {% else %}
                                 <input class="button is-primary" type='Submit' value='Criar'>
                             {% endif %}
                         </div>
+                    </form>
+
+                    <div class="control">
+                        <a class="button is-warning" href="{% url 'Recurso:recursos' %}"> Voltar
+                            atrás </a>
+                    </div>
                     </form>
                 </div>
             </div>

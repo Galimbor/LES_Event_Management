@@ -114,9 +114,9 @@ select {
       font-weight: bold;
   }
 
-  .is-danger {
-      padding: 1.5rem !important;
-  }
+  /*.is-danger {*/
+  /*    padding: 1.5rem !important;*/
+  /*}*/
   
   .title span {
       opacity: 60%;
@@ -239,6 +239,11 @@ select {
       color: white !important;
       background-color:  rgb(70, 116, 199) !important;
   }
+
+
+
+
+
 
 
   .is-filter-active

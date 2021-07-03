@@ -121,10 +121,11 @@
                                 <td class="td"> {{ obj.empresaid }}</td>
                                 <td>
                                     <a href="#" class="button btn-atribuir"
-                                    data-id="{{ obj.id }}"  data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                            data-tooltip="Eliminar recurso: {{ obj.nome }}">
-                                            Cancelar atribuicao
-                                        
+                                       data-id="{{ obj.id }}"
+                                       data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
+                                       data-tooltip="Eliminar recurso: {{ obj.nome }}">
+                                        Cancelar atribuicao
+
                                     </a>
                                 </td>
                             </tr>
@@ -186,13 +187,21 @@
         });
 
 
-
-        //Listen to atribuir 
+        //Listen to atribuir
         const attrBtns = document.querySelectorAll('.btn-atribuir');
         console.log(attrBtns);
 
+        // *************** DELETE ***************
+        var deleteFormModal = $('#confirm-delete-form-modal');
+        $('.delete-form-btn').click(function (e) {
+            e.stopPropagation(); //para a propagacao do evento javascript
+            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+            deleteFormModal.addClass('is-active'); //shows modal
+            //todo add warning when deleting templates
+        });
+
         attrBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 evento_id = "{{evento.id}}";
@@ -202,7 +211,7 @@
                 url = url.replace('456', obj_id)
                 url = url.replace('789', time)
                 location.href = url.replace('123', evento_id)
-                
+
             })
         })
 

@@ -27,6 +27,7 @@
                         <div class="column">
                             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
                                 <ul>
+                                    <li><a href="{% url 'home' %}">Página inicial</a></li>
                                     <li class="is-active">
                                         <a href="#" aria-current="page">
                                             <span class="has-text-weight-bold">Recursos</span>
@@ -130,18 +131,6 @@
             </span>
                             Serviço
                         </a>
-                        {#                                {% for templateFormulario in tiposForm %}#}
-                        {#                                    <a class="panel-block is-active category"#}
-                        {#                                       href="{% url 'create-form' templateFormulario.id templateFormulario.tipoformularioid.id %}"#}
-                        {#                                       id="subtipo-form{{ templateFormulario.tipoformularioid.categoria }}"#}
-                        {#                                       data-subtipo="{{ templateFormulario.tipoformularioid.categoria }}"#}
-                        {#                                       data-search="{{ templateFormulario.nome }}">#}
-                        {#            <span class="panel-icon">#}
-                        {#              <i class="fas fa-book" aria-hidden="true"></i>#}
-                        {#            </span>#}
-                        {#                                        {{ templateFormulario.nome }}#}
-                        {#                                    </a>#}
-                        {#                                {% endfor %}#}
                     </article>
                 </section>
 
@@ -175,11 +164,11 @@
                                     {% endif %}
                                     <td class="td"> Espaço</td>
                                 {% elif obj.equipamentoid.Nome is not None %}
-                                   {% if obj.equipamentoid.espacoid is not None %}
-                                       <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.equipamentoid.espacoid.Nome }})
+                                    {% if obj.equipamentoid.espacoid is not None %}
+                                        <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.equipamentoid.espacoid.Nome }})
                                         </td>
                                     {% else %}
-                                       <td class="td"><b>{{ obj.Nome }}</b></td>
+                                        <td class="td"><b>{{ obj.Nome }}</b></td>
                                     {% endif %}
                                     <td class="td"> Equipamento</td>
                                 {% elif obj.servicoid.Nome is not None %}
@@ -192,15 +181,15 @@
                                 {% else %}
                                     <td class="td"> --------</td>
                                 {% endif %}
-                                <td>
-                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
+                                <td class="td">
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
                                             data-tooltip="Editar recurso: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
-                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
                                             data-tooltip="Eliminar recurso: {{ obj.Nome }}">
                       <span class="icon">
@@ -258,39 +247,6 @@
         });
 
 
-        function filterCategory(category) {
-            // <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
-
-            //Alterar empty form creation
-            var url = "{% url 'create-form' 0 0 %}"
-            url = url.slice(0, -1) + category.data('tipo')
-            console.log(url)
-            $('.panel-block#empty').attr("href", url)
-
-            //FILTER STUFF
-            var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
-
-            $('.tipoFormulario').removeClass('is-active');
-            if (category.data('id') != 'all') {
-                tiposCampo.addClass('is-hidden');
-                var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id'));
-                tiposCampoFiltrados.removeClass('is-hidden');
-            } else {
-                tiposCampo.removeClass('is-hidden');
-            }
-            category.addClass('is-active');
-        }
-
-
-        // *************** DELETE FORM ***************
-        var deleteFormModal = $('#confirm-delete-form-modal');
-        $('.delete-form-btn').click(function (e) {
-            e.stopPropagation(); //para a propagacao do evento javascript
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
-            //todo add warning when deleting templates
-        });
-
         $('.close-modal').click(function () {
             $('.modal').removeClass('is-active');
         });
@@ -318,6 +274,15 @@
                     .search($(this).data('filter'))
                     .draw();
             })
+        });
+
+        // *************** DELETE ***************
+        var deleteFormModal = $('#confirm-delete-form-modal');
+        $('.delete-form-btn').click(function (e) {
+            e.stopPropagation(); //para a propagacao do evento javascript
+            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+            deleteFormModal.addClass('is-active'); //shows modal
+            //todo add warning when deleting templates
         });
 
 

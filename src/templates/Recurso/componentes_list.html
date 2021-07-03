@@ -27,6 +27,7 @@
                         <div class="column">
                             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
                                 <ul>
+                                    <li><a href="{% url 'home' %}">Página inicial</a></li>
                                     <li class="is-active">
                                         <a href="#" aria-current="page">
                                             <span class="has-text-weight-bold">Componentes</span>
@@ -196,19 +197,20 @@
                                     <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.campusid.universidadeid.Nome }})</td>
                                     <td class="td">Campus</td>
                                 {% elif obj.unidade_organicaid is not None %}
-                                    <td class="td"><b>{{ obj.Nome }}</b> ({{ obj.unidade_organicaid.universidadeid.Nome }})
+                                    <td class="td"><b>{{ obj.Nome }}</b>
+                                        ({{ obj.unidade_organicaid.universidadeid.Nome }})
                                     </td>
                                     <td class="td">Unidade Orgânica</td>
                                 {% endif %}
                                 <td>
-                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom button-edit"
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom button-edit"
                                             data-id="{{ obj.id }}"
                                             data-tooltip="Editar componente: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
-                                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom delete-form-btn"
                                             data-delete-url="{% url 'Recurso:componente-delete' obj.id %}"
                                             data-tooltip="Eliminar componente: {{ obj.Nome }}">
                       <span class="icon">
@@ -262,7 +264,11 @@
         });
 
 
-        // *************** DELETE  ***************
+        $('.close-modal').click(function () {
+            $('.modal').removeClass('is-active');
+        });
+
+        // *************** DELETE ***************
         var deleteFormModal = $('#confirm-delete-form-modal');
         $('.delete-form-btn').click(function (e) {
             e.stopPropagation(); //para a propagacao do evento javascript
@@ -270,11 +276,6 @@
             deleteFormModal.addClass('is-active'); //shows modal
             //todo add warning when deleting templates
         });
-
-        $('.close-modal').click(function () {
-            $('.modal').removeClass('is-active');
-        });
-
 
         //DATATABLES MANIPULATION
         $(document).ready(function () {
