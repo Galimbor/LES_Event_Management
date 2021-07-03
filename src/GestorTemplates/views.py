@@ -102,16 +102,19 @@ class FormHandling():
         return campos_dict['fields']
 
 
-    def saveSubCampos(self, subcampos, formulario, new_campo=None):        
-        for subcampo in subcampos:
-            if not Campo.objects.filter(pk=subcampo['pk']).exists():
-                if(new_campo):
-                    subcampo_clean = self.clean_form(subcampo, new_campo)
-                else:
-                    campo_obj = Campo.objects.get(pk = subcampo["fields"]["campo_relacionado"])
-                    subcampo_clean = self.clean_form(subcampo, campo_obj)
-                new_subcampo = Campo.objects.create(**subcampo_clean)      
-                CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
+    def saveSubCampos(self, subcampos, formulario, new_campo=None): 
+        try:       
+            for subcampo in subcampos:
+                if not Campo.objects.filter(pk=subcampo['pk']).exists():
+                    if(new_campo):
+                        subcampo_clean = self.clean_form(subcampo, new_campo)
+                    else:
+                        campo_obj = Campo.objects.get(pk = subcampo["fields"]["campo_relacionado"])
+                        subcampo_clean = self.clean_form(subcampo, campo_obj)
+                    new_subcampo = Campo.objects.create(**subcampo_clean)      
+                    CampoFormulario.objects.create(campoid = new_subcampo, formularioid = formulario)
+        except:
+            pass
 
 
     def updateSubCampos(self, subcampos, formulario):   
@@ -191,21 +194,6 @@ class FormHandling():
     
 
 
-    def get(self, *args, **kwargs):
-        form = self.get_object()
-        #  #editar formularios nao pode ser possivel quando esta a ser usado 
-        eventos_deste_form = EventoFormulario.objects.filter(formularioid=form).values_list('eventoid')
-        if eventos_deste_form:
-            messages.add_message(self.request, messages.WARNING, 'Não é possível editar formulários associados a eventos')
-            return redirect(reverse_lazy('form-list'))
-        campos_deste_form = CampoFormulario.objects.filter(formularioid=form).values_list('campoid')
-        respostas_deste_form = Resposta.objects.filter(campoid__in=campos_deste_form, eventoid__in=eventos_deste_form.values_list('eventoid'))
-        if respostas_deste_form.exists():
-            messages.add_message(self.request, messages.WARNING, 'Querias.. querias... Mas este formulário tem respostas pá:')
-            return redirect(reverse_lazy('form-list'))
-        return super().get(*args, **kwargs)
-
-
     def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
         # context['categorias'] = CATEGORIAS_TIPO_FORMULARIO
@@ -238,6 +226,7 @@ class FormCreate(FormHandling, CreateView):
         form.save()
         form.created = timezone.now()
         form.is_template = 0
+        form.nome = "Cópia de {}".format(form.nome)
         form.save()
         for campo in todos_campos_form:
             CampoFormulario.objects.create(campoid = campo, formularioid = form)
@@ -303,6 +292,25 @@ class FormUpdate(FormHandling, UpdateView):
 
         return context
 
+    def get(self, *args, **kwargs):
+        form = self.get_object()
+
+        # if form.tipoeventoid:
+        #     messages.add_message(self.request, messages.WARNING, 'Não é possível eliminar formulários associados a eventos')
+        #     return redirect(reverse_lazy('form-list'))
+    
+        #  #editar formularios nao pode ser possivel quando esta a ser usado 
+        eventos_deste_form = EventoFormulario.objects.filter(formularioid=form).values_list('eventoid')
+        if eventos_deste_form:
+            messages.add_message(self.request, messages.WARNING, 'Não é possível editar formulários associados a eventos')
+            return redirect(reverse_lazy('form-list'))
+        campos_deste_form = CampoFormulario.objects.filter(formularioid=form).values_list('campoid')
+        respostas_deste_form = Resposta.objects.filter(campoid__in=campos_deste_form, eventoid__in=eventos_deste_form.values_list('eventoid'))
+        if respostas_deste_form.exists():
+            messages.add_message(self.request, messages.WARNING, 'Querias.. querias... Mas este formulário tem respostas pá:')
+            return redirect(reverse_lazy('form-list'))
+        return super().get(*args, **kwargs)
+
     
 
 
@@ -319,6 +327,9 @@ class FormDelete(DeleteView):
         # printspecial(eventos_deste_form)
         # TODO verificar eliminar nao funcionou
 
+        # if form.tipoeventoid:
+        #     messages.add_message(request, messages.WARNING, 'Não é possível eliminar formulários associados a eventos')
+        #     return redirect(reverse_lazy('form-list'))
         # nao eliminar formularios que estao em eventos
         if eventos_deste_form:
             messages.add_message(request, messages.WARNING, 'Não é possível eliminar formulários associados a eventos')

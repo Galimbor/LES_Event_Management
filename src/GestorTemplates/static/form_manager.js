@@ -10,6 +10,14 @@
 
 const ESCOLHA_MULTIPLA = 12; //Primary Key na base de dados de uma pergunta de escolha multipla
 var NEW_CAMPO_COUNTER = 0;
+
+let displayUnsavedWarning = true;
+window.onbeforeunload = function() { 
+    if (displayUnsavedWarning)
+        return true;
+}
+
+
 var FormManager = class {
 
     /** CONSTRUCT OBJECT Updated**/
@@ -30,11 +38,14 @@ var FormManager = class {
 
             let selected_option = document.querySelector('input[name="answer"]:checked').dataset.id;
             // console.log( $('input[name="answer"]:checked').data('id'))
-            console.log(selected_option)
+            $(this).addClass('is-loading')
             form.publishForm(selected_option) //this is a HTML element   
         })
 
-        $('.button.save-form').click(e => form.saveRemotely())
+        $('.button.save-form').click(e => {
+            $('.button.save-form').addClass('is-loading');
+            form.saveRemotely();
+        })
 
 
     }
@@ -518,7 +529,7 @@ var FormManager = class {
     publishForm(id){
         if(id){
             this.formulario.fields.visibilidade = id;
-            this.saveRemotely();
+            this.saveRemotely('/GestorTemplates/');
             
         }
         else {
@@ -535,11 +546,13 @@ var FormManager = class {
     /*
     * Posts form
     */
-    saveRemotely() 
+    saveRemotely(success_url=null) 
     {
         if(this.formValid())
         {
-        let success_url = this.success_url
+        displayUnsavedWarning = false;
+        if(success_url==null)
+            success_url = this.success_url
         $.ajax({
             contentType: 'application/json; charset=utf-8',
             type: 'POST',
