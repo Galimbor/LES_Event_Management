@@ -56,7 +56,7 @@
           <ul>
             <li class="is-active" data-column="0" data-filter="">
               <a>
-                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span class="icon is-small"><i class="fas fa-list-ul" aria-hidden="true"></i></span>
                 <span>Todos</span>
               </a>
             </li>
@@ -70,6 +70,13 @@
               <a>
                 <span class="icon is-small"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
                 <span>Templates</span>
+              </a>
+            </li>
+
+            <li data-column="1" data-filter="1">
+              <a>
+                <span class="icon is-small"><i class="fas fa-archive" aria-hidden="true"></i></span>
+                <span>Arquivados</span>
               </a>
             </li>
             
@@ -135,6 +142,7 @@
           <thead>
             <tr>
               <th>is_template</th>
+              <th>is_arquivado</th>
               <th>Formulários por título</th>
               <th>Tipo de Formulário</th>
               <th>Tipo de Evento</th>
@@ -148,6 +156,7 @@
             {% for obj in object_list %}
             <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
               <td>{{obj.is_template}}</td>
+              <td>{{obj.is_arquivado}}</td>
               <td>{{obj.nome}}</td>
               <td> {{obj.tipoformularioid}}</td>
               <td> {{obj.tipoeventoid}}</td>
@@ -291,9 +300,9 @@
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
       },
-      "columnDefs": [ { "orderable": false, "targets": 6 },
+      "columnDefs": [ { "orderable": false, "targets": 7 },
       {
-                "targets": [ 0 ],
+                "targets": [ 0, 1 ],
                 "visible": false
             }
     ],      
@@ -303,7 +312,11 @@
     tabs.click(function(){
       tabs.removeClass('is-active')
       $(this).addClass('is-active');
-      table.column($(this).data('column'))
+
+
+      table.columns()
+        .search('')
+        .column($(this).data('column'))
         .search($(this).data('filter'))
         .draw();
     })
