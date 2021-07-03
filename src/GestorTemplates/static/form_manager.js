@@ -51,6 +51,7 @@ var FormManager = class {
         
         // ARCHIVE FORM
         $('.button.archive-form-btn').click(e => {
+            $('.button.save-form').addClass('is-loading')
             form.formulario.fields.is_arquivado = 1
             this.saveRemotely();
         })
