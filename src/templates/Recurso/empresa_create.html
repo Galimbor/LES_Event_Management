@@ -15,48 +15,47 @@
                         {% csrf_token %}
 
                         <div class="form-group-c">
-                            <label for="">Nome</label>
+                            <label class="label" for="nome"> Nome: </label>
                             {{ form.nome }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Descrição</label>
+                            <label class="label" for=""> Descrição: </label>
                             {{ form.descricao }}
                         </div>
 
 
                         <div class="form-group-c">
-                            <label for="">Email
+                            <label class="label" for=""> Email: </label>
                                 {{ form.email }}
-                            </label>
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Telefone</label>
+                            <label class="label" for=""> Telefone: </label>
                             {{ form.telefone }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Cidade</label>
+                            <label class="label" for=""> Cidade: </label>
                             {{ form.cidade }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Endereço</label>
+                            <label class="label" for=""> Endereço: </label>
                             {{ form.endereco }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Código Postal</label>
+                            <label class = "label" for=""> Código Postal: </label>
                             {{ form.codigopostal }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Faturação</label>
+                            <label class="label" for="">Nº Contribuinte: </label>
                             {{ form.faturacao }}
                         </div>
 
-                        <input type='Submit' value='Save'>
+                        <input class="button is-primary" type='Submit' value='Save'>
                     </form>
                 </div>
             </div>

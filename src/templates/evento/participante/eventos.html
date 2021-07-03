@@ -12,12 +12,15 @@
       </div>
 
 {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+    {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                <p {% if message.tags %} class="{{ message.tags }}"{% endif %} > {{ message }}</p>
+          </div>
+        </article>
+    {% endfor %}
 {% endif %}
+
 
       <a class="button is-success" href="">
         <span class="icon">

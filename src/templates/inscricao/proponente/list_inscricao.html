@@ -9,15 +9,19 @@
     <div class="columns">
       <div class="column">
         <h1 class="title"> Gerir inscrições do seus eventos </h1>
+
       </div>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <article class="message is-success">
+                        <div class="message-body">
+                            <button class="delete" aria-label="delete"></button>
+                            <p {% if message.tags %} class="{{ message.tags }}"{% endif %} > {{ message }}</p>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% endif %}
 
 
     </div>
@@ -45,14 +49,11 @@
                 <br>
                 <br>
 
-              <time datetime="2016-1-1"> Start-time : {{ obj.eventoid.horario.datainicial }} {{ obj.eventoid.horario.horainicial }}  </time>
-                <br>
-               <time datetime="2016-1-1"> End-time :{{ obj.eventoid.horario.datafinal }} {{ obj.eventoid.horario.horafinal }} </time>
             </div>
           </div>
           <footer class="card-footer">
             <a href="{% url 'Inscricao:prop_update_inscricao'   id=obj.id  %}" class="card-footer-item">Alterar estado da inscrição</a>
-            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:prop_delete_inscricao' obj.pk %}">Eliminar inscrição</a>
+            <a href="#" class="card-footer-item delete-form-btn" data-delete-url="{% url 'Inscricao:prop_delete_inscricao' inscricaoid=obj.pk %}">Eliminar inscrição</a>
           </footer>
         </div>
       </div>

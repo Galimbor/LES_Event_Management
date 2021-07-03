@@ -9354,18 +9354,6 @@ label.panel-block:hover {
 
 
 /* Jay */
-select {
-  height: auto !important;
-}
 
-.radio-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5%;
-}
 
-.radio-label label {
-  margin-right: .5rem;
-}
 /*# sourceMappingURL=bulma.css.map */

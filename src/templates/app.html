@@ -96,17 +96,12 @@
 </head>
 
 <body>
-  <div id="app">
+<div id="app">
     {% include 'popup.html' %}
     {% include 'navbar.html' %}
-
-
     <div class="hero is-primary is-bold" id="top-hero">
-      <div id="top-hero-body" class="hero-body">
-
-      </div>
+        <div id="top-hero-body" class="hero-body"></div>
     </div>
-
     <div id="page-content">
       <div class="card">
   
@@ -132,13 +127,12 @@
           <!-- include the content here-->
           {% endblock content %}
         </div>
-      </div>
     </div>
 
     <footer class="footer">
-      <div style="margin: auto; width: max-content">
-        &#169; 2021 Dia Aberto UAlg (Grupos 1 e 6)
-      </div>
+        <div style="margin: auto; width: max-content">
+            &#169; Laboratório de Engenharia de Software - 2021
+        </div>
     </footer>
   </div>
 
@@ -172,6 +166,5 @@
   {% endblock scripts %}
 
 </body>
-
 
 </html>

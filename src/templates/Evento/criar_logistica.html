@@ -1,0 +1,30 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+
+    <div>
+        <div class="section">
+            <h1 class="title"> <strong>{{ evento.nome }}</strong></h1>
+            <div class="columns is-centered">
+
+                <div class="column is-one-third is-flex is-justify-content-center">
+                    <a href="{% url 'Evento:equip-logistic' event_id=evento.id %}" class="button
+                    is-dark">Equipamento</a>
+                </div>
+                <div class="column is-one-third is-flex is-justify-content-center">
+                    <a href="{% url 'Evento:espaco-logistic' event_id=evento.id %}" class="button is-dark">Espaço</a>
+                </div>
+                <div class="column is-one-third is-flex is-justify-content-center">
+                    <a href="{% url 'Evento:servico-logistic' event_id=evento.id %}" class="button is-dark">Serviço</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

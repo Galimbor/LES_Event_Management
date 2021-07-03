@@ -18,6 +18,7 @@ CATEGORIAS_TIPO_FORMULARIO = [
 ex.: Seminario (nome do tipoFormulario) é Tipoformulario, categoria = evento
     inscriçao é TipoFormulario, categoria = inscrição
 """
+
 class Tipoformulario(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
@@ -119,11 +120,9 @@ class Tipocampo(models.Model):
     nome = models.CharField(
         db_column="Nome", max_length=255
     )  # Field name made lowercase.
-    template = models.TextField(
-        db_column="Template", default='', blank=True
-    )
+    template = models.TextField()
 
-       
+
     def __str__(self):
         return self.nome
 
@@ -155,7 +154,6 @@ class Campo(models.Model):
         null=True,
     )  # Field name made lowercase.
 
-
     class Meta:
         managed = True
         db_table = "Campo"
@@ -176,13 +174,21 @@ class CampoFormulario(models.Model):
     class Meta:
         managed = True
         db_table = "Campo_Formulario"
-    
+
     def __str__(self):
-        return "Form: {} ---- Pergunta: {}".format(self.formularioid,self.campoid)
+        return "Form: {} ---- Pergunta: {}".format(self.formularioid, self.campoid)
 
 
+class Respostaspossiveis(models.Model):
+    id = models.AutoField(
+        db_column="Id", primary_key=True
+    )  # Field name made lowercase.
+    nome = models.CharField(
+        db_column="Nome", max_length=255
+    )  # Field name made lowercase.
 
-
+    def __str__(self):
+        return self.nome
 
 class Resposta(models.Model):
     id = models.AutoField(
@@ -210,20 +216,6 @@ class Resposta(models.Model):
     
     def __str__(self):
         return self.conteudo
-
-
-
-class Respostaspossiveis(models.Model):
-    id = models.AutoField(
-        db_column="Id", primary_key=True
-    )  # Field name made lowercase.
-    nome = models.CharField(
-        db_column="Nome", max_length=255
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "RespostasPossiveis"
 
 
 

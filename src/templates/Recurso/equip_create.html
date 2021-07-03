@@ -15,33 +15,32 @@
                         {% csrf_token %}
 
                         <div class="form-group-c">
-                            <label for="">Nome</label>
+                            <label class="label" for=""> Nome: </label>
                             {{ form.nome }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Descrição</label>
+                            <label class="label" for=""> Descrição: </label>
                             {{ form.descricao }}
                         </div>
 
 
                         <div class="form-group-c">
-                            <label for="">Empresa
+                            <label class="label" for=""> Empresa: </label>
                                 {{ form2.empresaid }}
-                            </label>
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Unidade Orgnânica</label>
+                            <label class="label" for=""> Unidade Orgnânica: </label>
                             {{ form.unidadeorganicaid }}
                         </div>
 
                         <div class="form-group-c">
-                            <label for="">Espaço</label>
+                            <label class="label" for=""> Espaço: </label>
                             {{ form.espacoid }}
                         </div>
 
-                        <input type='Submit' value='Save'>
+                        <input class="button is-primary" type='Submit' value='Criar'>
                     </form>
                 </div>
             </div>
