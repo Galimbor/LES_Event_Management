@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
-from GestorTemplates.models import Formulario, Tipoformulario, CampoFormulario, Campo, Resposta
+from GestorTemplates.models import Formulario, Tipoformulario, CampoFormulario, Campo, Resposta, EventoFormulario
 from Evento.models import Evento
 from Utilizadores.models import User
-from eventoFormulario.models import EventoFormulario
 from .models import Feedback
 from django.contrib import messages
 from django.utils import timezone

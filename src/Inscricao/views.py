@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
-from GestorTemplates.models import Tipoformulario, Formulario, CampoFormulario, Campo, Resposta
+from GestorTemplates.models import Tipoformulario, Formulario, CampoFormulario, Campo, Resposta, EventoFormulario
 from Utilizadores.models import User
 from .forms import InscricaoForm, InscricaoUpdateForm, InscricaoCheckinUpdateForm
 from Evento.models import Evento
@@ -9,7 +9,7 @@ from .models import Inscricao
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
-from eventoFormulario.models import EventoFormulario
+
 from datetime import date, datetime
 from Feedback.models import Feedback
 # -------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
