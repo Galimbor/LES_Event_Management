@@ -71,6 +71,25 @@
               {% if object.pk %}
               <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                 <div class="dropdown-content">
+                  {% if formulario.is_arquivado %}
+                  <div class="dropdown-item">
+                    <button class="button is-text has-text-grey  has-tooltip-bottom remove-archive-form-btn"  data-archive="{{ formulario.is_arquivado }}" data-tooltip="Remover formulário do arquivo: {{object.nome}}">
+                      <span class="icon">
+                        <i class="fas fa-box-open"></i>
+                      </span>
+                      <span>Remover do arquivo </span>
+                    </button> 
+                  </div>
+                  {% else %}
+                  <div class="dropdown-item">
+                    <button class="button is-text has-text-grey  has-tooltip-bottom archive-form-btn"  data-archive="{{ formulario.is_arquivado }}" data-tooltip="Arquivar formulário: {{object.nome}}">
+                      <span class="icon">
+                        <i class="fas fa-archive"></i>
+                      </span>
+                      <span>Arquivar formulário </span>
+                    </button> 
+                  </div>
+                  {% endif %}
                   <div class="dropdown-item">
                     <button class="button is-text has-text-grey  has-tooltip-bottom delete-form-btn"  data-delete-url="{% url 'delete-form' object.pk %}" data-tooltip="Eliminar formulário: {{object.nome}}">
                       <span class="icon">
@@ -79,6 +98,7 @@
                       <span>Eliminar formulário </span>
                     </button> 
                   </div>
+                  
                 </div>
               </div>
               {% endif %}
@@ -205,8 +225,11 @@
       // *************** DELETE FORM ***************
   var deleteFormModal = $('#confirm-delete-form-modal');
   $('.delete-form-btn').click(function (e) {
+    displayUnsavedWarning = false;
     e.stopPropagation(); //para a propagacao do evento javascript 
-    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    let confirm = deleteFormModal.find('.confirm')
+    confirm.attr('href', $(this).data('delete-url')); //passes obj id to modal
+    confirm.click(e => confirm.addClass('is-loading'))
     deleteFormModal.addClass('is-active'); //shows modal
     //todo add warning when deleting templates
   });

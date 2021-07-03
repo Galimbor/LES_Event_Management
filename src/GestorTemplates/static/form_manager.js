@@ -48,6 +48,21 @@ var FormManager = class {
         })
 
 
+        
+        // ARCHIVE FORM
+        $('.button.archive-form-btn').click(e => {
+            $('.button.save-form').addClass('is-loading')
+            form.formulario.fields.is_arquivado = 1
+            this.saveRemotely();
+        })
+
+        // REMOVE FROM ARCHIVE
+        $('.button.remove-archive-form-btn').click(e => {
+            form.formulario.fields.is_arquivado = 0
+            this.saveRemotely();
+        })
+
+
     }
 
 
@@ -314,8 +329,8 @@ var FormManager = class {
         })
 
         // SAVE SETTINGS
-        $('.button.save-form-settings').click(e => {
-
+        $('.button.save-form-settings').click(function (){
+            $('.button.save-form').addClass('is-loading')
             // Tipo de Formulario
             form.formulario.fields.tipoformularioid = $('.tipo_formulario option:selected').data("tipoformulario")
             
@@ -328,8 +343,8 @@ var FormManager = class {
             //Tornar template
             form.formulario.fields.is_template= $('.is_template_option input:checked').data("id") 
             
-            this.saveRemotely();
-
+            form.saveRemotely();
+            
             $('.ver_form_config').removeClass('is-active')
 
         })
