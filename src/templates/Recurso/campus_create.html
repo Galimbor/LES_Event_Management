@@ -9,14 +9,14 @@
         {% if messages %}
             <article class="message is-warning">
                 <div class="message-header">
-                    <p>Erro</p>
-                    <button class="close-message delete" aria-label="delete"></button>
-                </div>
-                {% for message in messages %}
-                    <div class="message-body">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+                    {% for message in messages %}
+                        <p>Erro</p>
+                        <button class="close-message delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
             </article>
         {% endif %}
         <div class="section">

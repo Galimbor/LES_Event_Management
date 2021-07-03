@@ -38,7 +38,6 @@ class EspacoForm(forms.ModelForm):
             'capacidade': {
                 'invalid': 'A capacidade tem que ser um número inteiro positivo'
             }
-
         }
 
 
