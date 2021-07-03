@@ -10,6 +10,20 @@
     <div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
+                {% if messages %}
+                <article class="message is-danger">
+                    {% for message in messages %}
+                        <div class="message-header ">
+                            <p>Erro:</p>
+                            <button id="close-message" class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </article>
+              {% endif %}
+
                  <h1 class="title">Criar Evento <span>[2]</span></h1>
                 {{ type }}
                 <form class="box" id="form" method="post">
@@ -21,36 +35,36 @@
                         {% if campo.campoid.tipocampoid.id == 1 %}
                             <div class="form-group-c">
                                 <label class="label" for="nome">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text">
+                                <input class="input-clean" name="{{ campo.campoid.id }}" type="text" required>
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 4 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
                                 <textarea class="input-clean" name="{{ campo.campoid.id }}" cols="30"
-                                          rows="10"></textarea>
+                                          rows="10" required></textarea>
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 6 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean" name="{{ campo.campoid.id }}" type="number">
+                                <input required class="input-clean" name="{{ campo.campoid.id }}" type="number">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 7 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-data" name="{{ campo.campoid.id }}" type="date">
+                                <input required class="input-clean input-data" name="{{ campo.campoid.id }}" type="date">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 8 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
-                                <input class="input-clean input-time" name="{{ campo.campoid.id }}" type="time">
+                                <input required class="input-clean input-time" name="{{ campo.campoid.id }}" type="time">
                             </div>
                         {% elif campo.campoid.tipocampoid.id == 12 %}
                             <div class="form-group-c">
                                 <label class="label" for="">{{ campo.campoid.conteudo }}</label>
                                 <div class="radio-label">
                                     {% for escolha in campo.campoid.respostas %}
-                                        <label for="tipo">{{ escolha }}</label>
-                                        <input type="radio" id="tipo" name="{{ campo.campoid.id }}" value="{{ escolha }}">
+                                        <label for="tipo">{{ escolha.conteudo }}</label>
+                                        <input required type="radio" id="tipo" name="{{ campo.campoid.id }}" value="{{ escolha.conteudo }}">
                                         <br>
                                     {% endfor %}
                                 </div>
@@ -65,5 +79,7 @@
         </div>
 
     </div>
+
+
 {% endblock content %}
 

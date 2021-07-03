@@ -13,6 +13,27 @@
                 </div>
 
             </div>
+
+
+            <section class="pedido ">
+                <h2 class="sub-title">Dados do evento proposto</h1>
+                
+                {% for pergunta in perguntas %}
+                    {% for resposta in respostas %}
+
+                        {% if pergunta.campoid == resposta.campoid %} 
+                        <div class="block mt-3">
+                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
+                            <p class="resposta">{{resposta.conteudo}}</p>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </section>
+
             <div class="columns is-multiline is-space-between mt-5">
 
                 <div class="column is-3">
@@ -95,25 +116,6 @@
 
                 {% endif %}
             </div>
-
-            <section class="pedido mt-5">
-                <h2 class="sub-title">Dados do evento proposto</h1>
-                
-                {% for pergunta in perguntas %}
-                    {% for resposta in respostas %}
-
-                        {% if pergunta.campoid == resposta.campoid %} 
-                        <div class="block mt-3">
-                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
-                            <p class="resposta">{{resposta.conteudo}}</p>
-                        </div>
-                        {% endif %}
-
-                    {% endfor %}
-
-                {% endfor %}
-
-            </section>
         </div>
     </div>
 

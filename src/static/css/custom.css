@@ -348,3 +348,8 @@ select {
     margin-right: 1.5rem;
     font-weight: bold;
 }
+
+
+.error {
+    border-bottom: 4px solid red !important;
+}
