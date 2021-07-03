@@ -1,0 +1,327 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
+{% block content %}
+{% load static %}
+<div>
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  <li><a href="{% url 'Evento:eventos-gerir'  %}">Eventos a gerir</a></li>
+                  <li><a href="{% url 'Evento:gerir' event_id=request.resolver_match.kwargs.eventoid %}">Gerir evento</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Check-ins no evento</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+                              <a class="button is-success"
+                   href="{% url 'Evento:criar-csv' evento_id=request.resolver_match.kwargs.eventoid %}">
+        <span class="icon">
+          <i class="fa fa-file  " ></i>
+        </span>
+                    <span>Gerar ficheiro CSV</span>
+                </a>
+    </nav>
+    <div class="columns">
+      <div class="column">
+        <div class="tabs is-centered is-medium">
+          <ul>
+            <li class="is-active" data-column="5" data-filter="">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Todas</span>
+              </a>
+            </li>
+            <li data-column="5" data-filter="Sim">
+              <a>
+                <span class="icon is-small"><i class="fas fa-check" aria-hidden="true"></i></span>
+                <span>Foi ao evento</span>
+              </a>
+            </li>
+            <li data-column="5" data-filter="Não">
+              <a>
+                <span class="icon is-small"><i class="fas fa-times" aria-hidden="true"></i></span>
+                <span>Não foi ao evento</span>
+              </a>
+            </li>
+          </ul>
+      </div>
+      </div>   
+  </div>
+  </section>
+
+  <div class="section" id="main-section-content">
+    <div class="columns">
+      <div class="column ">
+
+        <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telemóvel</th>
+              <th>Idade</th>
+              <th>Profissão</th>
+                <th> Check-in</th>
+              <th></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
+              <td> {{obj.nome}}</td>
+              <td> {{obj.email}}</td>
+              <td> {{obj.telemovel}}</td>
+              <td> {{obj.idade}}</td>
+              <td> {{obj.profissao}}</td>
+                <td class="td-flex"> {% if obj.checkin == False %}<span class="ins-detail-red">Não
+                     {% else %}<span class="ins-detail-green">Sim{% endif %}</span>
+                </td>
+              <td>
+                      <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom go-btn"   data-tooltip="Vai : {{obj.nome}}">
+                      <span  class="icon">
+                        <i class="fas fa-check" ></i>
+                      </span>
+                    </button>
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom not-go-btn"  data-tooltip="Não vai: {{obj.nome}}">
+                      <span class="icon">
+                        <i class="fas fa-times" ></i>
+                      </span>
+                    </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="modal" id="checkin-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Está prestes a fazer o check-in do utilizador. Pretende continuar ?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger checkin-confirm" href="#">Sim</a>
+      <button class="button close-modal">Não</button>
+    </footer>
+  </div>
+</div>
+
+
+<div class="modal" id="checkout-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Está prestes a fazer o check-out do utilizador. Pretende continuar ?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger checkout-confirm" href="#">Sim</a>
+      <button class="button close-modal">Não</button>
+    </footer>
+  </div>
+</div>
+
+
+
+
+{% endblock content%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+<script>
+
+
+
+     {# Checkin  modals #}
+    var checkInModal = $('#checkin-modal');
+
+    $('.go-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript
+    checkInModal.addClass('is-active'); //shows modal
+        let id = $(this).parent().parent().data('id')
+          checkInModal.attr('data-id', id)
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
+
+    {#Checkout modal#}
+
+
+    var checkoutModal= $('#checkout-modal');
+        $('.not-go-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript
+    let id = $(this).parent().parent().data('id')
+      checkoutModal.attr('data-id', id)
+    checkoutModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+
+
+
+     {#Cookie for CSRF token #}
+
+     function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+
+      {#Check-in functionality #}
+
+      $('.checkin-confirm').click(function (e)
+      {
+     const checkin = "True"
+    e.stopPropagation(); //para a propagacao do evento javascript
+                  checkin_confirm = $(this)
+            let id = checkin_confirm.parent().parent().parent().data('id')
+      console.log(id);
+        $.ajax({
+             url :`/Inscricao/doCheckin/${id}`,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                checkin: checkin
+            },
+            beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+             },
+            success: function (data) {
+                checkInModal.removeClass('is-active'); //shows modal
+                location.reload();
+            },
+            error: function (error) {
+                 console.log("There's an error with ajax : ")
+            console.log(error);
+            }
+
+        })
+
+  })
+
+
+           {#Check-out functionality #}
+
+      $('.checkout-confirm').click(function (e)
+      {
+     const checkin = "False"
+    e.stopPropagation(); //para a propagacao do evento javascript
+                checkout_confirm = $(this)
+            let id = checkout_confirm.parent().parent().parent().data('id')
+      console.log(id);
+        $.ajax({
+             url :`/Inscricao/doCheckin/${id}`,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                checkin: checkin
+            },
+            beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+             },
+            success: function (data) {
+                checkoutModal.removeClass('is-active'); //shows modal
+                location.reload();
+            },
+            error: function (error) {
+            console.log(error);
+            }
+
+        })
+
+  })
+
+
+//DATATABLES MANIPULATION
+
+    var table = $('#form-list-table').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+      "columnDefs": [ { "orderable": false, "targets": 6 },
+    ],
+    });
+
+  $(document).ready(function () {
+
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+      {#console.log(table.column($(this).data('column')).search($(this).data('filter')).draw())#}
+      table.column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
+    })
+  });
+
+
+
+  $('.datatable-row').click(function () {
+    let url = "{% url 'Inscricao:consultar_inscricao_prop' inscricaoid=123  %}"
+    location.href= url.replace('123',  $(this).data('id'))
+
+  });
+
+
+</script>
+{% endblock %}

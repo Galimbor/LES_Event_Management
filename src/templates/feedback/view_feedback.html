@@ -5,25 +5,42 @@
 
 {% block content %}
 {% load static %}
-
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  <li><a href="{% url 'Evento:eventos'  %}">Eventos</a></li>
+                  <li><a href="{% url 'Evento:gerir' event_id=feedback.eventoid.id %}">Gerir evento</a></li>
+                  <li><a href="{% url 'Feedback:list_feedback' eventoid=feedback.eventoid.id %}">Feedbacks</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Ver feedback</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
 
   <div>
             <div class="section">
                 <div class="columns is-align-items-center">
                     <div class="column is-half is-offset-one-quarter">
-                        <h1 class="title has-text-centered"> Feedback número {{ feedback.id }}</h1>
+                        <h1 class="title has-text-centered"> Feedback número {{ feedback.number }}</h1>
                         {% for pergunta, resposta in QAA %}
                         <div class="event-group">
                             <span class="span-header">{{ pergunta.conteudo }}</span>
                                 <p class="event-body ">
                                 {% if resposta.conteudo|length == 0  %} A resposta encontra-se vazia.
-                                {% elif pergunta.id == 28 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
                                 {% else %} {{ resposta.conteudo }}  {% endif %}</p>
                         </div>
                           {% endfor %}
                         <div class="column">
                                                             <div class="control">
-                                    <a class="button is-link" href="{% url 'Feedback:list_feedback' eventoid=27 %}"> Voltar atrás </a>
+                                    <a class="button is-link" href="{% url 'Feedback:list_feedback' eventoid=feedback.eventoid.id %}"> Voltar atrás </a>
                                 </div>
                         </div>
 

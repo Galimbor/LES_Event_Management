@@ -12,12 +12,12 @@ class QuestionInline(admin.TabularInline):
     model = CampoFormulario
 
 
+
 @admin.register(Formulario)
 class FormAdmin(admin.ModelAdmin):
     inlines = [
         QuestionInline,
     ]
-
 
 @admin.register(Tipocampo)
 class TipoCampoAdmin(admin.ModelAdmin):
@@ -48,9 +48,10 @@ class CampoFormularioAdmin(admin.ModelAdmin):
     list_display = ('formularioid', 'campoid')
 
 
+
 models = apps.get_models()
 for model in models:
-    if ('GestorTemplates' in str(model)):
+    if ('GestorTemplates' in str(model) ):
         try:
             admin.site.register(model)
         except admin.sites.AlreadyRegistered:

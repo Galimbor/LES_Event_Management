@@ -17,7 +17,7 @@
                     {# //Inscricoes Rescursos Logistica#}
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header">
-                            <a class="mx-auto" href="">
+                            <a class="mx-auto" href="{% url 'Inscricao:prop_list_inscricao' eventoid=id %}">
                             <p class="card-header-title is-centered">
                                     Inscricoes
                             </p>
@@ -47,6 +47,40 @@
                         </header>
                     </div>
                 </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Inscricao:consultar_checkins' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Check-ins
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Feedback:list_feedback' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Feedback
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+{#                <div class="column is-3">#}
+{#                    <div class="card" style="min-height: 10px;">#}
+{#                        <header class="card-header">#}
+{#                            <a class="mx-auto" href="{% url 'Evento:criar-csv' evento_id=id %}">#}
+{#                            <p class="card-header-title is-centered">#}
+{#                                    Criar ficheiro de CSV#}
+{#                            </p>#}
+{#                            </a>#}
+{#                        </header>#}
+{#                    </div>#}
+{#                </div>#}
+
 
             </div>
         </div>

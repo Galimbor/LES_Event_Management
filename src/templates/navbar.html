@@ -43,6 +43,8 @@
                         </a>
                     {% endif %}
 
+
+
                 </div>
             </div>
             <a href="{% url 'Inscricao:part_list_inscricao' %}" class="navbar-item">
@@ -332,6 +334,14 @@
                     </div>
                 </div>
 
+
+            {% if user_tipo == 'gcp' %}
+                <span class="user-type">GCP</span>
+            {% elif user_tipo == 'interno' %}
+                <span class="user-type">Proponente Interno</span>
+            {% elif user_tipo == 'externo' %}
+                <span class="user-type">Proponente Externo</span>
+            {% endif %}
 
 
                 {% if user.is_authenticated %}

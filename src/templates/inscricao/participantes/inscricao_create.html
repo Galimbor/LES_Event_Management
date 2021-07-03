@@ -5,11 +5,31 @@
 
 {% block content %}
 {% load static %}
+
+              <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="{% url 'Evento:eventos'  %}">Eventos</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Criar inscrição</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+
 <div>
   <div class="section">
     <div class="columns">
       <div class="column is-is-four-fifths">
-        <h1 class="title">Inscrição no evento</h1>
+        <h1 class="title">Inscrição no evento : {{ evento.nome }}</h1>
 
         <form class="box" id="form" method="post">
              {% csrf_token %}
@@ -17,45 +37,55 @@
 
             {% for pergunta in form %}
              <div class="field">
-                {% if pergunta.campoid.tipocampoid.nome == 'Resposta aberta' %}
-                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                {% if pergunta.campoid.tipocampoid.nome == 'Resposta aberta' or pergunta.campoid.tipocampoid.nome == 'Resposta Curta' %}
+                    <div class="form-group-c">
+                        <label class="label"> {{ pergunta.campoid.conteudo }}</label>
                         <div class="form-group-c">
-                            <input class="text input-clean" type="text" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
+                            <input class="text input-clean"  required type="text" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
                         </div>
+                       </div>
                 {% elif pergunta.campoid.tipocampoid.nome == 'Resposta Numérica' %}
-                        <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <div class="form-group-c">
+                        <label class="label"> {{ pergunta.campoid.conteudo }}</label>
                         <div class="form-group-c">
-                            <input class="text input-clean" type="number" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
+                            <input class="text input-clean" required type="number" name="{{ pergunta.campoid.id }}" placeholder="{{ pergunta.campoid.conteudo }}">
                         </div>
-                {% elif pergunta.campoid.tipocampoid.nome == 'RadioBox'%}
+                    </div>
+                {% elif pergunta.campoid.tipocampoid.nome == 'Escolha Múltipla'%}
 
                         <div class="form-group-c">
-                        <label class="field" > {{ pergunta.campoid.conteudo }}</label>
+                        <label class="label" > {{ pergunta.campoid.conteudo }}</label>
+                         <div class="radio-label">
                         {% for opcao in pergunta.campoid.respostas %}
                             <label class="radio" for="{{ pergunta.campoid.id }}">
-                                <input type="radio" class="input-clean" id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao }}">
-                                    {{ opcao }}
+                                <input type="radio" class=""  required id="{{ pergunta.campoid.id }}" name="{{ pergunta.campoid.id }}" value="{{ opcao.conteudo }}">
+                                    {{ opcao.conteudo }}
                             </label>
                         {% endfor %}
+                         </div>
                         </div>
                 {% elif pergunta.campoid.tipocampoid.nome == 'Dropdown' %}
-                    <label class="field" for="{{ pergunta.campoid.id }}"> {{ pergunta.campoid.conteudo }}</label>
+                       <div class="form-group-c">
+                    <label class="label" for="{{ pergunta.campoid.id }}"> {{ pergunta.campoid.conteudo }}</label>
                     <div class="select is-small">
-                      <select name="{{ pergunta.campoid.id }}" id="{{ pergunta.campoid.id }}" >
+                      <select name="{{ pergunta.campoid.id }}" required id="{{ pergunta.campoid.id }}" >
                         <option selected value="">--Please choose an option--</option>
                           {% for opcao in pergunta.campoid.respostas %}
                             <option name="{{ opcao}}">{{ opcao }}</option>
                           {% endfor %}
                       </select>
                     </div>
-                {% elif pergunta.campoid.tipocampoid.nome == 'Pergunta aberta longa' %}
-                    <label class="field"> {{ pergunta.campoid.conteudo }}</label>
-                      <div class="control">
-                        <textarea class="textarea " name="{{ pergunta.campoid.id }}" cols="10" placeholder="{{ pergunta.campoid.conteudo}}"></textarea>
                       </div>
-
+                {% elif pergunta.campoid.tipocampoid.nome == 'Pergunta aberta longa' %}
+                    <div class="form-group-c">
+                    <label class="label"> {{ pergunta.campoid.conteudo }}</label>
+                      <div class="control">
+                        <textarea class="textarea " required name="{{ pergunta.campoid.id }}" cols="10" placeholder="{{ pergunta.campoid.conteudo}}"></textarea>
+                      </div>
+                    </div>
                 {% elif pergunta.campoid.tipocampoid.nome == 'Anexo' %}
-                   <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <div class="form-group-c">
+                   <label class="label"> {{ pergunta.campoid.conteudo }}</label>
                     <div class="file">
                       <label class="file-label">
                         <input class="file-input" type="file" name="{{ pergunta.campoid.id }}">
@@ -69,6 +99,7 @@
                         </span>
                       </label>
                     </div>
+                     </div>
                 {% endif %}
              </div>
             {% endfor %}

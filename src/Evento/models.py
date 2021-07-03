@@ -1,8 +1,11 @@
 from django.db import models
 
 # Create your models here.
+# from GestorTemplates.models import Formulario
+# from GestorTemplates.models import Formulario
 from Neglected.models import Timedate
 from Utilizadores.models import ProponenteInterno, ProponenteExterno
+
 
 
 class Tipoevento(models.Model):
@@ -51,14 +54,15 @@ class Evento(models.Model):
     inscritos = models.IntegerField(db_column='Num_participantes')
     val_inscritos = models.IntegerField(db_column='Validacao_inscritos')
 
+
+
     class Meta:
         managed = False
         db_table = 'Evento'
 
 
-
-
-
+    def __str__(self):
+        return "Evento: {} ".format( self.nome)
 
 class Logistica(models.Model):
     def _str_(self):
