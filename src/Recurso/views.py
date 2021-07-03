@@ -16,6 +16,25 @@ from django.http import JsonResponse
 # Create your views here.
 
 
+def recurso_ajax(request):
+    if request.method == "GET":
+        recurso_id = request.GET["id"]
+
+        recurso = Recurso.objects.get(id=int(recurso_id))
+        print(recurso)
+
+        event_rec = EventoRecurso.objects.filter(recursoid=recurso)
+        if not event_rec:
+            safe_to_delete = 'true'
+        else:
+            safe_to_delete = 'false'
+
+        data = {
+            "res": safe_to_delete
+        }
+        return JsonResponse(data)
+
+
 def home_view(request):
     return render(request, 'inicio.html')
 

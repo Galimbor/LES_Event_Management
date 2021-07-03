@@ -8,7 +8,8 @@ from Recurso.views import recursos, recursosv2, recurso_detail, recurso_delete, 
     servico_detail, equipamento_detail, empresa_detail, unidadeorganica_update, unidadeorganica_detail,\
     universidade_detail, campus_update, edificio_detail, espaco_detail, campus_detail, componentes, componente_delete,\
     componente_detail, componente_update, recurso_update, equipamento_update, servico_update, empresa_update, edificio_update,\
-    espaco_update, universidade_update, recurso_atribuir, recurso_atribuir_list, recurso_atribuir_cancelar
+    espaco_update, universidade_update, recurso_atribuir, recurso_atribuir_list, recurso_atribuir_cancelar \
+    ,recurso_ajax
 
 app_name = 'Recurso'
 
@@ -88,4 +89,8 @@ urlpatterns = [
     path('campus/<int:my_id>/delete/', campus_delete, name='campus-delete'),
     path('campus/<int:my_id>/detail/', campus_detail, name='campus-detail'),
     path('campus/<int:my_id>/', campus_update, name='campus-update'),
+
+
+    #AJAX
+     path('ajax/', recurso_ajax, name='recurso-ajax'),
 ]

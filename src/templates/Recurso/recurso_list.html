@@ -190,7 +190,7 @@
                       </span>
                                     </button>
                                     <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom delete-form-btn"
-                                            data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
+                                            data-id="{{ obj.id }}" data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
                                             data-tooltip="Eliminar recurso: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-trash-alt"></i>
@@ -222,6 +222,23 @@
             <footer class="modal-card-foot">
                 <a class="button is-danger confirm" href="#">Eliminar</a>
                 <button class="button close-modal">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+    <div class="modal" id="no-delete-form-modal" data-id="">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Recurso em uso!</p>
+                <button class="close-modal delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <!-- Content ... -->
+            </section>
+            <footer class="modal-card-foot">
+                <a class="button is-danger confirm" href="#">Eliminar</a>
+                <button class="button close-modal">Voltar</button>
             </footer>
         </div>
     </div>
@@ -278,10 +295,41 @@
 
         // *************** DELETE ***************
         var deleteFormModal = $('#confirm-delete-form-modal');
+        var noFormModal = $('#no-delete-form-modal');
         $('.delete-form-btn').click(function (e) {
             e.stopPropagation(); //para a propagacao do evento javascript
-            deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
-            deleteFormModal.addClass('is-active'); //shows modal
+            let id = $(this).data('id');
+
+            $.ajax({
+            url: '/Recurso/ajax/',
+            type: 'GET',
+            data: {
+                id: id
+            },
+            success: function(data) {
+                const safe_to_delete = data.res === 'true' ? true : false;
+
+                if(safe_to_delete) {
+                    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+                    deleteFormModal.addClass('is-active'); //shows modal
+                } else 
+                {
+                    noFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+                    noFormModal.addClass('is-active'); //shows modal
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+
+
+
+
+
+
+            // deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+            // deleteFormModal.addClass('is-active'); //shows modal
             //todo add warning when deleting templates
         });
 
@@ -301,6 +349,8 @@
             let url = "{% url 'Recurso:recurso-update' my_id=123  %}"
             location.href = url.replace('123', $(this).data('id'))
         });
+
+
 
 
     </script>
