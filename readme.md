@@ -26,10 +26,6 @@ Install the project in your environment
 pip install -r requirements.txt
 ```
 
-Dependencies
-```python
-pip install mysqlclient
-```
 
 Must add to ``__init__.py``
 ```python

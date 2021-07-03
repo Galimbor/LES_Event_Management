@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 # from Evento.models import Feedback, Evento
@@ -7,7 +8,7 @@ from Inscricao.models import Inscricao
 from Utilizadores.models import Gcp
 from Feedback.models import Feedback
 
-caterogias_tipo_formulario = [
+CATEGORIAS_TIPO_FORMULARIO = [
     ("0", "Evento"),
     ("1", "Inscrição"),
     ("2", "Feedback"),
@@ -28,7 +29,7 @@ class Tipoformulario(models.Model):
     categoria = models.CharField(
         db_column="Categoria",
         max_length=255,
-        choices=caterogias_tipo_formulario,
+        choices=CATEGORIAS_TIPO_FORMULARIO,
         default="0",
     )
 
@@ -37,7 +38,7 @@ class Tipoformulario(models.Model):
         db_table = "TipoFormulario"
 
     def __str__(self):
-        return "{} : {}-{}".format(self.id,self.get_categoria_display(), self.nome)
+        return self.nome
 
 
 class Formulario(models.Model):
@@ -45,22 +46,36 @@ class Formulario(models.Model):
         db_column="Id", primary_key=True
     )  # Field name made lowercase.
     nome = models.CharField(db_column="Nome", max_length=255, default="Sem título")
-    VISIBILIDADE = [
-        ("0", "Público"),
-        ("1", "Privado"),
+    VISIBILIDADE_list = [
+        ("0", "Privado"),
+        ("1", "Utilizadores da aplicação"),
+        ("2", "Público"),
     ]
     visibilidade = models.CharField(
-        db_column="Visibilidade", max_length=255, choices=VISIBILIDADE, default="0"
+        db_column="Visibilidade", max_length=255, choices=VISIBILIDADE_list, default="0"
     )
-    is_template = models.IntegerField(
-        db_column="IsTemplate",
-        choices=[
+    TEMPLATE_LIST = [
             (0, "Não"),
             (1, "Sim"),
-        ],
+    ]
+    is_template = models.IntegerField(
+        db_column="IsTemplate",
+        choices=TEMPLATE_LIST,
         default=0,
         verbose_name="É Template?",
     )
+    ARQUIVADO_LIST = [
+            (0, "Não"),
+            (1, "Sim"),
+    ]
+    is_arquivado = models.IntegerField(
+        db_column="IsArquivado",
+        choices=ARQUIVADO_LIST,
+        default=0,
+        verbose_name="Está Arquivado?",
+    )
+    created = models.DateTimeField(db_column="DataCriado", default = timezone.now)
+    updated = models.DateTimeField(db_column="DataAtualizado", null=True, blank=True)
     tipoeventoid = models.ForeignKey(
         Tipoevento, models.DO_NOTHING, db_column="TipoEventoID", null=True
     )
@@ -71,7 +86,8 @@ class Formulario(models.Model):
         Gcp, models.DO_NOTHING, db_column="GCPid"
     )  # Field name made lowercase.
 
-    eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
+    # eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column="eventoID")
+  
 
     class Meta:
         managed = True
@@ -79,6 +95,22 @@ class Formulario(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class EventoFormulario(models.Model):
+    eventoid = models.ForeignKey(
+        Evento, models.CASCADE, db_column="eventoID"
+    )  # Field name made lowercase.
+    formularioid = models.ForeignKey(
+        Formulario, models.CASCADE, db_column="formularioID"
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = "Evento_Formulario"
+
+    def str(self):
+        return "Evento: {} ---- Formulario: {}".format( self.eventoid, self.formularioid)
 
 
 class Tipocampo(models.Model):
@@ -104,9 +136,8 @@ class Campo(models.Model):
     id = models.AutoField(
         db_column="ID", primary_key=True
     )  # Field name made lowercase.
-    conteudo = models.CharField(
-        db_column="Conteudo", max_length=255
-    )  # Field name made lowercase.
+    conteudo = models.TextField(db_column='Conteudo')
+     # Field name made lowercase.
     obrigatorio = models.BooleanField(
         db_column="Obrigatorio"
     )  # Field name made lowercase. This field type is a guess.
@@ -114,6 +145,7 @@ class Campo(models.Model):
         "Tipocampo", models.CASCADE, db_column="TipoCampoID"
     )  # Field name made lowercase.
     campo_relacionado = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
+    position_index = models.IntegerField(default = 0,  db_column="Posicao")
     respostapossivelid = models.ForeignKey(
         "Respostaspossiveis",
         models.DO_NOTHING,
@@ -137,6 +169,7 @@ class CampoFormulario(models.Model):
     formularioid = models.ForeignKey(
         "Formulario", models.CASCADE, db_column="FormularioId"
     )  # Field name made lowercase.
+    # position_index = models.IntegerField(default = 0,  db_column="Posicao")
 
     class Meta:
         managed = True

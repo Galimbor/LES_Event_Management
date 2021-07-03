@@ -2,102 +2,179 @@
 
 {% block title %}- Página Inicial{% endblock title %}
 
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
 {% block content %}
 {% load static %}
 <div>
-  <div class="section">
-    <div class="columns">
-      <div class="column">
-        <h1 class="title">Os Meus Formulários</h1>
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-      <button class="button is-success" id="openModal-newForm">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
-        </span>
-        <span>Novo</span>
-      </button>
-
-      <div class="modal" id="modal-newForm">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Selecione o tipo de Formulário</p>
-            <button class="close-modal delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <article class="panel is-primary" id="tipos-formulario">
-              <p class="panel-tabs">
-                <a class="tipoFormulario is-active" data-id="all"  data-tipo="0" onclick="filterCategory($(this))">Todos</a>
-                {% for tipoFormulario in categorias %}
-                <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}" onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
-                {% endfor %}
-              </p>
-
-              <div class="panel-block search">
-                <p class="control has-icons-left">
-                  <input class="input is-primary"  id="search-by-name" type="text" placeholder="Search">
-                  <span class="icon is-left">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </span>
-                </p>
-              </div>
-              <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
-                <span class="panel-icon ">
-                  <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
-                </span>
-                Em branco
-              </a>
-              {% for templateFormulario in tiposForm %}
-              <a class="panel-block is-active category" href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}" id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
-                data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
-                <span class="panel-icon">
-                  <i class="fas fa-book" aria-hidden="true"></i>
-                </span>
-                {{templateFormulario.nome}}
-              </a>
-              {% endfor %}
-            </article>
-          </section>
-
-        </div>
-      </div>
-
-
-
-
-    </div>
-
-  </div>
-  <div class="columns is-multiline">
-    {% for obj in object_list %}
-    <div class="column is-3">
-      <div class="card" style="min-height: 10px;">
-        <header class="card-header">
-          <p class="card-header-title">
-            {{obj.nome}}
-          </p>
-          <button class="card-header-icon" aria-label="more options">
-            <span class="icon">
-              <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-          </button>
-        </header>
-        <div class="card-content">
-          <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-            <br>
-            <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Formulários</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
-        <footer class="card-footer">
-          <a href="{% url 'edit-form' obj.pk  %}" class="card-footer-item">Editar</a>
-          <a href="#" class="card-footer-item delete-form-btn"
-            data-delete-url="{% url 'delete-form' obj.pk %}">Delete</a>
-        </footer>
+      
+        <div class="navbar-end">
+          <!-- navbar items on the right side -->
+          
+          <div class="navbar-item buttons has-tooltip-bottom">
+            <button class="button is-success" id="openModal-newForm">
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Novo</span>
+            </button>
+          </div>
+        </div>
+       
+      </div>
+    </nav>
+    <div class="columns">
+      <div class="column">
+        <div class="tabs is-centered is-medium">
+          <ul>
+            <li class="is-active" data-column="0" data-filter="">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Todos</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="0">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                <span>Formulários</span>
+              </a>
+            </li>
+            <li data-column="0" data-filter="1">
+              <a>
+                <span class="icon is-small"><i class="fas fa-file-alt" aria-hidden="true"></i></span>
+                <span>Templates</span>
+              </a>
+            </li>
+            
+          </ul>
+      </div>
+      </div>   
+  </div>
+  </section>
+  <div class="modal" id="modal-newForm">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Selecione o tipo de Formulário</p>
+        <button class="close-modal delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <article class="panel is-primary" id="tipos-formulario">
+          <p class="panel-tabs">
+            <a class="tipoFormulario is-active" data-id="all" data-tipo="0" onclick="filterCategory($(this))">Todos</a>
+            {% for tipoFormulario in categorias %}
+            <a class="tipoFormulario" data-id="{{tipoFormulario.categoria.0}}" data-tipo="{{tipoFormulario.id}}"
+              onclick="filterCategory($(this))">{{tipoFormulario.nome}}</a>
+            {% endfor %}
+          </p>
+
+          <div class="panel-block search">
+            <p class="control has-icons-left">
+              <input class="input is-primary" id="search-by-name" type="text" placeholder="Search">
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+          <a class="panel-block is-active " id="empty" href="{% url 'create-form' 0 0 %}">
+            <span class="panel-icon ">
+              <i class="fas fa-plus has-text-success" aria-hidden="true"></i>
+            </span>
+            Em branco
+          </a>
+          {% for templateFormulario in tiposForm %}
+          <a class="panel-block is-active category"
+            href="{% url 'create-form' templateFormulario.id  templateFormulario.tipoformularioid.id %}"
+            id="subtipo-form{{templateFormulario.tipoformularioid.categoria}}"
+            data-subtipo="{{templateFormulario.tipoformularioid.categoria}}" data-search="{{templateFormulario.nome}}">
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            {{templateFormulario.nome}}
+          </a>
+          {% endfor %}
+        </article>
+      </section>
+
+    </div>
+  </div>
+
+
+  <div class="section" id="main-section-content">
+    <div class="columns">
+      <div class="column ">
+
+        <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+          <thead>
+            <tr>
+              <th>is_template</th>
+              <th>Formulários por título</th>
+              <th>Tipo de Formulário</th>
+              <th>Tipo de Evento</th>
+              <th>Última modificação</th>
+              <th>Visibilidade</th>
+              <th></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
+              <td>{{obj.is_template}}</td>
+              <td>{{obj.nome}}</td>
+              <td> {{obj.tipoformularioid}}</td>
+              <td> {{obj.tipoeventoid}}</td>
+
+              {% if obj.updated %}
+              <td>{{obj.updated |date:'Y-m-d H:m' }}</td>
+              {% else %}
+              <td>{{obj.created |date:'Y-m-d H:m'}}</td>
+              {% endif %}
+              <td>{{obj.get_visibilidade_display}}</td>
+              <td>             
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-form-btn"  data-delete-url="{% url 'delete-form' obj.pk %}" data-tooltip="Eliminar formulário: {{obj.nome}}">
+                      <span class="icon">
+                        <i class="far fa-trash-alt"></i>
+                      </span>
+                    </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
       </div>
     </div>
-    {% endfor %}
   </div>
+
+
 </div>
 
 </div>
@@ -118,6 +195,13 @@
   </div>
 </div>
 
+{% endblock content%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
 <script>
 
   $('.dropdown').click(function () {
@@ -146,50 +230,51 @@
   });
 
 
-  function filterCategory(category){
+  function filterCategory(category) {
     // <a class="panel-block is-active" href="{% url 'create-form' 0 0 %}">
 
     //Alterar empty form creation
     var url = "{% url 'create-form' 0 0 %}"
-    url = url.slice(0, -1)+ category.data('tipo')
-    console.log(  url )
+    url = url.slice(0, -1) + category.data('tipo')
+    console.log(url)
     $('.panel-block#empty').attr("href", url)
 
     //FILTER STUFF
     var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
 
     $('.tipoFormulario').removeClass('is-active');
-    if (category.data('id') != 'all'){
+    if (category.data('id') != 'all') {
       tiposCampo.addClass('is-hidden');
-      var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id')); 
+      var tiposCampoFiltrados = filtrarPorAttr(tiposCampo, 'subtipo', category.data('id'));
       tiposCampoFiltrados.removeClass('is-hidden');
     }
-    else{
+    else {
       tiposCampo.removeClass('is-hidden');
     }
-    category.addClass('is-active'); 
+    category.addClass('is-active');
   }
 
-// SEARCH BY NAME 
-  $('.search #search-by-name').keyup( function(){
+  // SEARCH BY NAME 
+  $('.search #search-by-name').keyup(function () {
     var active_category = $('.tipoFormulario.is-active');
 
     var tiposCampo = $('#tipos-formulario .panel-block.category').not('.search');
     var tiposCampoFiltrados1 = tiposCampo;
     //filtrar primeiro outra vez por categoria
-    if (active_category.data('id') != 'all'){
-     tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id')); 
+    if (active_category.data('id') != 'all') {
+      tiposCampoFiltrados1 = filtrarPorAttr(tiposCampo, 'subtipo', active_category.data('id'));
     }
     tiposCampoFiltrados1.addClass('is-hidden');
-    var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase()); 
+    var tiposCampoFiltrados = filtrarValueInAttr(tiposCampoFiltrados1, 'search', $(this).val().toLowerCase());
     tiposCampoFiltrados.removeClass('is-hidden');
 
-  }  
+  }
   )
 
   // *************** DELETE FORM ***************
   var deleteFormModal = $('#confirm-delete-form-modal');
-  $('.delete-form-btn').click(function () {
+  $('.delete-form-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript 
     deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
     deleteFormModal.addClass('is-active'); //shows modal
     //todo add warning when deleting templates
@@ -199,16 +284,38 @@
     $('.modal').removeClass('is-active');
   });
 
-  function deleteForm(id) {
-    deleteFormModal.data(id).hide();
-  }
+
+//DATATABLES MANIPULATION
+  $(document).ready(function () {
+  var table = $('#form-list-table').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+      "columnDefs": [ { "orderable": false, "targets": 6 },
+      {
+                "targets": [ 0 ],
+                "visible": false
+            }
+    ],      
+    });
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+      table.column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
+    })
+  });
 
 
 
-
-
-
+  $('.datatable-row').click(function () {
+    let url = "{% url 'edit-form' pk=123  %}" 
+    location.href= url.replace('123',  $(this).data('id'))
+  });
 
 
 </script>
-{% endblock content%}
+{% endblock %}
