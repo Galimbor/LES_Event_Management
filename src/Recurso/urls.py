@@ -11,7 +11,7 @@ from Recurso.views import recursos, recursosv2, recurso_detail, recurso_delete, 
     componente_detail, componente_update, recurso_update, equipamento_update, servico_update, empresa_update, \
     edificio_update, \
     espaco_update, universidade_update, recurso_atribuir, recurso_atribuir_list, recurso_atribuir_cancelar \
-    , recurso_ajax, recurso_ajax_detail
+    , recurso_ajax, recurso_ajax_detail, recursosv1
 
 app_name = 'Recurso'
 
@@ -19,10 +19,11 @@ urlpatterns = [
 
     # RECURSO
     path('', recursos, name='recursos'),
-    path('all/<int:my_id>/', recursosv2, name='recursos-2'),
+    path('all/<int:my_id>/<str:tipo>/<int:log>', recursosv2, name='recursos-2'),
+    path('all/<int:my_id>', recursosv1, name='recursos-1'),
     path('atribuir/<int:my_id>/<str:tipo>/<int:time>/<int:log>', recurso_atribuir_list, name='recurso-atribuir-list'),
     path('atribuir-2/<int:my_id>/<int:obj_id>/<int:time>/<int:log>', recurso_atribuir, name='recurso-atribuir'),
-    path('atribuir-cancelar/<int:my_id>/<int:obj_id>/<int:time>', recurso_atribuir_cancelar,
+    path('atribuir-cancelar/<int:my_id>/<int:obj_id>/<int:log>/<str:tipo>', recurso_atribuir_cancelar,
          name='recurso-atribuir-cancelar'),
     path('recurso/<int:my_id>/detail/', recurso_detail, name='recurso-detail'),
     path('recurso/<int:my_id>/delete/', recurso_delete, name='recurso-delete'),

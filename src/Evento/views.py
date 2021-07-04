@@ -46,7 +46,7 @@ def ajax_finalizar_logistica(request):
                     for item in servicos:
                         item.delete()
 
-                    messages.success(request, 'Logistica recusada, o evento voltou para o estado inicial')
+                    messages.warning(request, 'Logística recusada, o evento voltou para o estado inicial')
 
                 else:
                     evento.estado = "Logistica Validada"
@@ -116,7 +116,7 @@ def ajax_filter_state(request):
 
             hora = Timedate.objects.get(id=e.horario.id)
             eventos.append({
-                "nome": e.Nome,
+                "nome": e.nome,
                 "estado": e.estado,
                 "data": f"{e.horario.datainicial.day}/{e.horario.datainicial.month}/{e.horario.datainicial.year} {e.horario.horainicial} - {e.horario.datafinal.day}/{e.horario.datafinal.month}/{e.horario.datafinal.year} {e.horario.horafinal}",
 
@@ -391,7 +391,7 @@ def edit_event(request, event_id):
             id = pergunta.campoid.id
             if id == 10:
                 nome = request.POST.get(f'{id}')
-                evento.Nome = nome
+                evento.nome = nome
                 resposta = Resposta.objects.get(eventoid=evento, campoid=pergunta.campoid)
                 resposta.conteudo = nome
                 resposta.save()
@@ -664,7 +664,7 @@ def edit_espaco(request, event_id, espaco_id, tipo):
 
 
     if request.method == 'POST':
-        obj.Nome = request.POST.get("desc")
+        obj.nome = request.POST.get("desc")
         obj.quantidade = request.POST.get("quantidade")
         dataI = request.POST.get("data_i")
         dataF = request.POST.get("data_f")
@@ -735,6 +735,8 @@ def view_logisticas(request, event_id):
     logistica_equipamento = Tipodeequipamento.objects.filter(logisticaid=logistica)
     logistica_servico = Tiposervico.objects.filter(logisticaid=logistica)
     logistica_espaco = Tipoespaco.objects.filter(logisticaid=logistica)
+
+    messages.warning('Caso não há um pedido para um espaço ou um espaço não seja atribuído o evento voltará para o estado "pendente".')
 
     context = {
         'equipamentos': logistica_equipamento,
@@ -877,7 +879,7 @@ def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
         id_p = pergunta.campoid.id
         if id_p == 11:
             desc = request.POST.get(f'{id_p}')
-            tipo.Nome = desc
+            tipo.nome = desc
         elif id_p == 14:
             data_i = request.POST.get(f'{id_p}')
             horario.datainicial = data_i

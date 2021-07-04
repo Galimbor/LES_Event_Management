@@ -163,11 +163,13 @@ def recurso_atribuir(request, my_id, obj_id, time, log):
     recurso = Recurso.objects.get(id=obj_id)
     hora = Timedate.objects.get(id=time)
 
-    rec_ev = EventoRecurso(eventoid=evento, recursoid=recurso)
-    rec_ev.save()
+
 
     hora_rec = TimedateRecurso(recursoid=recurso, timedateid=hora)
     hora_rec.save()
+
+    rec_ev = EventoRecurso(eventoid=evento, recursoid=recurso, timedateid=hora_rec)
+    rec_ev.save()
 
     if recurso.espacoid is not None:
         log_esp = Tipoespaco.objects.get(id=log)
@@ -188,21 +190,34 @@ def recurso_atribuir(request, my_id, obj_id, time, log):
     return redirect("Evento:view-logistic", my_id)
 
 
-def recurso_atribuir_cancelar(request, my_id, obj_id, time):
+def recurso_atribuir_cancelar(request, my_id, obj_id, log, tipo):
     evento = Evento.objects.get(id=my_id)
     recurso = Recurso.objects.get(id=obj_id)
 
     rec_ev = EventoRecurso.objects.get(eventoid=evento, recursoid=recurso)
-    rec_date = TimedateRecurso.objects.filter(recursoid=recurso, timedateid=time)
-    print(rec_ev)
-    print(rec_date)
-    # rec_date.delete()
-    # rec_ev.delete()
+    rec_date = TimedateRecurso.objects.get(id=rec_ev.timedateid.id)
+    rec_date.delete()
+    rec_ev.delete()
 
-    return redirect("Recurso:recursos-2", my_id)
+    if tipo == 'espaco':
+        logistica = Tipoespaco.objects.get(id=log)
+        logistica.isAttributed = 0
+        logistica.save()
+    if tipo == 'equipamento':
+        logistica = Tipodeequipamento.objects.get(id=log)
+        logistica.isAttributed = 0
+        logistica.save()
+    if tipo == 'servico':
+        logistica = Tiposervico.objects.get(id=log)
+        logistica.isAttributed = 0
+        logistica.save()
+
+    messages.success(request, 'Recurso desatribuído com sucesso.')
+
+    return redirect("Evento:view-logistic", my_id)
 
 
-def recursosv2(request, my_id):
+def recursosv2(request, my_id, tipo, log):
     if not request.user.is_authenticated:
         messages.error(request, 'Por favor, faça login primeiro.')
         return redirect('home')
@@ -212,7 +227,28 @@ def recursosv2(request, my_id):
     for i in eventoRecursos:
         recursos.append(i.recursoid)
     context = {
-        'object': recursos
+        'evento': obj,
+        'object': recursos,
+        'tipo': tipo,
+        'log_id': log,  
+    }
+
+    messages.warning(request, 'Cuidado com a desatribuição do recurso. Desatribuir apenas o recurso que foi atribuido a está logística')
+    return render(request, 'Recurso/recurso_list_event.html', context)
+
+def recursosv1(request, my_id,):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Por favor, faça login primeiro.')
+        return redirect('home')
+    obj = get_object_or_404(Evento, id=my_id)
+    eventoRecursos = EventoRecurso.objects.filter(eventoid__id=obj.id)
+    recursos = []
+    for i in eventoRecursos:
+        recursos.append(i.recursoid)
+    context = {
+        'evento': obj,
+        'object': recursos, 
+        'show': 'false'
     }
     return render(request, 'Recurso/recurso_list_event.html', context)
 

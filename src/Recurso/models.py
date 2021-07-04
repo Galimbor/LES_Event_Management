@@ -83,6 +83,7 @@ class EventoRecurso(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     eventoid = models.ForeignKey(Evento, models.DO_NOTHING, db_column='EventoID')  # Field name made lowercase.
     recursoid = models.ForeignKey('Recurso', models.DO_NOTHING, db_column='RecursoID')  # Field name made lowercase.
+    timedateid = models.ForeignKey('TimedateRecurso', models.DO_NOTHING, db_column='TimeDate')  # Field name made 
 
     class Meta:
         managed = False
