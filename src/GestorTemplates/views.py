@@ -10,10 +10,14 @@ import json
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Apenas para demonstração. Esta view não deve estar na app forms_manager
 def home(request):
-    return render(request, 'inicio.html')
+    user = get_user(request)
+    is_gcp = user.gcpid.id > 0
+    context = {"is_gcp": is_gcp}
+    return render(request, 'inicio.html', context)
 
 ### print
 def printspecial(var):
@@ -29,12 +33,23 @@ def create_form(request):
     return render(request, 'GestorTemplates/new_form.html')
 
 
-class FormList(ListView):
+class FormList(LoginRequiredMixin, ListView):
+    login_url = '/Utilizadores/login/'
+    redirect_field_name = 'form-list'
+    # reverse_lazy('login')
     model = Formulario
     template_name = 'GestorTemplates/lista_formularios.html'
 
+
+
+    def has_permission_to_forms(self):
+        user = get_user(self.request)
+        return user.gcpid.id > 0
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+       
+        print(context['user_tipo'])
         # tiposForm = Tipoformulario.objects.all()
         template = Formulario.objects.filter(is_template = 1)
         categoria = Tipoformulario.objects.all()[:3] #TODO
@@ -54,10 +69,11 @@ class FormList(ListView):
     #     return qs
 
 
-    # def get(self, request, *args, **kwargs):
-    #     response = super().get(request, *args, **kwargs)
-    #     user = get_user(self.request)
-    #     return response
+    def get(self, request, *args, **kwargs):
+        if(not self.has_permission_to_forms()):
+            messages.add_message(self.request, messages.WARNING, 'Não tem permissão para aceder aos formulários!')
+            return redirect(reverse_lazy('home')) 
+        return super().get(request,*args,**kwargs)
 
 class FormHandling():
 

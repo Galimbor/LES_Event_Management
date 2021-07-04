@@ -1,4 +1,7 @@
 {% load static %}
+htht
+
+{{user_tipo}}
 
 <nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -15,10 +18,12 @@
 
     <div class="navbar-menu">
         <div class="navbar-start">
-
+            
+            {% if user_tipo == 'gcp' %}
             <a href="{% url 'form-list' %}" class="navbar-item">
                 Formulários
             </a>
+            {% endif %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Eventos

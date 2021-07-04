@@ -23,7 +23,8 @@ class Gcp(models.Model):
         db_table = 'GCP'
 
 
-
+    def __str__(self):
+        return str(self.id)
 
 
 class ProponenteExterno(models.Model):
@@ -84,3 +85,6 @@ class User(models.Model):
     class Meta:
         managed = True
         db_table = 'User'
+    
+    def __str__(self):
+        return self.username
