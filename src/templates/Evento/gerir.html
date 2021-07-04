@@ -13,6 +13,27 @@
                 </div>
 
             </div>
+
+
+            <section class="pedido ">
+                <h2 class="sub-title">Dados do evento proposto</h1>
+                
+                {% for pergunta in perguntas %}
+                    {% for resposta in respostas %}
+
+                        {% if pergunta.campoid == resposta.campoid %} 
+                        <div class="block mt-3">
+                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
+                            <p class="resposta">{{resposta.conteudo}}</p>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </section>
+
             <div class="columns is-multiline is-space-between mt-5">
 
                 <div class="column is-3">
@@ -102,17 +123,6 @@
                     </div>
                 </div>
 
-{#                <div class="column is-3">#}
-{#                    <div class="card" style="min-height: 10px;">#}
-{#                        <header class="card-header">#}
-{#                            <a class="mx-auto" href="{% url 'Evento:criar-csv' evento_id=id %}">#}
-{#                            <p class="card-header-title is-centered">#}
-{#                                    Criar ficheiro de CSV#}
-{#                            </p>#}
-{#                            </a>#}
-{#                        </header>#}
-{#                    </div>#}
-{#                </div>#}
 
 
                 {% elif evento.estado == 'Submetido'%}
