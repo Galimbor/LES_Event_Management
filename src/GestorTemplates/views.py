@@ -284,7 +284,7 @@ class FormUpdate(FormHandling, UpdateView):
         # form = Formulario.objects.get(pk=formID) #returns one object (equivalente ao de cima)
         
         #Serialize Form
-        context['tipos_campo'] = Tipocampo.objects.all()
+        context['tipos_campo'] = Tipocampo.objects.all()[1:9] #TODO wrong but must be like this because of others
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
         context['subcampos_json'] = self.subcampos_to_json(form.id)
