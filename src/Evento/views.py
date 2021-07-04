@@ -138,6 +138,13 @@ def home_view(request):
 # Show all the events that has the final validation.
 def eventos(request):
     events = Evento.objects.filter(estado='Aceite')
+
+    if request.user.is_anonymous:
+        events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
+    else:
+        events = Evento.objects.filter(estado='Aceite')
+        
+
     for event in events:
         today = datetime.today()
         eventoDataFinal = event.horario.datafinal
@@ -154,11 +161,9 @@ def eventos(request):
             if event.inscritos < event.maxparticipantes and eventFinalDate > today and\
                     EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists() :
                 event.hasInscricao = True
-    if request.user.is_anonymous:
-        events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
-    else:
-        events = Evento.objects.filter(estado='Aceite')
-        
+
+
+
    
     
     logistica = Logistica.objects.all()
@@ -172,19 +177,63 @@ def eventos(request):
 
     return render(request, 'Evento/eventos.html', context)
 
+def associar_insc(request, event_id, form_id):
+    evento = Evento.objects.get(id=event_id)
+
+    formulario = Formulario.objects.get(id=form_id)
+    evento_form = EventoFormulario(eventoid=evento, formularioid=formulario)
+    evento_form.save()
+
+    formulario_feedback = Formulario.objects.filter(tipoformularioid__categoria=2)
+
+    messages.success(request, 'Formulário de inscrição associado com sucesso. Favor associar o formulário de feedback.')
+
+    context = {
+        'evento': evento,
+        'feedbacks': formulario_feedback
+    }
+    return render(request, 'Evento/evento-feed.html', context)
+
+def associar_feedback(request, event_id, form_id):
+    evento = Evento.objects.get(id=event_id)
+
+    formulario = Formulario.objects.get(id=form_id)
+    evento_form = EventoFormulario(eventoid=evento, formularioid=formulario)
+    evento_form.save()
+
+    evento.estado = 'Aceite'
+    evento.save()
+    messages.success(request, 'Formulários associados e evento aceite com sucesso.')
+    return redirect('Evento:eventos-gerir')
+
+
+    context = {
+        'evento': evento,
+    }
+    return redirect("Evento:eventos-gerir")
+
+
+def evento_feedback(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    formulario_feed = Formulario.objects.filter(tipoformularioid__categoria=2)
+
+    context = {
+        'evento': evento,
+        'feedbacks': formulario_feed,
+    }
+    return render(request, 'Evento/evento-feed.html', context)
 
 def evento_insc(request, event_id):
     evento = Evento.objects.get(id=event_id)
     formulario_insc = Formulario.objects.filter(tipoformularioid__categoria=1)
-    formulario_feedback = Formulario.objects.filter(tipoformularioid__categoria=2)
-    
+
+    messages.warning(request, 'Para aceitar o evento sera necessário associar os formulários de inscrição e feedback. Após ter associado estes formulários o evento será aceite.')
 
     context = {
         'evento': evento,
         'inscricoes': formulario_insc,
-        'feedbacks': formulario_feedback
     }
-    return render(request, 'Evento/evento-insc.html', context);
+    return render(request, 'Evento/evento-insc.html', context)
 
 
 

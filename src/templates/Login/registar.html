@@ -34,9 +34,8 @@
                             </label>
                         </div>
                         <div class="form-group-c">
-                            <label class="label">Data de Nascimento
-                                {{ form.data }}
-                            </label>
+                            <label class="label" for="">Data de Nascimento</label>
+                            <input required class="input-clean input-data" name="data" type="date">
                         </div>
                         <br>
                         <br>
@@ -51,16 +50,16 @@
                             </label>
                         </div>
                         <div class="form-group-c">
-                            <label class="label">Password
+                            <label class="label">Senha
                                 {{ form.password1 }}
                             </label>
                             <br>
-                            <label class="label">Password2
+                            <label class="label">Digitar a senha novamente
                                 {{ form.password2 }}
                             </label>
                         </div>
                         <div class="form-group-c">
-                            <label class="label" for="usuario">Tipo de Usuario:</label>
+                            <label class="label" for="usuario">Tipo de utilizador:</label>
                             <select id="usuario" name="usuario" size="3">
                                 <option value="gcp">GCP</option>
                                 <option value="interno">Proponente Interno</option>
@@ -68,7 +67,7 @@
                                 <option value="servicos">Servicos Tecnicos</option>
                             </select>
                         </div>
-                        <input class="button-submit" type='Submit' value='Save'>
+                        <input class="button-submit" type='Submit' value='Criar'>
                     </form>
                 </div>
             </div>

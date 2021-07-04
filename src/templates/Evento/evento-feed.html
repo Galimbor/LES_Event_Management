@@ -4,20 +4,20 @@
 
 {% block content %}
     {% load static %}
-    {% for obj in inscricoes %}
+    {% for obj in feedbacks %}
     <div class="modal my-modal modal-{{obj.id}}">
         <div class="modal-background"></div>
         <div class="modal-content">
           
             <div class="container-modal">
               <div class="inside-container">
-                <h3 class="modal-title mb-3">Tem certeza que deseja associar este formulário a este evento?</h3>
+                <h3 class="modal-title mb-3">Tem certeza que deseja associar este este formulário de feedback a este evento? O evento será aceite após esta associação</h3>
                 <div class="buttons">
                     <a class="button is-dark" href=
-                    "{% url 'Evento:associar-insc' event_id=evento.id form_id=obj.id %}">
+                    "{% url 'Evento:associar-feedback' event_id=evento.id form_id=obj.id %}">
                         Sim
                     </a>
-                    <a class="button close-modal is-danger" href="{% url 'Evento:evento-insc' evento.id%}">
+                    <a class="button close-modal is-danger" href="{% url 'Evento:evento-feed' evento.id%}">
                         Não
                     </a>
                 </div>
@@ -30,8 +30,8 @@
     {% endfor %}
 
 
-        <h1 class="title mt-5">Associar formulário de inscrição</h1>
-        <div class="columns mt-3">
+        <h1 class="mt-5 title">Associar formulário de feedback</h1>
+        <div class="columns">
             <div class="is-three-quarters">
                 <table id="example" class="table is-striped" style="width:100%">
                     <thead>
@@ -40,9 +40,9 @@
                         </tr>
                     </thead>
                     <tbody class="tbody">
-                        {% for insc in inscricoes %}
-                        <tr  data-id="{{ insc.id }}" class="datatable-selector">
-                            <td class="td">{{ insc.nome }}</td>
+                        {% for feed in feedbacks %}
+                        <tr  data-id="{{ feed.id }}" class="datatable-selector">
+                            <td class="td">{{ feed.nome }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -56,10 +56,10 @@
         </div>
     
     
+    
         <script>
-
-          
-          $(document).ready(function () {
+                  
+        $(document).ready(function () {
           $('#example').DataTable({
             "language": {
               "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
@@ -67,7 +67,6 @@
           });
         });
 
-                
         
 
 
@@ -90,6 +89,7 @@
           buttonCancel.forEach(button => {
               button.addEventListener('click', function(e) {
               e.preventDefault();
+
               const btn = e.target.closest('.button-cancel');
               const container = e.target.closest('.container-modal');
               console.log(container.children);
