@@ -1,0 +1,233 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
+{% block content %}
+{% load static %}
+<div class="section statistic">
+  <h1 class="title">Estatísticas do feedback</h1>
+
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  <li><a href="{% url 'Evento:meus-eventos'  %}">Meus Eventos</a></li>
+                  <li><a href="{% url 'Feedback:list_feedback_prop' eventoid=request.resolver_match.kwargs.eventoid %}">Feedbacks</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Feedbacks no evento</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+
+  <div class="columns is-multiline column-stat">
+
+    {% for pergunta in perguntasNormais %}
+        {% if pergunta.tipocampoid.id == 13 or pergunta.tipocampoid.id  == 12 %}
+            {% if forloop.counter0|divisibleby:"4" %}
+            <div class="column stat-item mt-3">
+
+              <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
+                <div id="container" style="width: 40%; color: white !important;">
+                  <canvas class="canvas" id="{{ pergunta.id }}"></canvas>
+              </div>
+
+            </div>
+            {% else %}
+            <div class="column stat-item mt-3">
+
+
+              <div id="container" style="width: 40%; color: white !important;">
+                  <canvas class="canvas" id="{{ pergunta.id }}"></canvas>
+                  </div>
+              <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
+            </div>
+
+            {% endif %}
+        {% else %}
+        <div class="column stat-item mt-3">
+            <h1 class="stat-questions"> {{ pergunta.conteudo }} </h1>
+         <table  class="table is-fullwidth is-striped is-hoverable display" style="width:100%">
+          <thead>
+            <tr>
+              <th>Número da resposta</th>
+                <th>Resposta</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for resposta in pergunta.respostas %}
+            <tr class="datatable-row datatable-selector" data-id="{{resposta.pk}}">
+              <td> {{ forloop.counter0 }}</td>
+                <td> {{ resposta }}</td>
+              <td>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+
+        </table>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+{#  {% for perguntaNormal in perguntasNormais %}#}
+{##}
+{#      <div class="column stat-item mt-3">#}
+{##}
+{#      <h1 class="stat-questions"> {{ perguntaNormal.conteudo }} </h1>#}
+{##}
+{##}
+{#    </div>#}
+{##}
+{#  {% endfor %}#}
+
+    
+  </div>
+                <div class="control">
+                <a class="button is-link" href="{% url 'Feedback:list_feedback_prop' eventoid=request.resolver_match.kwargs.eventoid  %}"> Voltar atrás </a>
+            </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+<script>
+
+//DATATABLES MANIPULATION
+
+    var table = $('table.display').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+      "columnDefs": [ { "orderable": false, "targets": 2 },
+
+    ],
+        "searching" : false,
+    });
+
+$(document).ready(function() {
+    $('table.display').DataTable();
+} );
+</script>
+
+
+
+
+
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+    <script>
+
+    const CHART_COLORS = {
+  red: 'rgb(255, 99, 132)',
+  orange: 'rgb(255, 159, 64)',
+  yellow: 'rgb(255, 205, 86)',
+  green: 'rgb(75, 192, 192)',
+  blue: 'rgb(54, 162, 235)',
+  purple: 'rgb(153, 102, 255)',
+  grey: 'rgb(201, 203, 207)'
+};
+
+    let configObj  = {};
+    let i = 0 ;
+
+
+    let functionObj = {};
+
+    let config;
+
+        let k = 0;
+    {% for labels,data,pergunta in QAA %}
+    config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ data|safe }},
+         backgroundColor: Object.values(CHART_COLORS),
+          label: 'Population',
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+        responsive: true,
+        legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 14
+                }
+            },
+
+      }
+    };
+
+    configObj[`config${i}`] = config;
+
+
+
+
+    functionObj[`function${i}`]  = function() {
+        let ctx = document.getElementById({{pergunta.id}}).getContext('2d');
+        window.myPie = new Chart(ctx, configObj[`config${k}`]);
+        k++;
+
+    };
+
+    i++;
+
+    {% endfor %}
+
+
+
+
+    window.onload = function() {
+        for(let j = 0; j < i; j++)
+        {
+         let pfunction = functionObj[`function${j}`];
+         pfunction();
+        }
+    };
+
+
+
+    </script>
+
+
+
+
+{% endblock content%}
+
+
+
+

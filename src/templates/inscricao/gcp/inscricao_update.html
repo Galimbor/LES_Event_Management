@@ -1,0 +1,77 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+
+    <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  {% if not fix %}
+                  <li><a href="{% url 'Evento:eventos'  %}">Eventos</a></li>
+                  <li><a href="{% url 'Evento:gerir' event_id=request.resolver_match.kwargs.eventoid %}">Gerir evento</a></li>
+                  <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=request.resolver_match.kwargs.eventoid %}"> Inscrições no evento</a></li>
+                  {% else %}
+                    <li><a href="{% url 'Evento:meus-eventos'  %}">Meus eventos</a></li>
+                  <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=request.resolver_match.kwargs.eventoid %}"> Inscrições no evento</a></li>
+                  {% endif %}
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Alterar inscrição</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Alterar estado da inscrição</h1>
+
+            <h2 class="subtitle">Dados gerais da inscrição</h2>
+            {% for pergunta, resposta in QAA %}
+                <article class="message">
+                  <div class="message-header">
+                    <p>{{ pergunta.conteudo }}</p>
+                  </div>
+                  <div class="message-body">
+                    {% if resposta.conteudo|length == 0  %} Answer is empty.
+                    {% elif pergunta.id == 20 %} {% if  resposta.conteudo == "0" %} Check-in não confirmado. {% else %} Check-in confirmado. {% endif %}
+                    {% else %} {{ resposta.conteudo }}  {% endif %}
+                  </div>
+                </article>
+            {% endfor %}
+
+            <form class="box" id="form" method="post">
+                <h2 class="subtitle">Estado do evento</h2>
+                {% csrf_token %}
+            <div class="field">
+                <label class="field" for="{{ estado.campoid.id }}"> {{ estado.campoid.conteudo }} </label>
+                    <div class="select is-small">
+                      <select name="{{ estado.campoid.id }}" id="{{ estado.campoid.id }}" >
+                          {% for opcao in estado.respostas %}
+                            <option name="{{ opcao}}" {% if estado.conteudo == opcao %} selected {% endif %} > {{opcao}} </option>
+                          {% endfor %}
+                      </select>
+                    </div>
+            </div>
+            <div class="control">
+              <input class="button is-link" type='Submit' value='Submit'>
+            </div>
+            </form>
+
+
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock content%}

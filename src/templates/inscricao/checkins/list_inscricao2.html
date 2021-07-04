@@ -25,8 +25,12 @@
           <div class="column">
             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
               <ul>
+                  {% if not fix %}
                   <li><a href="{% url 'Evento:eventos-gerir'  %}">Eventos a gerir</a></li>
                   <li><a href="{% url 'Evento:gerir' event_id=request.resolver_match.kwargs.eventoid %}">Gerir evento</a></li>
+                  {% else %}
+                  <li> <a href="{% url 'Evento:meus-eventos'  %}">Meus eventos</a> </li>
+                  {% endif %}
                 <li class="is-active">
                   <a href="#" aria-current="page">
                     <span class="has-text-weight-bold">Check-ins no evento</span>

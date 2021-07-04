@@ -1,0 +1,119 @@
+{% extends 'app.html' %}
+
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+{% load static %}
+
+              <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  <li><a href="{% url 'Evento:meus-eventos'  %}">Meus eventos</a></li>
+                  <li><a href="{% url '' event_id=evento.id %}">Gerir evento</a></li>
+                  <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id %}"> Inscrições no evento</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Alterar inscrição</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+
+<div>
+  <div class="section">
+    <div class="columns">
+      <div class="column is-is-four-fifths">
+        <h1 class="title">Alterar informações gerais da inscrição</h1>
+        <form class="box" id="form" method="post">
+            {% csrf_token %}
+               {% for pergunta, resposta in QAA %}
+             <div class="field">
+
+                {% if pergunta.tipocampoid.nome == 'Resposta aberta' or pergunta.tipocampoid.nome == 'Resposta Curta' %}
+                        <label class="field"> {{ pergunta.conteudo }}</label>
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="text" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        </div>
+                {% elif pergunta.tipocampoid.nome == 'Resposta Numérica' %}
+                        <label class="field"> {{ pergunta.conteudo }}</label>
+                        <div class="form-group-c">
+                            <input class="text input-clean" type="number" name="{{ pergunta.id }}" placeholder="{{ pergunta.conteudo }}" value="{{ resposta.conteudo }}">
+                        </div>
+                {% elif pergunta.tipocampoid.nome == 'Escolha Múltipla'%}
+
+                        <div class="form-group-c">
+                        <label class="label" > {{ pergunta.conteudo }}</label>
+                        <div class="radio-label">
+                        {% for opcao in pergunta.respostas %}
+                            <label class="radio" for="{{ pergunta.id }}">
+                                <input type="radio" class="" id="{{ pergunta.id }}"  name="{{ pergunta.id }}" value="{{ opcao.conteudo }}" {% if  resposta.conteudo == opcao.conteudo %} checked {% endif %}>
+                                    {{ opcao.conteudo }}
+                            </label>
+                        {% endfor %}
+                        </div>
+                        </div>
+
+                {% elif pergunta.tipocampoid.nome == 'Dropdown' %}
+                    <label class="field" for="{{ pergunta.id }}"> {{ pergunta.conteudo }}</label>
+                    <div class="select is-small">
+                      <select name="{{ pergunta.id }}" id="{{ pergunta.id }}" >
+                         {% for opcao in pergunta.respostas %}
+                            <option name="{{ opcao.conteudo}}" {% if resposta.conteudo == opcao.conteudo %} selected {% endif %} >{{ opcao.conteudo }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                {% elif pergunta.tipocampoid.nome == 'Resposta Aberta' %}
+                    <div class="form-group-c">
+                        <label class="label" for="">{{ pergunta.conteudo }}</label>
+                        <textarea class="input-clean" name="{{ pergunta.id }}" cols="3  0" placeholder="{{ pergunta.conteudo}}">{{ resposta.conteudo }}</textarea>
+                    </div>
+
+                {% elif pergunta.tipocampoid.nome == 'Anexo' %}
+                   <label class="field"> {{ pergunta.campoid.conteudo }}</label>
+                    <div class="file">
+                      <label class="file-label">
+                        <input class="file-input" type="file" name="{{ pergunta.campoid.id }}">
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                          </span>
+                          <span class="file-label">
+                            Escolha um ficheiro..
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                {% endif %}
+             </div>
+
+
+
+            {% endfor %}
+
+        <div class="field is-grouped">
+          <div class="control">
+              <input class="button is-link" type='Submit' value='Submit'>
+          </div>
+            <div class="control">
+                {% if not fix %}
+                <a class="button is-link" href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id %}"> Voltar atrás </a>
+                {% else %}
+                <a class="button is-link" href="{% url 'Inscricao:prop_list_inscricao_FIX' eventoid=evento.id %}"> Voltar atrás </a>
+
+                {% endif %}
+            </div>
+        </div>
+        </form>
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock content%}
