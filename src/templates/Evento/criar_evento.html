@@ -10,19 +10,6 @@
     <div class="section">
         <div class="columns">
             <div class="column is-is-four-fifths">
-                {% if messages %}
-                <article class="message is-danger">
-                    {% for message in messages %}
-                        <div class="message-header ">
-                            <p>Erro:</p>
-                            <button id="close-message" class="delete" aria-label="delete"></button>
-                        </div>
-                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </article>
-              {% endif %}
 
                  <h1 class="title">Criar Evento <span>[2]</span></h1>
                 {{ type }}

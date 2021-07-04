@@ -317,9 +317,9 @@ def edit_event(request, event_id):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
     respostas = Resposta.objects.filter(eventoid=evento)
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
     horario = evento.horario
     if request.method == 'POST':
@@ -594,9 +594,9 @@ def edit_espaco(request, event_id, espaco_id, tipo):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
 
     if request.method == 'POST':
@@ -753,9 +753,9 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
     horario = Timedate()
 

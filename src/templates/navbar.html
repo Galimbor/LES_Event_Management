@@ -51,6 +51,8 @@
                 As minhas Inscrições
             </a>
         {% endif %}
+
+        {% if user_tipo == 'gcp' %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Recursos
@@ -60,6 +62,7 @@
                     <a href="{% url 'Recurso:componentes' %}" class="navbar-item">Componentes</a>
                 </div>
             </div>
+        {% endif %}
         </div>
         <a href="" class="navbar-item">
 

@@ -6,33 +6,33 @@ color-primary : rgb(87, 115, 195);
 select {
     height: auto !important;
   }
-
-
+  
+    
     .radio-label {
       display: flex;
       justify-content: left;
       align-items: center;
       width: 100%;
     }
-
+    
     .radio-label label {
       margin-right: .5rem;
     }
-
+    
     .dark-a {
       color: rgb(70, 116, 199) !important;
       font-weight: bold;
     }
-
+    
     .mx-auto {
       margin: 0 auto;
     }
-
+    
     .display-column {
         display: flex;
         flex-direction: column;
     }
-
+    
     .display-column .item {
         padding: 2rem;
         background-color: #DEDEDE;
@@ -40,30 +40,30 @@ select {
         justify-content: space-between;
         align-items: center !important;
     }
-
+    
     .item-check .mdi-check {
         font-size: 1.5rem;
         color: #3abb67;
         cursor: pointer;
-        margin-right: 2rem;
+        margin-right: 1rem;
     }
-
+    
     .item-check .mdi-close {
         font-size: 1.5rem;
         color: #cc0f35;
         cursor: pointer;
     }
-
+    
     .pointer {
         cursor: pointer;
     }
-
+    
     .img {
         background-color: #2f2f2f;
         width: 450px;
         height: 650px;
     }
-
+    
     .span-header {
         font-weight: bold;
         width: 100%;
@@ -73,52 +73,56 @@ select {
         margin-bottom: .5rem;
         margin-top: 1.5rem;
     }
-
+    
     pre {
         width: 100%;
         background-color: white;
     }
-
+    
     .long-text {
         white-space: pre-wrap;
     }
-
+    
     .is-align-items-center	{
         align-items: center;
     }
-
+    
     .card-footer-item {
      transition: all .5s;
     }
-
+    
     .card-footer-item:hover {
         background-color: rgb(87, 115, 195);
         color: white !important;
     }
-
+    
     .form-group-c  .label{
         font-weight: bold;
         color: rgb(87, 115, 195);
         width: 100%;
-
+    
     }
-
+    
     .radio-label input {
         margin-right: 1rem;
     }
-
+    
     .button-submit {
         background-color: rgb(87, 115, 195) !important;
         color: white !important;
         padding: .5rem 1.5rem !important;
         font-weight: bold;
     }
-
+  
+    .is-danger {
+        padding: 1.5rem !important;
+    }
+    
     .title span {
         opacity: 60%;
         font-size: 1.3rem;
     }
-
+    
     .input-clean {
         border: none !important;
         border-bottom: rgb(87, 115, 195) 4px solid !important;
@@ -127,34 +131,29 @@ select {
         width: 100%;
         background-color: white !important;
     }
-
-
-
+    
+    
+    
     .button .is-dark .spaced {
       margin-right: auto;
     }
-
+    
     .is-justify-content-center {
       justify-content: center;
     }
-
+    
     .mt-5 {
         margin-top: 5rem;
     }
-
+    
     .mt-3 {
         margin-top: 3rem;
     }
-
+    
     .mt-2 {
         margin-top: 2rem;
     }
-
-    .column-stat {
-        display: flex;
-        flex-direction: column;
-    }
-
+  
     .stat-item {
         display: flex;
         justify-content: space-between;
@@ -162,28 +161,27 @@ select {
         padding: 3rem;
         background-color: rgb(87, 115, 195);
         color: white !important;
-        min-height: 600px;
     }
-
+  
     .stat-questions {
       font-size: 2rem;
       font-weight: 300;
       text-align: center;
       flex-grow: 2;
     }
-
+  
     .footer {
       padding: 3rem;
       margin-top: 1.5rem;
       background-color: white;
       color: grey;
     }
-
+  
     .navbar-start a,
     .navbar-start .navbar-item a {
         color: #1A76C9;
     }
-
+  
     .button-navbar {
         font-weight: bold;
         color: #1A76C9;
@@ -191,9 +189,9 @@ select {
         border: 3px solid #1A76C9;
         margin-right: 1rem;
         transition: all .5s;
-
+  
     }
-
+  
     .button-navbar:hover {
       font-weight: bold;
       color: white;
@@ -201,15 +199,15 @@ select {
       border-radius: 0px;
       border-color: #1A76C9;
       margin-right: 1rem;
-    }
-
-
+    }  
+  
+  
     .form {
         width: 50%;
         margin: 0 auto;
         padding: 4rem;
     }
-
+  
     .title-form {
         font-weight: 400;
         color: #1A76C9;
@@ -217,80 +215,141 @@ select {
         text-align: center;
         padding: 2rem;
     }
-
-
+  
+  
     .td-btn {
         width: 30% !important;
     }
-
+  
     .td-btn a:not(:last-child) {
         margin-right: 1rem !important;
     }
-
+  
     .td {
         padding: 1rem !important;
     }
-
+  
     .datatable-selector {
         cursor: pointer;
     }
-
-    .datatable-selector:hover
+  
+    .datatable-selector:hover 
     {
         opacity: .8;
         color: white !important;
         background-color:  rgb(70, 116, 199) !important;
     }
-
-    .stat-item {
-
+  
+  
+    .is-filter-active
+    {
+        background-color: rgb(70, 116, 199) !important;
+        color: white !important;
     }
-
-    .ins-detail-red {
-        color: white;
-        background: #cc0f35;
-        font-weight: 600;
-        padding: 1.5rem;
-        width: 100px;
-        text-align: center;
+  
+  
+    .none
+    {
+        display: none;
     }
-
-    .ins-detail-green {
-        color: white;
-        background: #3abb67;
-        font-weight: 600;
-        padding: 1.5rem;
-        width: 100px;
-        text-align: center;
+  
+    .item-description
+    {
+        width: 300px !important;
     }
-
-    .ins-detail-yellow {
-        color: white;
-        background: #ffbf46;
-        font-weight: 600;
-        padding: 1.5rem;
-        width: 100px;
-        text-align: center;
-    }
-
-
-    .td-flex {
-        display: flex;
-    }
-
-    .user-type {
-    padding: 1rem 4rem;
-    background-color: rgb(70, 116, 199);
-    color: white;
-    margin-right: 1.5rem;
-    font-weight: bold;
-}
-
-
-.error {
-    border-bottom: 4px solid red !important;
-}
-
-.hidden {
-    display: none !important;
-}
+  
+    .display-column .item-valid {
+      background-color: #3abb67;
+  }
+  
+  .display-column .item-invalid {
+      background-color: #cc0f35;
+  }
+  
+  .card-header-success {
+      background-color: #3abb67 !important;
+  }
+  
+  .card-header-error {
+      background-color: #cc0f35 !important;
+  }
+  
+  
+  .sub-title {
+      font-size: 1.5rem;
+  }
+  
+  .block {
+      padding: 2rem;
+      background-color: #DEDEDE;
+  }
+  
+  .pergunta {
+      font-weight: bold;
+      color: #1A76C9;
+  }
+  
+  
+  .item-view {
+      cursor: pointer;
+  }
+  
+  .item-view:hover {
+      background-color: rgb(70, 116, 199) !important;
+      color: white;
+  }
+  
+  .hidden {
+      display: none !important;
+  } 
+  
+  
+  .container-modal {
+      padding: 5rem;
+      background-color: #DEDEDE;
+      border-top:  rgb(70, 116, 199) 18px solid;
+  }
+  
+  .inside-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+  }
+  
+  
+  .btn-test {
+      background-color: #cc0f35;
+      padding: 1rem;
+      cursor: pointer;
+  }
+  
+  .modal-title {
+      margin-bottom: 3rem;
+      font-size: 1.2rem;
+  }
+  
+  .buttons {
+      margin: 0 auto;
+  }
+  
+  .btn-atribuir {
+      padding: 1.5rem 2rem;
+      background-color: rgb(70, 116, 199);
+      color: white;
+      cursor: pointer;
+      margin: 0 1rem;
+  }
+  
+  
+  .user-type {
+      padding: 1rem 4rem;
+      background-color: rgb(70, 116, 199);
+      color: white;
+      margin-right: 1.5rem;
+      font-weight: bold;
+  }
+  
+  
+  .error {
+      border-bottom: 4px solid red !important;
+  }
