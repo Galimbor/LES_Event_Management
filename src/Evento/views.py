@@ -46,7 +46,7 @@ def ajax_finalizar_logistica(request):
                     for item in servicos:
                         item.delete()
 
-                    messages.success(request, 'Logistica recusada, o evento voltou para o estado inicial')
+                    messages.warning(request, 'Logística recusada, o evento voltou para o estado inicial')
 
                 else:
                     evento.estado = "Logistica Validada"
@@ -735,6 +735,8 @@ def view_logisticas(request, event_id):
     logistica_equipamento = Tipodeequipamento.objects.filter(logisticaid=logistica)
     logistica_servico = Tiposervico.objects.filter(logisticaid=logistica)
     logistica_espaco = Tipoespaco.objects.filter(logisticaid=logistica)
+
+    messages.warning('Caso não há um pedido para um espaço ou um espaço não seja atribuído o evento voltará para o estado "pendente".')
 
     context = {
         'equipamentos': logistica_equipamento,
