@@ -185,9 +185,22 @@
               <h3 class="modal-title mb-3">Evento aprovado!</h3>
               <div class="buttons">
                 <a class="button is-dark " href=
-          "{% url 'Evento:view-event' event_id=obj.id %}">
-            Visualizar Evento
-          </a>
+                "{% url 'Evento:view-event' event_id=obj.id %}">
+                  Visualizar Evento
+                </a>
+
+                <a class="button is-dark " href="{% url 'Inscricao:prop_list_inscricao' eventoid=obj.id %}">
+                  Visualizar Inscrições
+                </a>
+
+
+                <a class="button is-dark " href="{% url 'Feedback:list_feedback' eventoid=obj.id %}">
+                  Visualizar Feedbacks
+                </a>
+
+                <a class="button is-dark " href="{% url 'Inscricao:consultar_checkins' eventoid=obj.id %}">
+                  Check-In
+                </a>
               </div>
             </div>
           </div>
