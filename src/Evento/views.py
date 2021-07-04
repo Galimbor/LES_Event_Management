@@ -6,7 +6,7 @@ from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta,
 from Utilizadores.models import User
 from django.db.models import Q
 from datetime import datetime
-
+from Inscricao.models import Inscricao
 from django.contrib import messages
 import json
 from django.http import HttpResponse
@@ -143,8 +143,17 @@ def eventos(request):
         eventoDataFinal = event.horario.datafinal
         eventoHoraFinal = event.horario.horafinal
         eventFinalDate = datetime.combine(eventoDataFinal, eventoHoraFinal)
-        if event.inscritos < event.maxparticipantes and eventFinalDate > today and EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists():
-            event.hasInscricao = True
+        if request.user.is_authenticated:
+            user_django = request.user
+            user = User.objects.filter(email=user_django.email)[0]
+            if event.inscritos < event.maxparticipantes and eventFinalDate > today and\
+                    EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists()\
+                    and not Inscricao.objects.filter(userid=user.id, eventoid=event.id).exists()  :
+                event.hasInscricao = True
+        else :
+            if event.inscritos < event.maxparticipantes and eventFinalDate > today and\
+                    EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists() :
+                event.hasInscricao = True
     if request.user.is_anonymous:
         events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
     else:
