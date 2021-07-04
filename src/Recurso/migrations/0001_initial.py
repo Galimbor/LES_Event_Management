@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -176,7 +175,9 @@ class Migration(migrations.Migration):
                 ('tipo', models.CharField(db_column='Tipo', max_length=255)),
                 ('capacidade', models.IntegerField(db_column='Capacidade')),
                 ('mobilidade', models.BooleanField(db_column='Mobilidade')),
-                ('edificioid', models.ForeignKey(blank=True, db_column='EdificioID', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='Recurso.edificio')),
+                ('edificioid', models.ForeignKey(blank=True, db_column='EdificioID', null=True,
+                                                 on_delete=django.db.models.deletion.DO_NOTHING,
+                                                 to='Recurso.edificio')),
             ],
             options={
                 'db_table': 'Espaco',

@@ -1,20 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.urls import reverse_lazy
+import json
 
+from django.forms import model_to_dict
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Evento, Recurso, Equipamento, Servico, Espaco, Empresa, Edificio, Unidadeorganica, Campus, \
     Universidade, EventoRecurso, Componente, TimedateRecurso, Tipodeequipamento, Tipoespaco, Tiposervico
 from .forms import RecursoForm, EquipamentoForm, EspacoForm, ServicoForm, EmpresaForm, EdificioForm, CampusForm, \
     UniversidadeForm, UnidadeOrganicaForm
 from Neglected.models import Timedate
-
-import json
-from django.http import HttpResponse
 from django.http import JsonResponse
+from django.core import serializers
 
 
-# Create your views here.
-
+# ------------------- RECURSOS ------------------
 
 def recurso_ajax(request):
     if request.method == "GET":
@@ -35,11 +33,38 @@ def recurso_ajax(request):
         return JsonResponse(data)
 
 
+def recurso_ajax_detail(request):
+    if request.method == "GET":
+        recurso_id = request.GET["id"]
+        recurso = Recurso.objects.get(id=int(recurso_id))
+
+        if recurso.espacoid is not None:
+            type = 'espaco'
+        elif recurso.equipamentoid is not None:
+            type = 'equipamento'
+        else:
+            type = 'servico'
+
+        recurso_data = []
+        recurso_data.append(
+            ""
+        )
+
+        data = {
+            "obj": recurso,
+            "res": type
+        }
+        return JsonResponse(data)
+
+
 def home_view(request):
     return render(request, 'inicio.html')
 
 
 def recursos(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Por favor, faça login primeiro.')
+        return redirect('home')
     obj = Recurso.objects.all()
     context = {
         'object': obj
@@ -48,7 +73,6 @@ def recursos(request):
 
 
 def recurso_atribuir_list(request, my_id, tipo, time, log):
-    print(log)
     evento = Evento.objects.get(id=my_id)
     recursos = Recurso.objects.all()
     hora = Timedate.objects.get(id=time)
@@ -170,63 +194,18 @@ def recurso_atribuir_cancelar(request, my_id, obj_id, time):
 
     rec_ev = EventoRecurso.objects.get(eventoid=evento, recursoid=recurso)
     rec_date = TimedateRecurso.objects.filter(recursoid=recurso, timedateid=time)
+    print(rec_ev)
     print(rec_date)
-    rec_ev.delete()
+    # rec_date.delete()
+    # rec_ev.delete()
 
     return redirect("Recurso:recursos-2", my_id)
 
 
-def componentes(request):
-    obj = Componente.objects.all()
-    context = {
-        'object': obj
-    }
-    return render(request, 'Recurso/componentes_list.html', context)
-
-
-def componente_update(request, my_id):
-    obj = get_object_or_404(Componente, id=my_id)
-    if obj.empresaid is not None:
-        return redirect('Recurso:empresa-update', obj.empresaid.id)
-    elif obj.edificioid is not None:
-        return redirect('Recurso:edificio-update', obj.edificioid.id)
-    elif obj.campusid is not None:
-        return redirect('Recurso:campus-update', obj.campusid.id)
-    elif obj.universidadeid is not None:
-        return redirect('Recurso:universidade-update', obj.universidadeid.id)
-    else:
-        return redirect('Recurso:unidade-organica-update', obj.unidade_organicaid.id)
-
-
-def componente_detail(request, my_id):
-    obj = get_object_or_404(Componente, id=my_id)
-    if obj.empresaid is not None:
-        return redirect('Recurso:empresa-detail', obj.empresaid.id)
-    elif obj.edificioid is not None:
-        return redirect('Recurso:edificio-detail', obj.edificioid.id)
-    elif obj.campusid is not None:
-        return redirect('Recurso:campus-detail', obj.campusid.id)
-    elif obj.universidadeid is not None:
-        return redirect('Recurso:universidade-detail', obj.universidadeid.id)
-    else:
-        return redirect('Recurso:unidade-organica-detail', obj.unidade_organicaid.id)
-
-
-def componente_delete(request, my_id):
-    obj = get_object_or_404(Componente, id=my_id)
-    if obj.empresaid is not None:
-        return redirect('Recurso:empresa-delete', obj.empresaid.id)
-    elif obj.edificioid is not None:
-        return redirect('Recurso:edificio-delete', obj.edificioid.id)
-    elif obj.universidadeid is not None:
-        return redirect('Recurso:universidade-delete', obj.universidadeid.id)
-    elif obj.unidade_organicaid is not None:
-        return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid.id)
-    else:
-        return redirect('Recurso:campus-delete', obj.campusid)
-
-
 def recursosv2(request, my_id):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Por favor, faça login primeiro.')
+        return redirect('home')
     obj = get_object_or_404(Evento, id=my_id)
     eventoRecursos = EventoRecurso.objects.filter(eventoid__id=obj.id)
     recursos = []
@@ -278,6 +257,8 @@ def recurso_delete(request, my_id):
     messages.success(request, 'Recurso eliminado com sucesso')
     return redirect('Recurso:recursos')
 
+
+# ------------------- EQUIPAMENTOS ------------------
 
 def equipamentos(request):
     obj = Equipamento.objects.all()
@@ -367,6 +348,8 @@ def equipamento_delete(request, my_id):
     return redirect('Recurso:recursos')
 
 
+# ------------------- ESPAÇOS ------------------
+
 def espacos(request):
     obj = Espaco.objects.all()
     context = {
@@ -452,6 +435,8 @@ def espaco_delete(request, my_id):
     obj.delete()
     return redirect('Recurso:recursos')
 
+
+# ------------------- SERVIÇOS ------------------
 
 def servicos(request):
     obj = Servico.objects.all()
@@ -541,6 +526,63 @@ def servico_delete(request, my_id):
     return redirect('Recurso:recursos')
 
 
+# ------------------- COMPONENTES ------------------
+
+def componentes(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Por favor, faça login primeiro.')
+        return redirect('home')
+    obj = Componente.objects.all()
+    context = {
+        'object': obj
+    }
+    return render(request, 'Recurso/componentes_list.html', context)
+
+
+def componente_update(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-update', obj.empresaid.id)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-update', obj.edificioid.id)
+    elif obj.campusid is not None:
+        return redirect('Recurso:campus-update', obj.campusid.id)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-update', obj.universidadeid.id)
+    else:
+        return redirect('Recurso:unidade-organica-update', obj.unidade_organicaid.id)
+
+
+def componente_detail(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-detail', obj.empresaid.id)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-detail', obj.edificioid.id)
+    elif obj.campusid is not None:
+        return redirect('Recurso:campus-detail', obj.campusid.id)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-detail', obj.universidadeid.id)
+    else:
+        return redirect('Recurso:unidade-organica-detail', obj.unidade_organicaid.id)
+
+
+def componente_delete(request, my_id):
+    obj = get_object_or_404(Componente, id=my_id)
+    if obj.empresaid is not None:
+        return redirect('Recurso:empresa-delete', obj.empresaid.id)
+    elif obj.edificioid is not None:
+        return redirect('Recurso:edificio-delete', obj.edificioid.id)
+    elif obj.universidadeid is not None:
+        return redirect('Recurso:universidade-delete', obj.universidadeid.id)
+    elif obj.unidade_organicaid is not None:
+        return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid.id)
+    else:
+        return redirect('Recurso:campus-delete', obj.campusid)
+
+
+# ------------------- EMPRESAS ------------------
+
 def empresas(request):
     obj = Empresa.objects.all()
     context = {
@@ -623,6 +665,9 @@ def empresa_detail(request, my_id):
     return render(request, "Recurso/empresa_detail.html", context)
 
 
+# ------------------- EDIFICIOS ------------------
+
+
 def edificios(request):
     obj = Edificio.objects.all()
     context = {
@@ -684,6 +729,8 @@ def edificio_detail(request, my_id):
     }
     return render(request, "Recurso/edificio_detail.html", context)
 
+
+# ------------------- UNIDADES ORGÂNICAS ------------------
 
 def unidadesorganicas(request):
     obj = Unidadeorganica.objects.all()
@@ -748,6 +795,8 @@ def unidadeorganica_detail(request, my_id):
     return render(request, "Recurso/unidade-organica_detail.html", context)
 
 
+# ------------------- UNIVERSIDADES ------------------
+
 def universidades(request):
     obj = Universidade.objects.all()
     context = {
@@ -809,6 +858,8 @@ def universidade_delete(request, my_id):
     messages.success(request, 'Universidade eliminada com sucesso')
     return redirect('Recurso:componentes')
 
+
+# ------------------- CAMPIS ------------------
 
 def campis(request):
     obj = Campus.objects.all()

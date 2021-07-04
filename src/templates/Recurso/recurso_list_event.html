@@ -40,19 +40,6 @@
 
                 </div>
             </nav>
-            {% if messages %}
-                <article class="message is-success">
-                    {% for message in messages %}
-                        <div class="message-header">
-                            <p>Success</p>
-                            <button id="close-message " class="delete" aria-label="delete"></button>
-                        </div>
-                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </article>
-            {% endif %}
             <div class="columns">
                 <div class="column">
                     <div class="tabs is-centered is-medium">
