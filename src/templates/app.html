@@ -5,96 +5,94 @@
 
 <head>
 
-    <title>
-        Dia Aberto {% block title %} {% endblock title %}
+  <title>
+    Plataforma de Gestão de Eventos UALG {% block title %} {% endblock title %}
 
-    </title>
+  </title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
-    <!-- <link rel="stylesheet" href="{% static 'css/mystyle.css' %}"> -->
-    <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
+  <!-- <link rel="stylesheet" href="{% static 'css/mystyle.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/responsive-tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animated-arrows.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
-    <link rel="icon" href="{% static 'img/logo.png' %}"/>
+  <link rel="icon" href="{% static 'img/logo.png' %}" />
 
-    <script src="{% url 'js-catlog' %}"></script>
+  <script src="{% url 'js-catlog' %}"></script>
 
-    {% block load %}
-    {% endblock load %}
+  {% block load %}
+  {% endblock load %}
 
-    <style>
-        body,
-        html {
-            min-height: 100%;
-            background-size: cover;
-            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
-        }
+  <style>
+    body,
+    html {
+      min-height: 100%;
+      background-size: cover;
+      background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+    }
 
-        * {
-            outline: none;
-        }
+    * {
+      outline: none;
+    }
 
-        #app {
-            position: relative;
-            min-height: 100vh;
-            padding-bottom: 5rem
-        }
+    #app {
+      position: relative;
+      min-height: 100vh;
+      padding-bottom: 5rem
+    }
 
-        #top-hero-body {
-            height: 45vh;
-        }
+    #top-hero-body {
+      height: 45vh;
+    }
 
-        #page-content {
-            margin: -37vh 5vw 0
-        }
+    #page-content {
+      margin: -37vh 5vw 0
+    }
 
-        #page-content .card {
-            min-height: 70vh
-        }
+    #page-content .card {
+      min-height: 70vh
+    }
 
-        .footer {
-            width: 100%;
-            background-color: #fafafa;
-            padding: 1rem 3rem;
-        }
+    .footer {
+      width: 100%;
+      background-color: #fafafa;
+      padding: 1rem 3rem;
+    }
 
-        .step-item.is-completed {
-            cursor: pointer;
-        }
+    .step-item.is-completed {
+      cursor: pointer;
+    }
 
-        .step-item.is-active {
-            cursor: pointer;
-        }
+    .step-item.is-active {
+      cursor: pointer;
+    }
+    .sticky{
+    position: fixed;
+    top: 0;
+    width: 86%;
+    background-color: white;
+    z-index: 10;
+    padding-top: 6px;
+  }
 
-        .sticky {
-            position: fixed;
-            top: 0;
-            width: 86%;
-            background-color: white;
-            z-index: 10;
-            padding-top: 6px;
-        }
+  @media screen and (max-width: 768px) {
+      .section{
+          padding: 0rem;
+      }
+      .sticky{
+        width: 78%;
+        padding-top: 3vh;
+      }
 
-        @media screen and (max-width: 768px) {
-            .section {
-                padding: 0rem;
-            }
-
-            .sticky {
-                width: 78%;
-                padding-top: 3vh;
-            }
-
-        }
-    </style>
-    {% block page_css %}
-    {% endblock %}
+  }
+  </style>
+  {% block page_css %}
+  {% endblock %}
 </head>
 
 <body>
@@ -168,9 +166,9 @@
 <script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.0/dist/js/bulma-calendar.min.js"></script>
 <script type="text/javascript">
-    {#$('.delete').click(function () {#}
-    {#    $(this).parent().('.messages').remove()#}
-    {#})#}
+    // {#$('.delete').click(function () {#}
+    // {#    $(this).parent().('.messages').remove()#}
+    // {#})
 
     $('.close-message').click(function () {
         let message = $(this).parent().parent();

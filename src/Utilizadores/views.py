@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .forms import UserRegistrationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
@@ -64,7 +64,7 @@ def login(request):
         user = authenticate(request, username=user, password=passw)
         if user is not None:
             auth_login(request, user)
-            return redirect('Evento:eventos')
+            return redirect(reverse_lazy('home'))
         else:
             context = {
                 'message': 'Wrong Credentials!'
@@ -75,5 +75,5 @@ def login(request):
 
 def logout_view(request):
     auth_logout(request)
-    url = reverse("Evento:eventos")
+    url = reverse_lazy('home')
     return redirect(url, args=(), kwargs={})

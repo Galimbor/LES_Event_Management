@@ -22,6 +22,10 @@ class Gcp(models.Model):
         db_table = 'GCP'
 
 
+    def __str__(self):
+        return str(self.id)
+
+
 class ProponenteExterno(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     profissao = models.CharField(max_length=255, blank=True, null=True)
@@ -82,3 +86,6 @@ class User(models.Model):
     class Meta:
         managed = True
         db_table = 'User'
+    
+    def __str__(self):
+        return self.username
