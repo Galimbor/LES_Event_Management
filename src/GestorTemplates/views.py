@@ -14,10 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Apenas para demonstração. Esta view não deve estar na app forms_manager
 def home(request):
-    user = get_user(request)
-    is_gcp = user.gcpid.id > 0
-    context = {"is_gcp": is_gcp}
-    return render(request, 'inicio.html', context)
+    return render(request, 'inicio.html')
 
 ### print
 def printspecial(var):
@@ -273,7 +270,7 @@ class FormCreate(FormHandling, CreateView):
         
         
       
-        context['tipos_campo'] = Tipocampo.objects.all()
+        context['tipos_campo'] = Tipocampo.objects.all()[:9]  #TODO wrong but must be like this because of others
         context['formulario'] = form
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
@@ -299,7 +296,7 @@ class FormUpdate(FormHandling, UpdateView):
         # form = Formulario.objects.get(pk=formID) #returns one object (equivalente ao de cima)
         
         #Serialize Form
-        context['tipos_campo'] = Tipocampo.objects.all()[1:9] #TODO wrong but must be like this because of others
+        context['tipos_campo'] = Tipocampo.objects.all()[:9] #TODO wrong but must be like this because of others
         context['formulario_json'] = serializers.serialize("json", [form])
         context['campos_json'] = self.campos_to_json(form.id)
         context['subcampos_json'] = self.subcampos_to_json(form.id)
