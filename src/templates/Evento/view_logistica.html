@@ -11,19 +11,7 @@
                     <h1 class="title">Logistica - {{ evento.nome }}</h1>
                 </div>
             </div>
-            {% if messages %}
-            <article class="message is-success">
-                {% for message in messages %}
-                    <div class="message-header">
-                        <p>Success</p>
-                        <button id="close-message" class="delete" aria-label="delete"></button>
-                    </div>
-                    <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </article>
-          {% endif %}
+
             <h2 class="subtitle">Espaços</h2>
             <div class="columns is-full display-column">
                 {% for espaco in espacos %}
@@ -49,6 +37,10 @@
                         <div class="item-check">
                             <span data-time={{espaco.horariorequisicao.id}} data-logisticaid="{{espaco.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
                         </div>
+                        {% else %}
+                        <div class="item-close">
+                            <span data-logisticaid="{{espaco.id}}" data-id="{{evento.id}}" class="btn-desatribuir">Desatribuir</span>
+                        </div>
                         {% endif %}
 
                     </div>
@@ -58,7 +50,6 @@
             <h2 class="subtitle">Equipamentos</h2>
             <div class="columns is-full display-column">
                 {% for equipamento in equipamentos %}
-
 
                         {% if equipamento.isAttributed == 1 %}
                             <div class="item item-equipamento item-valid">
@@ -79,6 +70,10 @@
                         {% if equipamento.isAttributed != 1 %}
                         <div class="item-check">
                             <span data-time={{equipamento.horariorequisicao.id}} data-logisticaid="{{equipamento.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                        </div>
+                        {% else %}
+                        <div class="item-close">
+                            <span data-logisticaid="{{equipamento.id}}" data-id="{{evento.id}}" class="btn-desatribuir">Desatribuir</span>
                         </div>
                         {% endif %}
                     </div>
@@ -111,6 +106,10 @@
                         {% if servico.isAttributed != 1 %}
                         <div class="item-check">
                             <span data-time={{servico.horariorequisicao.id}} data-logisticaid="{{servico.id}}" data-id="{{evento.id}}" class="btn-atribuir">Atribuir</span>
+                        </div>
+                        {% else %}
+                        <div class="item-close">
+                            <span data-logisticaid="{{equipamento.id}}" data-id="{{evento.id}}" class="btn-desatribuir">Desatribuir</span>
                         </div>
                         {% endif %}
                     </div>
@@ -156,6 +155,24 @@
             const parentEl = item.lastChild.previousSibling;
             const atribuir = item.children[3]?.children[0];
 
+            if(atribuir.classList.contains('btn-desatribuir'))
+            {
+                //Listen to desatribuir evento
+                atribuir?.addEventListener('click', function(e) {
+                    const id = e.target.dataset.id;
+                    const logisticaid = e.target.dataset.logisticaid;
+        
+                    let url = `{% url 'Recurso:recursos-2' my_id=123  tipo=456 log=999 %}`;
+                    url = url.replace('456', 'equipamento')
+                    url = url.replace('999', logisticaid)
+
+                    document.location.href = url.replace('123', id);
+
+                });
+            }
+            else 
+            {
+
             atribuir?.addEventListener('click', function(e) {
                 const id = e.target.dataset.id;
                 const horarioid = e.target.dataset.time;
@@ -169,44 +186,82 @@
                 document.location.href = url.replace('123', id);;
 
             });
+        }
         });
 
         itemsEspaco.forEach(item => {
             const parentEl = item.lastChild.previousSibling;
             const atribuir = item.children[3]?.children[0];
 
-            
-            //Listen to atribuir evento
-            atribuir?.addEventListener('click', function(e) {
-                const id = e.target.dataset.id;
-                const horarioid = e.target.dataset.time;
-                const logisticaid = e.target.dataset.logisticaid;
-    
-                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
-                url = url.replace('456', 'espaco')
-                url = url.replace('789', horarioid)
-                url = url.replace('999', logisticaid)
+            if(atribuir.classList.contains('btn-desatribuir'))
+            {
+                //Listen to desatribuir evento
+                atribuir?.addEventListener('click', function(e) {
+                    const id = e.target.dataset.id;
+                    const logisticaid = e.target.dataset.logisticaid;
+        
+                    let url = `{% url 'Recurso:recursos-2' my_id=123  tipo=456 log=999 %}`;
+                    url = url.replace('456', 'espaco')
+                    url = url.replace('999', logisticaid)
 
-                document.location.href = url.replace('123', id);;
+                    document.location.href = url.replace('123', id);;
 
-            });
+                });
+            }
+            else 
+            {
+                //Listen to atribuir evento
+                atribuir?.addEventListener('click', function(e) {
+                    const id = e.target.dataset.id;
+                    const horarioid = e.target.dataset.time;
+                    const logisticaid = e.target.dataset.logisticaid;
+        
+                    let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123  tipo=456 time=789 log=999 %}`;
+                    url = url.replace('456', 'espaco')
+                    url = url.replace('789', horarioid)
+                    url = url.replace('999', logisticaid)
+
+                    document.location.href = url.replace('123', id);;
+
+                });
+            }
         });
 
         itemsServico.forEach(item => {
             const parentEl = item.lastChild.previousSibling;
             const atribuir = item.children[3]?.children[0];
+
+
+            if(atribuir.classList.contains('btn-desatribuir'))
+            {
+                //Listen to desatribuir evento
+                atribuir?.addEventListener('click', function(e) {
+                    const id = e.target.dataset.id;
+                    const logisticaid = e.target.dataset.logisticaid;
+        
+                    let url = `{% url 'Recurso:recursos-2' my_id=123  tipo=456 log=999 %}`;
+                    url = url.replace('456', 'servico')
+                    url = url.replace('999', logisticaid)
+
+                    document.location.href = url.replace('123', id);;
+
+                });
+            }
+            else 
+            {
             
-            atribuir?.addEventListener('click', function(e) {
-                const id = e.target.dataset.id;
-                const horarioid = e.target.dataset.time;
-                const logisticaid = e.target.dataset.logisticaid;
-                
-                let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789 log=999%}`;
-                url = url.replace('456', 'servico')
-                url = url.replace('789', horarioid)
-                url = url.replace('999', logisticaid)
-                document.location.href = url.replace('123', id);;
-            });
+                atribuir?.addEventListener('click', function(e) {
+                    const id = e.target.dataset.id;
+                    const horarioid = e.target.dataset.time;
+                    const logisticaid = e.target.dataset.logisticaid;
+                    
+                    let url = `{% url 'Recurso:recurso-atribuir-list' my_id=123 tipo=456 time=789 log=999%}`;
+                    url = url.replace('456', 'servico')
+                    url = url.replace('789', horarioid)
+                    url = url.replace('999', logisticaid)
+                    document.location.href = url.replace('123', id);;
+                });
+            }
         });
 
 

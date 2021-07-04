@@ -96,25 +96,25 @@
                         <tbody>
                         {% for obj in object %}
                             <tr class="datatable-row datatable-selector" data-id="{{ obj.id }}">
-                                <td class="td">{{ obj.nome }}</td>
+                                <td class="td">{{ obj.Nome }}</td>
                                 {% if obj.espacoid is not None %}
                                     <td class="td"> Espaço</td>
-                                {% elif obj.equipamentoid.nome is not None %}
+                                {% elif obj.equipamentoid.Nome is not None %}
                                     <td class="td"> Equipamento</td>
-                                {% elif obj.servicoid.nome is not None %}
+                                {% elif obj.servicoid.Nome is not None %}
                                     <td class="td"> Serviço</td>
                                 {% endif %}
                                 <td class="td"> {{ obj.fonte }}</td>
                                 <td class="td"> {{ obj.empresaid }}</td>
+                                {% if show != 'false' %}
                                 <td>
                                     <a href="#" class="button btn-atribuir"
-                                       data-id="{{ obj.id }}"
-                                       data-delete-url="{% url 'Recurso:recurso-delete' obj.id %}"
-                                       data-tooltip="Eliminar recurso: {{ obj.nome }}">
+                                       data-id="{{ obj.id }}">
                                         Cancelar atribuicao
 
                                     </a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -187,16 +187,19 @@
             //todo add warning when deleting templates
         });
 
+
         attrBtns.forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 evento_id = "{{evento.id}}";
+                log_id = "{{log_id}}";
+                tipo = "{{tipo}}";
                 obj_id = e.target.dataset.id;
-                time = e.target.dataset.time;
-                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456 time=789 %}"
+                let url = "{% url 'Recurso:recurso-atribuir-cancelar' my_id=123 obj_id=456 log=789 tipo=999 %}"
                 url = url.replace('456', obj_id)
-                url = url.replace('789', time)
+                url = url.replace('789', log_id)
+                url = url.replace('999', tipo)
                 location.href = url.replace('123', evento_id)
 
             })

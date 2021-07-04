@@ -107,8 +107,9 @@
     <div id="page-content">
         <div class="card">
             <div class="card-content">
+    
                 {% for message in messages %}
-                    {% if  message.tags  == 'error' and  forloop.counter  == 0 %}
+                    {% if  message.tags  == 'error' and  forloop.counter  == 1 %}
                         <article class="message is-danger">
                             <div class="message-header"><p>Corrija os seguintes erros, por favor:</p>
                                 <button class="close-message delete" aria-label="delete"></button>

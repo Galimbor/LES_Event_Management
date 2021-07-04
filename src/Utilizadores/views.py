@@ -4,6 +4,7 @@ from .forms import UserRegistrationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .models import User as Usuario, Admin, ProponenteExterno, ProponenteInterno, Servicostecnicos, Gcp
+from django.contrib import messages
 
 
 # Create your views here.
@@ -49,6 +50,9 @@ def registar(request):
 
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
+
+        messages.success(request, 'Conta criada com sucesso.')
+
         return redirect('Utilizadores:login')
 
     context = {
