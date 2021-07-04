@@ -1,0 +1,186 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block content %}
+    {% load static %}
+
+        <h1 class="title">Associar formulário de inscrição</h1>
+        <div class="columns">
+            <div class="is-three-quarters">
+                <table id="example" class="table is-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Formulário</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        {% for insc in inscricoes %}
+                        <tr  data-id="{{ insc.id }}" class="datatable-selector">
+                            <td class="td">{{ insc.nome }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Formulário</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+
+        <h1 class="mt-5 title">Associar formulário de feedback</h1>
+        <div class="columns">
+            <div class="is-three-quarters">
+                <table id="example2" class="table is-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Formulário</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        {% for feed in feedbacks %}
+                        <tr  data-id="{{ insc.id }}" class="datatable-selector">
+                            <td class="td">{{ feed.nome }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Formulário</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    
+    
+    
+        <script>
+
+          
+          $(document).ready(function () {
+          $('#example').DataTable({
+            "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+            }
+          });
+        });
+
+                  
+        $(document).ready(function () {
+          $('#example2').DataTable({
+            "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+            }
+          });
+        });
+
+        
+
+
+    
+    
+    
+        //   Get event clicable
+          const event = document.querySelectorAll('.datatable-selector');
+          event.forEach(element => {
+            element.addEventListener('click', e => {
+              const id = element.dataset.id;
+              const modal = document.querySelector(`.modal-${id}`);
+                e.preventDefault();
+            modal.classList.add("is-active");
+          })
+          });
+
+          //Listen to delete event
+          const buttonCancel = document.querySelectorAll('.button-cancel');
+          buttonCancel.forEach(button => {
+              button.addEventListener('click', function(e) {
+              e.preventDefault();
+              const btn = e.target.closest('.button-cancel');
+              const container = e.target.closest('.container-modal');
+              console.log(container.children);
+              container.children[0].classList.add('hidden');
+              container.children[1].classList.remove("hidden");
+            })
+          })
+
+
+
+
+          
+        
+
+          //Listen to close event in modal
+          const close = document.querySelector('.modal-close');
+          
+          const modals = document.querySelectorAll('.modal');
+          modals.forEach(modal => {
+            modal.childNodes[5]?.addEventListener('click', function(e) {
+              modal.classList.remove('is-active');
+              console.log(e.target.parentElement.children[1].children[0].children[0]);
+              e.target.parentElement.children[1].children[0].children[0].classList.remove('hidden')
+              if(!e.target.parentElement.children[1].children[0].children[1].classList.contains('hidden'))
+                e.target.parentElement.children[1].children[0].children[1].classList.add('hidden')
+            })
+          })
+  
+  
+      //Get elements
+      const items = document.querySelectorAll('.filter-item');
+  
+      //Get rid of the active background of every element
+      const clearActive = function() {
+        items.forEach(element => {
+          element.classList.remove('is-filter-active');
+        })  
+      };
+
+      const clearEventsNone = function() {
+        event.forEach(e => e.classList.remove('none'));
+      }
+  
+      // Filter element
+      const parentEl = document.querySelector('.tbody');
+      items.forEach(element => {
+        element.addEventListener('click', e => {
+          clearActive();
+          element.classList.add('is-filter-active');
+          clearEventsNone();
+          event.forEach(e => {
+            const dataState = e.dataset.state;
+            if(dataState !== element.innerHTML.trim())
+            {
+              e.classList.add('none');
+            }
+            
+          })
+          
+        })
+      });
+  
+      //Reset filter
+      const resetBtn = document.querySelector('.reset');
+      console.log(resetBtn);
+      resetBtn.addEventListener('click', function(e) {
+        clearActive();
+        clearEventsNone();
+      });
+
+      $('#close-message').click(function () {
+            let message = $('#close-message').parent().parent();
+            message.addClass('is-hidden')
+        });
+  
+      </script>
+    {% endblock content %}
+    
+    {% block scripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+    {% endblock %}

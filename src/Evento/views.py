@@ -173,6 +173,21 @@ def eventos(request):
     return render(request, 'Evento/eventos.html', context)
 
 
+def evento_insc(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    formulario_insc = Formulario.objects.filter(tipoformularioid__categoria=1)
+    formulario_feedback = Formulario.objects.filter(tipoformularioid__categoria=2)
+    
+
+    context = {
+        'evento': evento,
+        'inscricoes': formulario_insc,
+        'feedbacks': formulario_feedback
+    }
+    return render(request, 'Evento/evento-insc.html', context);
+
+
+
 # Show all the events that as been created so GCP users can manage it.
 # Only GCP user will have access.
 def eventos_gerir(request):
