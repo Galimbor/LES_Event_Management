@@ -73,7 +73,8 @@ def ajax_filter_type(request):
             hora = Timedate.objects.get(id=e.horario.id)
             eventos.append({
                 "nome": e.nome,
-                "hora": f"{e.horario.horainicial}-{e.horario.horafinal}",
+                "hora_i": f"{e.horario.horainicial}",
+                "hora_f": f"{e.horario.horafinal}",
                 "data": f"{e.horario.datainicial.day}/{e.horario.datainicial.month}/{e.horario.datainicial.year} - {e.horario.datafinal.day}/{e.horario.datafinal.month}/{e.horario.datafinal.year}",
             })
         data = {

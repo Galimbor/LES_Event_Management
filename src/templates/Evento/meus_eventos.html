@@ -246,7 +246,7 @@
                         <tr  data-state="{{ obj.estado }}" data-id="{{ obj.id }}" class="datatable-selector">
                             <td class="td">{{ obj.nome }}</td>
                             <td class="td">{{ obj.estado }}</td>
-                            <td class="td">{{ obj.horario.datainicial }} {{ obj.horario.horainicial }} - {{ obj.horario.datafinal }} {{ obj.horario.horafinal }}</td>
+                            <td class="td">{{ obj.horario.datainicial|date:"d/m/Y"}} {{ obj.horario.horainicial|date:"H:i" }} - {{ obj.horario.datafinal|date:"d/m/Y" }} {{ obj.horario.horafinal|date:"H:i" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
