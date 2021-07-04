@@ -3,12 +3,21 @@ from django.urls import path
 import Inscricao.views
 from .views import CriarInscricao, PartConsultarInscricoes, PartInscricaoCancelar,\
     PropAlterarEstadoInscricao, PropConsultarInscricoes, PropRemoverInscricao,  PartInscricaoCheckin,\
-    PartAlterarInscricao,  returnCurrentEstado, updateEstado, PropConsultarCheckIns, doCheckin, PropAlterarInscricao, consultarInscricaoProp, consultarInscricaoPart, create_csv_certificates
+    PartAlterarInscricao,  returnCurrentEstado, updateEstado, PropConsultarCheckIns, doCheckin, PropAlterarInscricao, consultarInscricaoProp, consultarInscricaoPart,\
+    create_csv_certificates, PropConsultarInscricoesFIX, PropConsultarCheckInsFIX, PropAlterarInscricaoFIX, PropRemoverInscricaoFIX, PropAlterarEstadoInscricaoFIX, consultarInscricaoPropFIX
 
 app_name = 'Inscricao'
 
 urlpatterns = [
 
+
+    #PARA PROPONENTES FIX
+    path('consultarpro/<int:eventoid>', PropConsultarInscricoesFIX.as_view(), name='prop_list_inscricao_FIX'),
+    path('consultarCheckinspro/<int:eventoid>', PropConsultarCheckInsFIX.as_view(), name='consultar_checkins_FIX'),
+    path('alterarpro/<int:id>', PropAlterarInscricaoFIX, name='prop_alterar_inscricao_FIX'),
+    path('deletepro/<int:inscricaoid>', PropRemoverInscricaoFIX, name='prop_delete_inscricao_FIX'),
+    path('alterarEstadopro/<int:id>', PropAlterarEstadoInscricaoFIX, name='prop_update_inscricao_fix'),
+    path('consultarinscricaopro/<int:inscricaoid>', consultarInscricaoPropFIX, name='consultar_inscricao_prop_FIX'),
 
 
     # URL'S para os participantes

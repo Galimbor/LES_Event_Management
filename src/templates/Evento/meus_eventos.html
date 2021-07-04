@@ -189,16 +189,16 @@
                   Visualizar Evento
                 </a>
 
-                <a class="button is-dark " href="{% url 'Inscricao:prop_list_inscricao' eventoid=obj.id %}">
+                <a class="button is-dark " href="{% url 'Inscricao:prop_list_inscricao_FIX' eventoid=obj.id %}">
                   Visualizar Inscrições
                 </a>
 
 
-                <a class="button is-dark " href="{% url 'Feedback:list_feedback' eventoid=obj.id %}">
+                <a class="button is-dark " href="{% url 'Feedback:list_feedback_prop' eventoid=obj.id %}">
                   Visualizar Feedbacks
                 </a>
 
-                <a class="button is-dark " href="{% url 'Inscricao:consultar_checkins' eventoid=obj.id %}">
+                <a class="button is-dark " href="{% url 'Inscricao:consultar_checkins_FIX' eventoid=obj.id %}">
                   Check-In
                 </a>
               </div>

@@ -362,3 +362,124 @@ select {
   .error {
       border-bottom: 4px solid red !important;
   }
+  .form {
+
+          width: 50%;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+
+   .is-justify-content-center {
+      justify-content: center;
+    }
+
+    .mt-5 {
+        margin-top: 5rem;
+    }
+
+    .mt-3 {
+        margin-top: 3rem;
+    }
+
+    .mt-2 {
+        margin-top: 2rem;
+    }
+
+    .column-stat {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 3rem;
+        background-color: rgb(87, 115, 195);
+        color: white !important;
+        min-height: 600px;
+    }
+
+    .stat-questions {
+      font-size: 2rem;
+      font-weight: 300;
+      text-align: center;
+      flex-grow: 2;
+    }
+
+    .title-form {
+        font-weight: 400;
+        color: #1A76C9;
+        font-size: 3.5rem;
+        text-align: center;
+        padding: 2rem;
+    }
+
+
+    .td-btn {
+        width: 30% !important;
+    }
+
+    .td-btn a:not(:last-child) {
+        margin-right: 1rem !important;
+    }
+
+    .td {
+        padding: 1rem !important;
+    }
+
+    .datatable-selector {
+        cursor: pointer;
+    }
+
+    .datatable-selector:hover
+    {
+        opacity: .8;
+        color: white !important;
+        background-color:  rgb(70, 116, 199) !important;
+    }
+
+    .stat-item {
+
+    }
+
+    .ins-detail-red {
+        color: white;
+        background: #cc0f35;
+        font-weight: 600;
+        padding: 1.5rem;
+        width: 100px;
+        text-align: center;
+    }
+
+    .ins-detail-green {
+        color: white;
+        background: #3abb67;
+        font-weight: 600;
+        padding: 1.5rem;
+        width: 100px;
+        text-align: center;
+    }
+
+    .ins-detail-yellow {
+        color: white;
+        background: #ffbf46;
+        font-weight: 600;
+        padding: 1.5rem;
+        width: 100px;
+        text-align: center;
+    }
+
+
+    .td-flex {
+        display: flex;
+    }
+
+    .user-type {
+    padding: 1rem 4rem;
+    background-color: rgb(70, 116, 199);
+    color: white;
+    margin-right: 1.5rem;
+    font-weight: bold;
+}
