@@ -7,6 +7,19 @@
 
     <div>
         <div class="section">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+                        <ul>
+                            <li><a href="{% url 'home' %}">Página inicial</a></li>
+                            <li><a href="{% url 'Recurso:componentes' %}">Componentes</a></li>
+                            <li class="is-active">
+                                <a href="#" aria-current="page">
+                                            <span class="has-text-weight-bold">
+                                                Empresa
+                                            </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
             <div class="columns is-align-items-center">
                 <div class="column">
                     <h1 class="title has-text-centered">{{ obj.Nome }}</h1>
