@@ -290,3 +290,7 @@ select {
 .error {
     border-bottom: 4px solid red !important;
 }
+
+.hidden {
+    display: none !important;
+}
