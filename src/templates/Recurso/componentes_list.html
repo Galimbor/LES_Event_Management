@@ -53,19 +53,6 @@
 
                 </div>
             </nav>
-            {% if messages %}
-                <article class="message is-success">
-                    {% for message in messages %}
-                        <div class="message-header">
-                            <p>Success</p>
-                            <button id="close-message" class="delete" aria-label="delete"></button>
-                        </div>
-                        <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </article>
-            {% endif %}
             <div class="columns">
                 <div class="column">
                     <div class="tabs is-centered is-medium">
@@ -203,14 +190,14 @@
                                     <td class="td">Unidade Orgânica</td>
                                 {% endif %}
                                 <td>
-                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom button-edit"
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-fade button-edit"
                                             data-id="{{ obj.id }}"
                                             data-tooltip="Editar componente: {{ obj.Nome }}">
                       <span class="icon">
                         <i class="far fa-edit"></i>
                       </span>
                                     </button>
-                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-bottom delete-form-btn"
+                                    <button class="button is-white has-text-grey-dark ver_form_config has-tooltip-fade delete-form-btn"
                                             data-delete-url="{% url 'Recurso:componente-delete' obj.id %}"
                                             data-tooltip="Eliminar componente: {{ obj.Nome }}">
                       <span class="icon">

@@ -21,13 +21,13 @@
                     {% for obj in eventos %}
                     <tr  data-id="{{ obj.id }}" class="datatable-selector">
                         <td class="td">{{ obj.nome }}</td>
-                        <td class="td">{{ obj.horario.datainicial }} - {{ obj.horario.datafinal }}</td>
-                        <td class="td">{{ obj.horario.horainicial }} - {{ obj.horario.horafinal }}</td>
+                        <td class="td">{{ obj.horario.datainicial|date:"d/m/Y" }} - {{ obj.horario.datafinal|date:"d/m/Y" }}</td>
+                        <td class="td">{{ obj.horario.horainicial|date:"H:i" }} - {{ obj.horario.horafinal|date:"H:i" }}</td>
                         <td>{% if obj.hasInscricao %}
 
-                                <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
-                                   class="card-footer-item dark-a">Inscrever</a>
-                                {% endif %} </td>
+                          <a href="{% url 'Inscricao:create_inscricao' eventoid=obj.id %}"
+                             class="card-footer-item dark-a">Inscrever</a>
+                          {% endif %} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -142,7 +142,7 @@
                     <tr  data-id="" class="datatable-selector">
                         <td class="td">${evento.nome}</td>
                         <td class="td">${evento.data}</td>
-                        <td class="td">${evento.hora}</td>
+                        <td class="td">${evento.hora_i.substring(0, evento.hora_i.length - 3)} - ${evento.hora_f.substring(0, evento.hora_i.length - 3)}</td>
                     </tr>
               `;
               parentEl.insertAdjacentHTML("afterbegin", markUp);

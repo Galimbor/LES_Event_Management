@@ -32,7 +32,7 @@ def createFeedback(request, eventoid):
 
 
     # Associado ao feedback
-    formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id, formularioid__tipoFormulario__categoria=2)
+    formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id, formularioid__tipoformularioid__categoria=2)
 
     formularioFeedback = formularioEvento[0].formularioid
 
@@ -68,7 +68,7 @@ def createFeedback(request, eventoid):
         'form': perguntas,
         'evento' : evento,
     }
-    return render(request, 'feedback/feedback_create.html', context)
+    return render(request, 'feedback/gcp/feedback_create.html', context)
 
 
 # Create your views here.
@@ -96,12 +96,12 @@ def viewFeedback(request, feedbackid):
         'QAA': QAA,
         'feedback': feedback,
     }
-    return render(request, 'feedback/view_feedback.html', context)
+    return render(request, 'feedback/gcp/view_feedback.html', context)
 
 
 def viewStatistics(request, eventoid):
 
-    formularioEvento = EventoFormulario.objects.filter(eventoid=eventoid, formularioid__tipoFormulario__categoria=2)
+    formularioEvento = EventoFormulario.objects.filter(eventoid=eventoid, formularioid__tipoformularioid__categoria=2)
 
     formulario = formularioEvento[0].formularioid
 
@@ -154,14 +154,14 @@ def viewStatistics(request, eventoid):
         'respostasNormais' : respostasNormais,
     }
 
-    return render(request,'feedback/feedback_statistics.html', context)
+    return render(request, 'feedback/gcp/feedback_statistics.html', context)
 
 class listFeedback(ListView):
     # We don't have users yet. -- Implement with @Login
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
     #         return redirect('Inscricao:list_inscricao')
-    template_name = 'feedback/list_feedback.html'
+    template_name = 'feedback/gcp/list_feedback.html'
 
     paginate_by = 10
 
@@ -210,25 +210,134 @@ def deleteFeedback(request, feedbackid):
 
     return redirect('Feedback:list_feedback', eventoid.id )
 
-class ConsultarFeedbacksPendentes(ListView):
-    # We don't have users yet.
+def viewFeedbackProp(request, feedbackid):
+    feedback = Feedback.objects.get(id=feedbackid)
+    feedbacks = Feedback.objects.filter(eventoid=feedback.eventoid.id)
+    count = 1
+    for feed in feedbacks:
+        if feed.id == feedbackid :
+            feedback.number = count
+            break
+        count = count + 1
+
+
+    respostas = Resposta.objects.filter(feedbackid=feedbackid)
+
+    perguntas = []
+
+    for resposta in respostas:
+        perguntas.append(resposta.campoid)
+
+    QAA = zip(perguntas, respostas)
+
+    context = {
+        'QAA': QAA,
+        'feedback': feedback,
+    }
+    return render(request, 'feedback/prop/view_feedback.html', context)
+
+
+def viewStatisticsProp(request, eventoid):
+
+    formularioEvento = EventoFormulario.objects.filter(eventoid=eventoid, formularioid__tipoformularioid__categoria=2)
+
+    formulario = formularioEvento[0].formularioid
+
+
+
+    #Todas as perguntas associadas aos formulário
+    campoform = CampoFormulario.objects.filter(formularioid=formulario.id)
+
+    perguntas = []
+
+    labelslist = []
+    datalist = []
+
+    perguntasNormais = []
+    respostasNormais = []
+
+    #fetched perguntas with multiple options
+    for campofield in campoform:
+        if campofield.campoid.campo_relacionado == None and (campofield.campoid.tipocampoid.id == 12 or campofield.campoid.tipocampoid.id == 13):
+            perguntasNormais.append(campofield.campoid)
+            perguntas.append(campofield.campoid)
+        elif campofield.campoid.tipocampoid.id != 12 and campofield.campoid.tipocampoid.id != 13:
+            campofield.campoid.respostas = Resposta.objects.filter(campoid=campofield.campoid, feedbackid__eventoid__id=eventoid)
+            perguntasNormais.append((campofield.campoid)) #colocamos as perguntas normais aqui..
+
+
+
+    for pergunta in perguntas:
+        labels = []
+        data = []
+        respostaspossiveis =  Campo.objects.filter(campo_relacionado=pergunta.id)
+        for respostapossivel in respostaspossiveis:
+            labels.append(respostapossivel.conteudo)
+            data.append(Resposta.objects.filter(campoid=pergunta, feedbackid__eventoid__id=eventoid,conteudo=respostapossivel).count())
+        datalist.append(data)
+        labelslist.append(labels)
+
+    for perguntasNormal in perguntasNormais:
+        respostasNormais.append(Resposta.objects.filter(campoid=perguntasNormal, feedbackid__eventoid__id=eventoid))
+
+
+
+    QAA = zip(labelslist,datalist,perguntas)
+
+
+    context = {
+        'perguntas': perguntas,
+        'QAA' : QAA,
+        'perguntasNormais': perguntasNormais,
+        'respostasNormais' : respostasNormais,
+    }
+
+    return render(request, 'feedback/prop/feedback_statistics.html', context)
+
+class listFeedbackProp(ListView):
+    # We don't have users yet. -- Implement with @Login
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
     #         return redirect('Inscricao:list_inscricao')
-
-    template_name = 'inscricao/participantes/list_inscricao2.html'
+    template_name = 'feedback/prop/list_feedback.html'
 
     paginate_by = 10
 
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            user_django = self.request.user
-            user = User.objects.filter(email=user_django.email)
-            realuser = user[0]
-            return Inscricao.objects.filter(userid=realuser.id)
-        else:
-            return Inscricao.objects.all()
+    # We don't have users yet
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # tiposForm = Tipoformulario.objects.all()
+        # numberofFeedbacks = Feedback.objects.filter(eventoid=self.kwargs.get('eventoid')).count()
+        # print(context['feedback_list'][0].number)
+        return context
 
-    # Show the inscricoes of the users
-    # def get_queryset(self):
-        # return Inscricao.objects.filter(userid=self.request.user)
+
+    def get_queryset(self):
+        queryset = Feedback.objects.filter(eventoid=self.kwargs.get('eventoid'))
+        number = 1
+        for feedback in queryset:
+            feedback.number = number
+            number = number + 1
+        return queryset
+
+def deleteFeedbackProp(request, feedbackid):
+    # We don't have users yet.
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:inscricao')
+
+    feedback = Feedback.objects.get(id=feedbackid)
+
+    respostas = Resposta.objects.filter(feedbackid=feedback)
+
+    for resposta in respostas:
+        resposta.delete()
+
+    eventoid = feedback.eventoid
+
+    feedback.delete()
+
+    # print("what")
+    messages.success(request, f'Eliminou o feedback com sucesso!')
+
+    return redirect('Feedback:list_feedback', eventoid.id )

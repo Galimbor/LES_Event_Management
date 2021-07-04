@@ -1,0 +1,174 @@
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+
+{% block page_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
+
+{% endblock %}
+{% block content %}
+{% load static %}
+<div>
+  <section  id="subnavbar" >
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" onclick="$('#form-menu-buttons').toggleClass('is-active')">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu is-white" id="form-menu-buttons">
+        <div class="navbar-start">
+          <!-- navbar items on the left side -->
+          <div class="column">
+            <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+              <ul>
+                  <li><a href="{% url 'Evento:meus-eventos'  %}">Meus eventos</a></li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">
+                    <span class="has-text-weight-bold">Feedbacks no evento</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+                              <a class="button is-success"
+                   href="{% url 'Feedback:view_feedback_statistics' eventoid=request.resolver_match.kwargs.eventoid %}">
+        <span class="icon">
+          <i class="fas fa-columns"></i>
+        </span>
+                    <span>Ver estatísticas de feedback</span>
+                </a>
+    </nav>
+  </section>
+
+  <div class="section" id="main-section-content">
+    <div class="columns">
+      <div class="column ">
+
+        <table id="form-list-table" class="table is-fullwidth is-striped is-hoverable" style="width:100%">
+          <thead>
+            <tr>
+              <th>Número do feedback</th>
+                <th>Descrição</th>
+              <th>Data de submissão</th>
+              <th></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
+              <td> {{obj.number}}</td>
+              <td> {{obj.descricao}}</td>
+              <td> {{obj.createdAt}}</td>
+              <td>
+                    <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-ins-btn"  data-delete-url="{% url 'Feedback:delete_feedback_prop' obj.pk %}" data-tooltip="Eliminar feedback: {{obj.number}}">
+                      <span  class="icon">
+                        <i class="far fa-trash-alt" ></i>
+                      </span>
+                    </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="modal" id="confirm-delete-form-modal" data-id="">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tem a certeza que deseja eliminar esta feedback ?</p>
+      <button class="close-modal delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger confirm" href="#">Eliminar</a>
+      <button class="button close-modal">Cancelar</button>
+    </footer>
+  </div>
+</div>
+
+
+
+
+
+{% endblock content%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+<script>
+
+
+
+  var deleteFormModal = $('#confirm-delete-form-modal');
+  $('.delete-ins-btn').click(function (e) {
+    e.stopPropagation(); //para a propagacao do evento javascript
+    deleteFormModal.find('.confirm').attr('href', $(this).data('delete-url')); //passes obj id to modal
+    deleteFormModal.addClass('is-active'); //shows modal
+    //todo add warning when deleting templates
+  });
+
+  $('.close-modal').click(function () {
+    $('.modal').removeClass('is-active');
+  });
+
+
+
+
+
+
+
+
+//DATATABLES MANIPULATION
+
+    var table = $('#form-list-table').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+      "columnDefs": [ { "orderable": false, "targets": 3 },
+    ],
+    });
+
+  $(document).ready(function () {
+
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+      {#console.log(table.column($(this).data('column')).search($(this).data('filter')).draw())#}
+      table.column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
+    })
+  });
+
+
+
+  $('.datatable-row').click(function () {
+    let url = "{% url 'Feedback:view_feedback_prop' feedbackid=123  %}"
+    location.href= url.replace('123',  $(this).data('id'))
+
+  });
+
+
+</script>
+{% endblock %}

@@ -18,20 +18,60 @@
                     <div class="form-group-c">
                         <label class="label" for="sim">Qual tipo de evento?</label>
                         {% for tipo in tipos %}
-                            <div class="radio-label">
+                            <div class="radio-label radio-label-tipo">
                                 <label for="tipo">{{ tipo.nome }}</label>
-                                <input type="radio" id="tipo" name="radio" value="{{ tipo.id }}">
+                                <input data-tipo="{{ tipo.id }}" type="radio" id="tipo" name="radio" value="{{ tipo.id }}">
                             </div>
                         {% endfor %}
-
-
                     </div>
 
-                    <input class="button-submit mt-3" type='Submit' value='Next'>
+                    <div class="form-group-c">
+                        <label class="label label-2 hidden" for="sim">Qual o formulario?</label>
+                            {% for form in formularios %}
+                            <div data-form="{{form.tipoeventoid.id}}" class="radio-label-form radio-label hidden">
+                                <label for="form">{{form.nome}}</label>
+                                <input type="radio" id="form" name="radio-form" value="{{form.id}}">
+                            </div>
+                            {% endfor %}
+                    </div>
+
+
+
+                    <input class="button-submit mt-3" type='Submit' value='Próximo'>
                 </form>
             </div>
         </div>
 
     </div>
+
+
+    <script>
+        const labels = document.querySelectorAll('.radio-label-tipo');
+        const labelsForm = document.querySelectorAll('.radio-label-form');
+        const label2 = document.querySelector('.label-2');
+
+        labels.forEach(label => {
+            label.addEventListener('click', function(e) {
+                let tipo = e.target.dataset.tipo;
+
+                if(label2.classList.contains('hidden')) {
+                    label2.classList.remove('hidden');
+                }
+
+                labelsForm.forEach(form => {
+                    if (form.dataset.form === tipo) {
+                        if (form.classList.contains('hidden')) {
+                            form.classList.remove('hidden');
+                        }
+                    } else {
+                        if (!form.classList.contains('hidden')) {
+                            form.classList.add('hidden');
+                        } 
+                    }
+                })
+
+            });
+        })
+    </script>
 {% endblock content %}
 

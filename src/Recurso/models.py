@@ -234,6 +234,7 @@ class Tipodeequipamento(models.Model):
     def __str__(self):
         return self.nome
 
+
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=255)
     quantidade = models.IntegerField(db_column='Quantidade', blank=True, null=True)
@@ -243,6 +244,7 @@ class Tipodeequipamento(models.Model):
     isAttributed = models.IntegerField(db_column='IsAttributed', null=True)
 
     class Meta:
+
         managed = False
         db_table = 'TipodeEquipamento'
 

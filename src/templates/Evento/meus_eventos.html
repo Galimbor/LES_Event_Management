@@ -185,9 +185,22 @@
               <h3 class="modal-title mb-3">Evento aprovado!</h3>
               <div class="buttons">
                 <a class="button is-dark " href=
-          "{% url 'Evento:view-event' event_id=obj.id %}">
-            Visualizar Evento
-          </a>
+                "{% url 'Evento:view-event' event_id=obj.id %}">
+                  Visualizar Evento
+                </a>
+
+                <a class="button is-dark " href="{% url 'Inscricao:prop_list_inscricao_FIX' eventoid=obj.id %}">
+                  Visualizar Inscrições
+                </a>
+
+
+                <a class="button is-dark " href="{% url 'Feedback:list_feedback_prop' eventoid=obj.id %}">
+                  Visualizar Feedbacks
+                </a>
+
+                <a class="button is-dark " href="{% url 'Inscricao:consultar_checkins_FIX' eventoid=obj.id %}">
+                  Check-In
+                </a>
               </div>
             </div>
           </div>
@@ -198,20 +211,6 @@
           <button class="modal-close is-large" aria-label="close"></button>
       </div>
       {% endfor %}
-
-      {% if messages %}
-      <article class="message is-success">
-          {% for message in messages %}
-              <div class="message-header">
-                  <p>Success</p>
-                  <button id="close-message" class="delete" aria-label="delete"></button>
-              </div>
-              <div class="message-body {% if message.tags %} {{ message.tags }} {% endif %}">
-                  {{ message }}
-              </div>
-          {% endfor %}
-      </article>
-    {% endif %}
   
         <h1 class="title">Meus Eventos</h1>
         <div class="columns">
@@ -229,7 +228,7 @@
                         <tr  data-state="{{ obj.estado }}" data-id="{{ obj.id }}" class="datatable-selector">
                             <td class="td">{{ obj.nome }}</td>
                             <td class="td">{{ obj.estado }}</td>
-                            <td class="td">{{ obj.horario.datainicial }} {{ obj.horario.horainicial }} - {{ obj.horario.datafinal }} {{ obj.horario.horafinal }}</td>
+                            <td class="td">{{ obj.horario.datainicial|date:"d/m/Y"}} {{ obj.horario.horainicial|date:"H:i" }} - {{ obj.horario.datafinal|date:"d/m/Y" }} {{ obj.horario.horafinal|date:"H:i" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -289,6 +288,8 @@
     
     
         <script>
+
+          
           $(document).ready(function () {
           $('#example').DataTable({
             "language": {

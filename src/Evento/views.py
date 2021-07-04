@@ -2,17 +2,18 @@ from django.shortcuts import redirect, render
 from Neglected.models import Timedate
 from .models import Evento, Logistica, Tipoevento
 from Recurso.models import Tipodeequipamento, Tipoespaco, Tiposervico
-from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta
+from GestorTemplates.models import Formulario, CampoFormulario, Campo, Resposta, EventoFormulario
 from Utilizadores.models import User
 from django.db.models import Q
 from datetime import datetime
-
+from Inscricao.models import Inscricao
 from django.contrib import messages
 import json
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core import serializers
-
+from django.utils import timezone
+from datetime import datetime
 
 def ajax_finalizar_logistica(request):
     if request.method == "POST":
@@ -73,8 +74,9 @@ def ajax_filter_type(request):
         for e in events:
             hora = Timedate.objects.get(id=e.horario.id)
             eventos.append({
-                "nome": e.Nome,
-                "hora": f"{e.horario.horainicial}-{e.horario.horafinal}",
+                "nome": e.nome,
+                "hora_i": f"{e.horario.horainicial}",
+                "hora_f": f"{e.horario.horafinal}",
                 "data": f"{e.horario.datainicial.day}/{e.horario.datainicial.month}/{e.horario.datainicial.year} - {e.horario.datafinal.day}/{e.horario.datafinal.month}/{e.horario.datafinal.year}",
             })
         data = {
@@ -136,13 +138,34 @@ def home_view(request):
 # Show all the events that has the final validation.
 def eventos(request):
     events = Evento.objects.filter(estado='Aceite')
+
+    if request.user.is_anonymous:
+        events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
+    else:
+        events = Evento.objects.filter(estado='Aceite')
+        
+
     for event in events:
         today = datetime.today()
         eventoDataFinal = event.horario.datafinal
         eventoHoraFinal = event.horario.horafinal
         eventFinalDate = datetime.combine(eventoDataFinal, eventoHoraFinal)
-        if event.inscritos < event.maxparticipantes and eventFinalDate > today:
-            event.hasInscricao = True
+        if request.user.is_authenticated:
+            user_django = request.user
+            user = User.objects.filter(email=user_django.email)[0]
+            if event.inscritos < event.maxparticipantes and eventFinalDate > today and\
+                    EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists()\
+                    and not Inscricao.objects.filter(userid=user.id, eventoid=event.id).exists()  :
+                event.hasInscricao = True
+        else :
+            if event.inscritos < event.maxparticipantes and eventFinalDate > today and\
+                    EventoFormulario.objects.filter(eventoid=event.id, formularioid__tipoformularioid__categoria=1).exists() :
+                event.hasInscricao = True
+
+
+
+   
+    
     logistica = Logistica.objects.all()
     tipos = Tipoevento.objects.all()
 
@@ -153,6 +176,65 @@ def eventos(request):
     }
 
     return render(request, 'Evento/eventos.html', context)
+
+def associar_insc(request, event_id, form_id):
+    evento = Evento.objects.get(id=event_id)
+
+    formulario = Formulario.objects.get(id=form_id)
+    evento_form = EventoFormulario(eventoid=evento, formularioid=formulario)
+    evento_form.save()
+
+    formulario_feedback = Formulario.objects.filter(tipoformularioid__categoria=2)
+
+    messages.success(request, 'Formulário de inscrição associado com sucesso. Favor associar o formulário de feedback.')
+
+    context = {
+        'evento': evento,
+        'feedbacks': formulario_feedback
+    }
+    return render(request, 'Evento/evento-feed.html', context)
+
+def associar_feedback(request, event_id, form_id):
+    evento = Evento.objects.get(id=event_id)
+
+    formulario = Formulario.objects.get(id=form_id)
+    evento_form = EventoFormulario(eventoid=evento, formularioid=formulario)
+    evento_form.save()
+
+    evento.estado = 'Aceite'
+    evento.save()
+    messages.success(request, 'Formulários associados e evento aceite com sucesso.')
+    return redirect('Evento:eventos-gerir')
+
+
+    context = {
+        'evento': evento,
+    }
+    return redirect("Evento:eventos-gerir")
+
+
+def evento_feedback(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    formulario_feed = Formulario.objects.filter(tipoformularioid__categoria=2)
+
+    context = {
+        'evento': evento,
+        'feedbacks': formulario_feed,
+    }
+    return render(request, 'Evento/evento-feed.html', context)
+
+def evento_insc(request, event_id):
+    evento = Evento.objects.get(id=event_id)
+    formulario_insc = Formulario.objects.filter(tipoformularioid__categoria=1)
+
+    messages.warning(request, 'Para aceitar o evento sera necessário associar os formulários de inscrição e feedback. Após ter associado estes formulários o evento será aceite.')
+
+    context = {
+        'evento': evento,
+        'inscricoes': formulario_insc,
+    }
+    return render(request, 'Evento/evento-insc.html', context)
+
 
 
 # Show all the events that as been created so GCP users can manage it.
@@ -299,9 +381,9 @@ def edit_event(request, event_id):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
     respostas = Resposta.objects.filter(eventoid=evento)
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
     horario = evento.horario
     if request.method == 'POST':
@@ -387,9 +469,9 @@ def create_event(request, type_id, type_evento):
     perguntas = CampoFormulario.objects.filter(formularioid=formulario[0]).exclude(Q(campoid_id=22) | Q(campoid_id=23)).order_by('campoid')
 
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
     evento = Evento()
     horario = Timedate()
@@ -426,8 +508,25 @@ def create_event(request, type_id, type_evento):
             elif id == 17:
                 hora_f = request.POST.get(f'{id}')
                 horario.horafinal = hora_f
-            resposta = Resposta(conteudo=request.POST.get(f'{id}'), campoid=pergunta.campoid, eventoid=evento)
-            respostas.append(resposta)
+
+            # Check if the date makes sense here1
+
+            datetime_str = f'{request.POST.get("14")} {request.POST.get("16")}'
+            datetime_evento_i = datetime. strptime(datetime_str, '%Y-%m-%d %H:%M')
+            datetime_str_f = f'{request.POST.get("15")} {request.POST.get("17")}'
+            datetime_evento_f = datetime. strptime(datetime_str_f, '%Y-%m-%d %H:%M')
+
+            
+
+            if datetime_evento_f >= datetime_evento_i and datetime.now() <= datetime_evento_i:
+                resposta = Resposta(conteudo=request.POST.get(f'{id}'), campoid=pergunta.campoid, eventoid=evento)
+                respostas.append(resposta)
+            elif int(request.POST.get('12')) <= 0:
+                messages.error(request, 'Números de participantes inválido, favor tentar novamente')
+                return redirect('Evento:create-event', type_id, type_evento)
+            else:
+                messages.error(request, 'Datas inválidas, favor tentar novamente')
+                return redirect('Evento:create-event', type_id, type_evento)
 
         horario.save()
         evento.inscritos = 0
@@ -439,6 +538,9 @@ def create_event(request, type_id, type_evento):
         evento.tipoeventoid = tipo_evento
 
         evento.save()
+
+        event_form = EventoFormulario(eventoid=evento, formularioid=formulario[0])
+        event_form.save()
         messages.success(request, 'Evento criado com sucesso')
 
         for resp in respostas:
@@ -460,13 +562,16 @@ def create_event(request, type_id, type_evento):
 
 def select_type(request):
     tipos = Tipoevento.objects.all()
+    formularios = Formulario.objects.filter(tipoformularioid=3)
 
     if request.method == 'POST':
+        form = request.POST['radio-form']
         tipo = request.POST['radio']
-        return redirect('Evento:select_form', tipo)
+        return redirect('Evento:create-event', form, tipo)
 
     context = {
-        'tipos': tipos
+        'tipos': tipos,
+        'formularios': formularios
     }
     return render(request, 'Evento/selecionar_tipo.html', context)
 
@@ -553,9 +658,9 @@ def edit_espaco(request, event_id, espaco_id, tipo):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
 
     if request.method == 'POST':
@@ -712,19 +817,46 @@ def render_logistic_form_by_type(request, event_id, obj, type_logistic):
 
     # Get multiple choices and bind to the pergunta obj
     for pergunta in perguntas:
-        if pergunta.campoid.tipocampoid.Nome == 'Escolha Múltipla' or \
-                pergunta.campoid.tipocampoid.Nome == 'Dropdown':
-            pergunta.campoid.respostas = pergunta.campoid.respostapossivelid.Nome.split(",")
+        if (pergunta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+                pergunta.campoid.tipocampoid.nome == 'Dropdown'):
+            pergunta.campoid.respostas = Campo.objects.filter(campo_relacionado=pergunta.campoid)
 
     horario = Timedate()
 
     if request.method == 'POST':
         get_data_from_form(request, obj, perguntas, horario, logistic[0], evento)
 
-        # Redirect to eventos page
-        messages.success(request, 'Pedido adicionado com sucesso, podera adicionar mais ou se finalizado, favor submeter a logistica')
-        return redirect('Evento:meus-eventos')
+        datetime_str = f'{request.POST.get("14")} {request.POST.get("16")}'
+        datetime_i = datetime. strptime(datetime_str, '%Y-%m-%d %H:%M')
+        datetime_str_f = f'{request.POST.get("15")} {request.POST.get("17")}'
+        datetime_f = datetime. strptime(datetime_str_f, '%Y-%m-%d %H:%M')
 
+        # Hora do evento
+        time_evento = evento.horario
+        hora_i = time_evento.horainicial
+        hora_f = time_evento.horafinal
+        data_i = time_evento.datainicial
+        data_f = time_evento.datafinal
+
+        datetime_str_evento_i = f'{data_i} {hora_i}'
+
+        print(data_i)
+        print(hora_i)
+        datetime_i_evento = datetime. strptime(datetime_str_evento_i, '%Y-%m-%d %H:%M:%S')
+        datetime_str_evento_f = f'{data_f} {hora_f}'
+        datetime_f_evento = datetime. strptime(datetime_str_evento_f, '%Y-%m-%d %H:%M:%S')
+
+
+        if datetime_i < datetime_i_evento or datetime_f > datetime_f_evento:
+            messages.error(request, 'Datas Inválidas')
+            return redirect('Evento:meus-eventos')
+        elif datetime_i > datetime_f:
+            messages.error(request, 'Datas Inválidas')
+            return redirect('Evento:meus-eventos')
+        else:
+            messages.success(request, 'Pedido adicionado com sucesso, podera adicionar mais ou se finalizado, favor submeter a logistica')
+            return redirect('Evento:meus-eventos')
+        
     else:
         context = {
             'evento': evento,
@@ -758,6 +890,9 @@ def get_data_from_form(request, tipo, perguntas, horario, logistica, evento):
         elif id_p == 17:
             hora_f = request.POST.get(f'{id_p}')
             horario.horafinal = hora_f
+
+
+
 
     horario.save()
     tipo.horariorequisicao = horario

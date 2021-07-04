@@ -5,6 +5,7 @@
 
 <head>
 
+
   <title>
     Plataforma de Gestão de Eventos UALG {% block title %} {% endblock title %}
 
@@ -93,78 +94,107 @@
   </style>
   {% block page_css %}
   {% endblock %}
+
 </head>
 
 <body>
-  <div id="app">
+<div id="app">
     {% include 'popup.html' %}
     {% include 'navbar.html' %}
     <div class="hero is-primary is-bold" id="top-hero">
         <div id="top-hero-body" class="hero-body"></div>
     </div>
     <div id="page-content">
-      <div class="card">
+        <div class="card">
+            <div class="card-content">
+                {% for message in messages %}
+                    {% if  message.tags  == 'error' and  forloop.counter  == 0 %}
+                        <article class="message is-danger">
+                            <div class="message-header"><p>Corrija os seguintes erros, por favor:</p>
+                                <button class="close-message delete" aria-label="delete"></button>
+                            </div>
+                            <div class="message-body">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <article class="message is-success">
+                            <div class="message-header">
+                                <p>Sucesso</p>
+                                <button class="delete close-message" aria-label="delete"></button>
+                            </div>
+                            <div class="message-body">
+                                {{ message }}
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+                {% for message in messages %}
+                    {% if message.tags == 'warning' %}
+                        <article class="message is-warning">
+                            <div class="message-header">
+                                <p>Atenção</p>
+                                <button class="delete close-message" aria-label="delete"></button>
+                            </div>
+                            <div class="message-body">
+                                {{ message }}
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
 
-        <div class="card-content">
-
-          {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-            <article class="message is-{{ message.tags }}">
-              <div class="message-header">
-                <p>Atenção!</p>
-                <button class="delete" aria-label="delete"></button>
-              </div>
-              <div class="message-body">
-                {{ message }}
-              </div>
-            </article>
-            {% endfor %}
-          </ul>
-          {% endif %}
-
-          {% block content %}
-          <!-- include the content here-->
-          {% endblock content %}
+                {% block content %}
+                    <!-- include the content here-->
+                {% endblock content %}
+            </div>
         </div>
+
+        <footer class="footer">
+            <div style="margin: auto; width: max-content">
+                &#169; Laboratório de Engenharia de Software - 2021
+            </div>
+        </footer>
     </div>
+</div>
 
-    <footer class="footer">
-        <div style="margin: auto; width: max-content">
-            &#169; Laboratório de Engenharia de Software - 2021
-        </div>
-    </footer>
-  </div>
-  </div>
+<script type="text/javascript" src="{% static 'js/fontawesome.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.0/dist/js/bulma-calendar.min.js"></script>
+<script type="text/javascript">
+    {#$('.delete').click(function () {#}
+    {#    $(this).parent().('.messages').remove()#}
+    {#})#}
 
-  <script type="text/javascript" src="{% static 'js/fontawesome.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/animated-arrows.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/js_custom.js' %}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.0/dist/js/bulma-calendar.min.js"></script>
-  <script type="text/javascript">
-    $('.messages .delete').click(function(){
-      $(this).closest('.messages').remove()
-    })
-  </script>
-  <script>
-    $(window).scroll(function(){
-      let subnavbar = $('#subnavbar');
-      let mainSectionContent = $('#main-section-content');
-      if ($(window).scrollTop() >= mainSectionContent.offset().top) {
-          if(!subnavbar.hasClass('sticky')){
-            subnavbar.hide().addClass('sticky').fadeIn();
-            mainSectionContent.css('padding-top','100px')
-          }
-      }
-      else{
-          subnavbar.removeClass('sticky');
-          mainSectionContent.css('padding-top','10px')
+    $('.close-message').click(function () {
+        let message = $(this).parent().parent();
+        message.addClass('is-hidden')
+    });
+</script>
+
+<script>
+    $(window).scroll(function () {
+        let subnavbar = $('#subnavbar');
+        let mainSectionContent = $('#main-section-content');
+        if ($(window).scrollTop() >= mainSectionContent.offset().top) {
+            if (!subnavbar.hasClass('sticky')) {
+                subnavbar.hide().addClass('sticky').fadeIn();
+                mainSectionContent.css('padding-top', '100px')
+            }
+        } else {
+            subnavbar.removeClass('sticky');
+            mainSectionContent.css('padding-top', '10px')
         }
     });
-  </script>
-  {% block scripts %}
-  {% endblock scripts %}
+</script>
+{% block scripts %}
+{% endblock scripts %}
 
 </body>
 

@@ -1,3 +1,5 @@
+import csv
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
@@ -33,7 +35,7 @@ def CriarInscricao(request, eventoid):
             return redirect('Evento:eventos')
 
         formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id,
-                                                           formularioid__tipoFormulario__categoria=1)
+                                                           formularioid__tipoformularioid__categoria=1)
 
         formularioInscricao = formularioEvento[0].formularioid
 
@@ -48,7 +50,7 @@ def CriarInscricao(request, eventoid):
 
     else :
         formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id,
-                                                           formularioid__tipoFormulario__categoria=1)
+                                                           formularioid__tipoFormularioid__categoria=1)
 
         formularioInscricao = formularioEvento[0].formularioid
 
@@ -100,7 +102,7 @@ def CriarInscricao(request, eventoid):
             if evento.val_inscritos:
                 estado = "Pendente"
             else:
-                estado = "Confirmado"
+                estado = "Válida"
 
 
 
@@ -154,7 +156,7 @@ def CriarInscricao(request, eventoid):
             if evento.val_inscritos:
                 estado = "Pendente"
             else:
-                estado = "Confirmado"
+                estado = "Válida"
 
 
             userid = None
@@ -215,7 +217,7 @@ class PartConsultarInscricoes(ListView):
                 eventoDataFinal = inscricao.eventoid.horario.datafinal
                 eventoHoraFinal = inscricao.eventoid.horario.horafinal
                 eventFinalDate = datetime.combine(eventoDataFinal,eventoHoraFinal)
-                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoFormulario__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
+                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoformularioid__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
                     inscricao.hasFeedback = True
             return queryset
         else:
@@ -421,7 +423,7 @@ def PropAlterarInscricao(request, id):
         'QAA': QAA,
         'evento' : inscricao.eventoid
     }
-    return render(request, 'inscricao/proponente/inscricao_alterar.html', context)
+    return render(request, 'inscricao/gcp/inscricao_alterar.html', context)
 
 
 class PropConsultarInscricoes(ListView):
@@ -429,7 +431,7 @@ class PropConsultarInscricoes(ListView):
     # if not request.user.is_authenticated:
     #         messages.error(request, f'Por favor, faça login primeiro.')
     #         return redirect('Inscricao:list_inscricao')
-    template_name = 'inscricao/proponente/list_inscricao2.html'
+    template_name = 'inscricao/gcp/list_inscricao2.html'
 
     paginate_by = 10
 
@@ -501,7 +503,7 @@ def PropAlterarEstadoInscricao(request, id):
         'estado': estado,
 
     }
-    return render(request, 'inscricao/proponente/inscricao_update.html', context)
+    return render(request, 'inscricao/gcp/inscricao_update.html', context)
 
 
 class PropConsultarCheckIns(ListView):
@@ -591,3 +593,204 @@ def doCheckin(request, id):
             check = "Check out"
         messages.success(request, f"{check} realizado com successo.")
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
+
+
+## CERTIFICADOS
+
+def create_csv_certificates(request, evento_id):
+    # todos os incritos do evento
+    # TODO - verificar apenas os com o check-in a true
+    inscritos = Inscricao.objects.filter(eventoid=evento_id, checkin=1)
+    print(inscritos)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="certificados{Evento.objects.get(id=evento_id).nome}.csv"'
+    writer = csv.writer(response)
+    # TODO - Profissao should be switched with institution but we dont save that..
+    for inscrito in inscritos:
+        writer.writerow([f'{inscrito.nome} {inscrito.profissao}'])
+    return response
+
+
+## ---------------------------- FOR THE PROPONENTE
+
+
+def consultarInscricaoPropFIX(request, inscricaoid):
+    inscricao = Inscricao.objects.get(id=inscricaoid)
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    fix = "1"
+
+    context = {
+        'inscricao': respostas,
+        'evento' : inscricao.eventoid,
+        'fix' : fix,
+    }
+
+    return render(request, 'inscricao/inscricao_consultar_prop.html', context)
+
+
+def PropAlterarInscricaoFIX(request, id):
+    inscricao = Inscricao.objects.get(id=id)
+
+
+
+
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao).exclude(campoid_id=28).exclude(
+        campoid_id=27)
+
+    perguntas = []
+
+    for resposta in respostas:
+        if (resposta.campoid.tipocampoid.nome == "Escolha Múltipla" or
+            resposta.campoid.tipocampoid.nome == 'Dropdown'):
+            resposta.campoid.respostas = Campo.objects.filter(campo_relacionado=resposta.campoid)
+        perguntas.append(resposta.campoid)
+
+    QAA = zip(perguntas, respostas)
+
+    if request.method == "POST":
+        temp_email =  request.POST.get("3")
+        if Inscricao.objects.filter(eventoid=inscricao.id, email=temp_email).exists():
+            messages.success(request, f'Já existe uma inscrição com este email!')
+            return redirect('Inscricao:prop_list_inscricao_FIX', inscricao.eventoid.id)
+        for resposta in respostas:
+            perguntaid = resposta.campoid.id
+
+            resposta_get = request.POST.get(f"{perguntaid}")
+
+            if perguntaid == 1:  # NOME
+                inscricao.nome = resposta_get
+            elif perguntaid == 2:  # IDADE
+                print("im here")
+                inscricao.idade = resposta_get
+            elif perguntaid == 3:  # EMAIL
+                inscricao.email = resposta_get
+            elif perguntaid == 4:  # NUMERO TELEMOVEL
+                inscricao.telemovel = resposta_get
+            elif perguntaid == 5:  # PROFISSAO
+                inscricao.profissao = resposta_get
+            resposta.conteudo = resposta_get
+            resposta.save()
+
+        inscricao.save()
+
+        messages.success(request, f'Alterou a sua inscrição com sucesso!')
+
+        return redirect('Inscricao:prop_list_inscricao_FIX', inscricao.eventoid.id)
+
+
+    fix = '1'
+    context = {
+        'QAA': QAA,
+        'evento' : inscricao.eventoid,
+        'fix' : fix,
+    }
+    return render(request, 'inscricao/gcp/inscricao_alterar.html', context)
+
+
+class PropConsultarInscricoesFIX(ListView):
+    # We don't have users yet. -- Implement with @Login
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:list_inscricao')
+    template_name = 'inscricao/gcp/list_inscricao2.html'
+
+    paginate_by = 10
+
+    # We don't have users yet
+    def get_queryset(self):
+        return Inscricao.objects.filter(eventoid=self.kwargs.get('eventoid'))
+
+    def get_context_data(self, **kwargs):
+        context = super(PropConsultarInscricoesFIX, self).get_context_data(**kwargs)
+        context['fix'] = "1"
+        return context
+
+
+def PropRemoverInscricaoFIX(request, inscricaoid):
+    # We don't have users yet.
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:inscricao')
+
+    inscricao = Inscricao.objects.get(id=inscricaoid)
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    for resposta in respostas:
+        resposta.delete()
+
+    evento = inscricao.eventoid
+
+    evento.inscritos -= 1
+
+    evento.save()
+
+    inscricao.delete()
+
+    messages.success(request, f'Eliminou a inscrição com sucesso!')
+
+    return redirect('Inscricao:prop_list_inscricao_FIX', evento.id)
+
+
+def PropAlterarEstadoInscricaoFIX(request, id):
+    inscricao = Inscricao.objects.get(id=id)
+
+    respostas = Resposta.objects.filter(inscricaoid=inscricao)
+
+    perguntas = []
+
+    estado = None
+
+    for resposta in respostas:
+        perguntas.append(resposta.campoid)
+        if resposta.campoid.id == 27:
+            estado = resposta
+            estado.respostas = resposta.campoid.respostapossivelid.nome.split(",")
+
+    QAA = zip(perguntas, respostas)
+
+    if request.method == "POST":
+        inscricao.estado = request.POST.get(f"{27}")
+
+        inscricao.save()
+
+        respostadb = Resposta.objects.get(inscricaoid=inscricao, campoid_id=27)
+
+        respostadb.conteudo = request.POST.get(f"{27}")
+
+        respostadb.save()
+
+        messages.success(request, f'Alterou o estado da inscrição com sucesso!')
+
+        return redirect('Inscricao:prop_list_inscricao_FIX', inscricao.eventoid.id)
+
+    fix = '1'
+    context = {
+        'QAA': QAA,
+        'estado': estado,
+        'fix' : fix,
+
+    }
+    return render(request, 'inscricao/gcp/inscricao_update.html', context)
+
+
+class PropConsultarCheckInsFIX(ListView):
+    # We don't have users yet. -- Implement with @Login
+    # if not request.user.is_authenticated:
+    #         messages.error(request, f'Por favor, faça login primeiro.')
+    #         return redirect('Inscricao:list_inscricao')
+    template_name = 'inscricao/checkins/list_inscricao2.html'
+
+    paginate_by = 10
+
+    # We don't have users yet
+    def get_queryset(self):
+        return Inscricao.objects.filter(eventoid=self.kwargs.get('eventoid')).filter(estado="Válida")
+
+    def get_context_data(self, **kwargs):
+        context = super(PropConsultarCheckInsFIX, self).get_context_data(**kwargs)
+        context['fix'] = "1"
+        return context

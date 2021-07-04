@@ -3,7 +3,8 @@ from .views import home_view, eventos, create_logistic, meus_eventos, gerir, sel
     eventos_gerir, equip_logistic, espaco_logistic, servico_logistic, submit_logistic, view_logisticas, \
     view_event, ajax_filter_type, ajax_filter_state, delete_event, edit_event, ajax_finalizar_logistica, \
     validar_evento, delete_logistica, edit_logistica, edit_espaco, edit_servico, edit_equipamento, \
-    select_form, submeter_event, aceitar_event, view_my_event, recusar_evento
+    select_form, submeter_event, aceitar_event, view_my_event, recusar_evento, evento_insc, associar_insc, \
+    associar_feedback, evento_feedback
 
 app_name = 'Evento'
 
@@ -39,4 +40,9 @@ urlpatterns = [
     path('edit-espaco/<int:event_id>/<int:espaco_id>/<str:tipo>', edit_espaco, name='edit-espaco'),
     path('edit-servico/<int:event_id>', edit_servico, name='edit-servico'),
     path('edit-equipamento/<int:event_id>', edit_equipamento, name='edit-equipamento'),
+
+    path('evento-insc/<int:event_id>', evento_insc, name='evento-insc'),
+    path('evento-feed/<int:event_id>', evento_feedback, name='evento-feed'),
+    path('associar-insc/<int:event_id>/<int:form_id>', associar_insc, name='associar-insc'),
+    path('associar-feedback/<int:event_id>/<int:form_id>', associar_feedback, name='associar-feedback'),
 ]

@@ -13,6 +13,27 @@
                 </div>
 
             </div>
+
+
+            <section class="pedido ">
+                <h2 class="sub-title">Dados do evento proposto</h1>
+                
+                {% for pergunta in perguntas %}
+                    {% for resposta in respostas %}
+
+                        {% if pergunta.campoid == resposta.campoid %} 
+                        <div class="block mt-3">
+                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
+                            <p class="resposta">{{resposta.conteudo}}</p>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </section>
+
             <div class="columns is-multiline is-space-between mt-5">
 
                 <div class="column is-3">
@@ -33,6 +54,29 @@
                             <a class="mx-auto" href="{% url 'Recurso:recursos-2' my_id=evento.id %}">
                             <p class="card-header-title is-centered">
                                     Recursos
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Inscricao:consultar_checkins' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Check-ins
+                            </p>
+                            </a>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="column is-3">
+                    <div class="card" style="min-height: 10px;">
+                        <header class="card-header">
+                            <a class="mx-auto" href="{% url 'Feedback:list_feedback' eventoid=id %}">
+                            <p class="card-header-title is-centered">
+                                    Feedback
                             </p>
                             </a>
                         </header>
@@ -78,39 +122,7 @@
                         </header>
                     </div>
                 </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <a class="mx-auto" href="{% url 'Inscricao:consultar_checkins' eventoid=id %}">
-                            <p class="card-header-title is-centered">
-                                    Check-ins
-                            </p>
-                            </a>
-                        </header>
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="card" style="min-height: 10px;">
-                        <header class="card-header">
-                            <a class="mx-auto" href="{% url 'Feedback:list_feedback' eventoid=id %}">
-                            <p class="card-header-title is-centered">
-                                    Feedback
-                            </p>
-                            </a>
-                        </header>
-                    </div>
-                </div>
-{#                <div class="column is-3">#}
-{#                    <div class="card" style="min-height: 10px;">#}
-{#                        <header class="card-header">#}
-{#                            <a class="mx-auto" href="{% url 'Evento:criar-csv' evento_id=id %}">#}
-{#                            <p class="card-header-title is-centered">#}
-{#                                    Criar ficheiro de CSV#}
-{#                            </p>#}
-{#                            </a>#}
-{#                        </header>#}
-{#                    </div>#}
-{#                </div>#}
+
 
 
                 {% elif evento.estado == 'Submetido'%}
@@ -118,7 +130,7 @@
                 <div class="column is-3">
                     <div class="card" style="min-height: 10px;">
                         <header class="card-header card-header-success">
-                            <a class="mx-auto" href="{% url 'Evento:aceitar-event' event_id=id %}">
+                            <a class="mx-auto" href="{% url 'Evento:evento-insc' event_id=id %}">
                             <p class="card-header-title is-centered">
                                     Aceitar Evento
                             </p>
@@ -130,24 +142,6 @@
                 {% endif %}
             </div>
 
-            <section class="pedido mt-5">
-                <h2 class="sub-title">Dados do evento proposto</h1>
-                
-                {% for pergunta in perguntas %}
-                    {% for resposta in respostas %}
-
-                        {% if pergunta.campoid == resposta.campoid %} 
-                        <div class="block mt-3">
-                            <p class="pergunta">{{pergunta.campoid.conteudo}}</p>
-                            <p class="resposta">{{resposta.conteudo}}</p>
-                        </div>
-                        {% endif %}
-
-                    {% endfor %}
-
-                {% endfor %}
-
-            </section>
         </div>
     </div>
 

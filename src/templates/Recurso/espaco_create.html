@@ -27,19 +27,6 @@
                 </nav>
             </div>
         </div>
-        {% if messages %}
-            <article class="message is-danger">
-                <div class="message-header">
-                    <p>Corrija os seguintes erros, por favor:</p>
-                    <button class="close-message delete" aria-label="delete"></button>
-                </div>
-                <div class="message-body">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </div>
-            </article>
-        {% endif %}
         <div class="section">
             <div class="columns">
                 <div class="column is-is-four-fifths">
@@ -92,7 +79,7 @@
                     </form>
 
                     <div class="control">
-                        <a class="button is-warning" href="{% url 'Recurso:recursos' %}"> Voltar
+                        <a class="button is-primary" href="{% url 'Recurso:recursos' %}"> Voltar
                             atrás </a>
                     </div>
                     </form>
