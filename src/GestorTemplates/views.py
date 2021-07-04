@@ -49,7 +49,6 @@ class FormList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
        
-        print(context['user_tipo'])
         # tiposForm = Tipoformulario.objects.all()
         template = Formulario.objects.filter(is_template = 1)
         categoria = Tipoformulario.objects.all()[:3] #TODO
