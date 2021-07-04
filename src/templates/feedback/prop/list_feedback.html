@@ -65,7 +65,7 @@
             <tr class="datatable-row datatable-selector" data-id="{{obj.pk}}">
               <td> {{obj.number}}</td>
               <td> {{obj.descricao}}</td>
-              <td> {{obj.createdAt}}</td>
+                <td> {{ obj.createdAt|date:"d/m/Y"}} às {{ obj.createdAt|date:"H:i" }}</td>
               <td>
                     <button class="button is-text has-text-grey ver_form_config has-tooltip-bottom delete-ins-btn"  data-delete-url="{% url 'Feedback:delete_feedback_prop' obj.pk %}" data-tooltip="Eliminar feedback: {{obj.number}}">
                       <span  class="icon">
