@@ -10,6 +10,30 @@
 {% endblock %}
 {% block content %}
     {% load static %}
+    <div class="column">
+        <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+          <ul>
+              <li> <a href="{% url 'Evento:eventos-gerir'  %}">Gerir eventos</a> </li>
+              
+              <li> <a href="{% url 'Evento:meus-eventos'  %}">{{evento.nome}}</a> </li>
+              {% if show != 'false' %}
+              <li> <a href="{% url 'Evento:view-logistic' evento.id %}">Pedido da logística</a> </li>
+              {% endif %}
+            <li class="is-active">
+              <a href="#" aria-current="page">
+                <span class="has-text-weight-bold">
+                {% if show == 'false' %}    
+                    Recursos
+                {% else %}
+                    Desatribuir recursos
+                {% endif %}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>    
+
     <div>
         <section id="subnavbar">
             <nav class="" role="navigation" aria-label="main navigation">
