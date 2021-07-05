@@ -260,12 +260,13 @@ class FormCreate(FormHandling, CreateView):
         elif not template_formID and formType:
             printspecial("heree")
             tipo_formulario = Tipoformulario.objects.get(id = formType)
-            gcp = Gcp.objects.get(id = self.request.user.id)
-            gcpid = gcp
+            user = get_user(self.request)
+            gcp = Gcp.objects.get(id = user.gcpid.id)
             form = Formulario.objects.create(gcpid = gcp, tipoformularioid = tipo_formulario, created = timezone.now())
         # create empty form without selecting type of form 
         else :
-            gcp = Gcp.objects.get(id = self.request.user.id)
+            user = get_user(self.request)
+            gcp = Gcp.objects.get(id = user.gcpid.id)
             form = Formulario.objects.create(gcpid = gcp, created = timezone.now()) ##TODO check campos obrigatrioressss ##TODO check utilizadores
         
         

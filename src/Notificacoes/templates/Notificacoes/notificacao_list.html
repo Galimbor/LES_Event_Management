@@ -11,7 +11,7 @@
   
     <tbody>
       {% for obj in object_list %}
-      <tr data-id="{{obj.id}}">
+      <tr data-id="{{obj.id}}" {% if obj.estado == 1a %} is-new="true" {% endif %}>
         <td>
           {{obj.titulo}}
         
@@ -36,7 +36,7 @@
   }
 
   function initNotifications(){
-    $('#notification-table').DataTable({
+    let table = $('#notification-table').DataTable({
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
       },
@@ -47,6 +47,18 @@
         $( "#notifications-list" ).html(data);
         initNotificationDetail()
       });
+    })
+    //tabs filters
+    let tabs = $('.tabs li')
+    tabs.click(function(){
+      tabs.removeClass('is-active')
+      $(this).addClass('is-active');
+
+      table.columns()
+        .search('')
+        .column($(this).data('column'))
+        .search($(this).data('filter'))
+        .draw();
     })
   }
   initNotifications();
