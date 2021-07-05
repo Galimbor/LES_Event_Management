@@ -30,4 +30,6 @@ urlpatterns = [
     path('Recurso/', include('Recurso.urls')),
     path('Inscricao/', include('Inscricao.urls')),
     path('Feedback/', include('Feedback.urls')),
+    path('notificacoes/', include('Notificacoes.urls')),
+
 ]

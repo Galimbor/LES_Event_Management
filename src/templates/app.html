@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
   <link rel="icon" href="{% static 'img/logo.png' %}" />
-
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bulma.min.css">
   <script src="{% url 'js-catlog' %}"></script>
 
   {% block load %}
@@ -192,6 +192,9 @@
         }
     });
 </script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.7/dist/js/bulma-extensions.min.js"></script>
 {% block scripts %}
 {% endblock scripts %}
 

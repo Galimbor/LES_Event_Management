@@ -1,0 +1,57 @@
+{% if object_list.count %}
+<table class="table is-fullwidth is-hoverable" id="notification-table" data-count="{{unread_count}}">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Descrição</th>
+        <th>Estado</th>
+
+      </tr>
+    </thead>
+  
+    <tbody>
+      {% for obj in object_list %}
+      <tr data-id="{{obj.id}}">
+        <td>
+          {{obj.titulo}}
+        
+        </td>
+        <td>{{obj.descricao}}</td>
+        <td>{{obj.get_estado_display}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<script>
+  function initNotificationDetail(){
+    $('#back-to-notification-list').click(function(){
+        loadNotifications()
+    })
+    $('#delete-notification').click(function(){
+      $.get( `/notificacoes/${$(this).data('id')}/delete`, function( data ) {
+        loadNotifications();
+      });
+    })
+  }
+
+  function initNotifications(){
+    $('#notification-table').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      },
+          
+    });
+    $('#notification-table tr').click(function(){
+      $.get( `/notificacoes/${$(this).data('id')}/`, function( data ) {
+        $( "#notifications-list" ).html(data);
+        initNotificationDetail()
+      });
+    })
+  }
+  initNotifications();
+</script>
+
+{%else%}
+Sem notificações
+{% endif %}

@@ -1,7 +1,7 @@
 {% load static %}
 
 
-<nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
+<nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation" style="z-index: 99;">
     <div class="navbar-brand">
         <a class="navbar-item logo" href="/">
             <img src="{% static 'img/logo.png' %}" alt="Dia Aberto">
@@ -86,12 +86,12 @@
                     <div id="notificacoes_trigger" role="button" class="dropdown-trigger">
               <span role="button">
 
-                <div type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text"
+                <div type="button" data-badge="1" class="button has-badge-rounded has-badge-warning is-text"
                      style="margin-right: 0.9rem">
                   <span>
 
                     <span class="icon">
-                      <span id="badge-inject" style="display:none;" title="Badge top right"
+                      <span id="notifications-count-badge" title="Badge top right"
                             class="badge is-warning"></span>
 
                       <i class=" mdi mdi-bell mdi-24px"></i>
@@ -121,51 +121,27 @@
                             <nav class="panel">
 
                                 <p class="panel-tabs">
-                                    <a class="tablinks is-active" onclick="openNotificacoes(event, 'Todas')">Todas</a>
-                                    <a class="tablinks" onclick="openNotificacoes(event, 'Novas')">Novas</a>
-                                    <a class="tablinks" onclick="openNotificacoes(event, 'Anteriores')">Anteriores</a>
+                                    <a class="tablinks is-active">Todas</a>
+                                    <a class="tablinks">Novas</a>
+                                    <a class="tablinks">Anteriores</a>
                                 </p>
                                 <div id="Todas" style="display:block" class="tabcontent">
-                                    <div data-tooltip="Click para ver detalhes">
-                                        <a href="#"
-                                           class="panel-block">
-                                            <a href="#"
-                                               class="panel-block" style="background: Gainsboro;">
-                          <span class="icon has-text-info">
-                            <i class="fas fa-info-circle"></i>
-                          </span>
-                                                <span class="icon has-text-success">
-                            <i class="fas fa-check-square"></i>
-                          </span>
-                                                <span class="icon has-text-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                          </span>
-                                                <span class="icon has-text-danger">
-                            <i class="fas fa-ban"></i>
-                          </span>
-
-
-                                                <p>
-                                                    <strong>
-                                                    </strong>
-                                                </p>
-
-                                            </a>
-                                        </a>
+                                  
+                                    <div id="notifications-list" class="block">
+                                        <p id="sem-mensagens" style="text-align:center;margin-top:2%;"><strong>Não tem nenhuma
+                                          notificação.</strong></p>
                                     </div>
                                     <div class="panel-block">
                                         <a href="#"
                                            class="dropdown-item is-disabled">
-                                            <button class="button is-link is-outlined is-fullwidth">
+                                            <button onclick="loadNotifications()" class="button is-link is-outlined is-fullwidth">
                                                 Ver todas as notificações
                                             </button>
                                         </a>
                                     </div>
-                                    <p id="sem-mensagens" style="text-align:center;margin-top:2%;"><strong>Não tem
-                                        nenhuma
-                                        notificação.</strong></p>
+                                  
                                     <a href="#"
-                                       class="dropdown-item is-disabled">
+                                       class="dropdown-item is-disabled is-hidden">
                                         <button class="button is-link is-outlined is-fullwidth">
                                             Caixa de entrada
                                         </button>
@@ -383,6 +359,15 @@
     <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
 
     <script>
+        function loadNotifications(){
+            $.get( "/notificacoes/", function( data ) {
+                $( "#notifications-list" ).html( data );
+                $('#notifications-count-badge').html($(data).data('count'))
+            });
+        }
+        $(document).ready(function(){
+            let notificationsCount = loadNotifications();
+        })
         $('#dropdown_definicoes').click(function (e) {
             $('#mensagens-dropdown').removeClass('is-active');
         })

@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'Utilizadores',
     'Neglected',
     'Feedback',
-
+    'Notificacoes',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,26 @@
+<div id="notification-detail">
+    <div class="field has-addons">
+        <p class="control">
+          <button class="button" id="back-to-notification-list" data-id="{{object.id}}">
+            <span class="icon is-small">
+              <i class="fas fa-arrow-left"></i>
+            </span>
+            <span>Voltar</span>
+          </button>
+        </p>
+        <p class="control">
+            <button class="button" id="delete-notification" data-id="{{object.id}}">
+              <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+              </span>
+              <span>Eliminar</span>
+            </button>
+          </p>
+      </div>
+     
+</div>
+<form action="" method="post">
+    
+    {% csrf_token %}
+    {{ form }}
+</form>
