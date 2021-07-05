@@ -29,7 +29,8 @@ var FormManager = class {
         this.container = $('#' + containerDivId);
         this.activeCampo = null;
         this.success_url = success_url;
-        
+        this.form_published = false
+
         let form = this;
         // collapse campos when clicking outside
         $(window).click(e => form.colapseCampos($('.campos-item')));
@@ -544,6 +545,7 @@ var FormManager = class {
     publishForm(id){
         if(id){
             this.formulario.fields.visibilidade = id;
+            this.form_published = true
             this.saveRemotely('/GestorTemplates/');
             
         }

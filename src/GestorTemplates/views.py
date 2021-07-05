@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from Notificacoes.models import Notificacao
 
 # Apenas para demonstração. Esta view não deve estar na app forms_manager
 def home(request):
@@ -189,7 +190,7 @@ class FormHandling():
         if self.request.is_ajax():
             if self.request.method == 'POST':
                 objects_dict = json.loads(self.request.body)
-   
+
                 ## 1. Save Formulario fields
                 formulario = objects_dict['formulario'] 
                 formulario['fields']['updated']=timezone.now()
@@ -200,6 +201,15 @@ class FormHandling():
                 ## 2. Save Campos fields
                 # printspecial(objects_dict)
                 self.saveCampos(objects_dict, f[0])
+
+                #send notification for form published
+                if objects_dict.get('form_published'):
+                    Notificacao.objects.create(user=self.request.user, 
+                        titulo='Formulário Publicado', 
+                        descricao='O Formulário {} foi publicado em modo {}'.format(f[0].nome, f[0].visibilidade), 
+                        tipo="APPLICATION"
+                    )
+
             return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
         return super().post(*args, **kwargs)

@@ -142,9 +142,9 @@
                 <nav class="panel">
 
                   <p class="panel-tabs">
-                    <a class="tablinks is-active" onclick="openNotificacoes(event, 'Todas')">Todas</a>
-                    <a class="tablinks" onclick="openNotificacoes(event, 'Novas')">Novas</a>
-                    <a class="tablinks" onclick="openNotificacoes(event, 'Anteriores')">Anteriores</a>
+                    <a class="tablinks is-active" data-filter="" onclick="openNotificacoes(event, 'Todas')">Todas</a>
+                    <a class="tablinks" data-filter="1" onclick="openNotificacoes(event, 'Novas')">Novas</a>
+                    <a class="tablinks" data-filter="1" onclick="openNotificacoes(event, 'Anteriores')">Anteriores</a>
                   </p>
                   <div id="Todas" style="display:block" class="tabcontent">
                     {% notification_list %}
