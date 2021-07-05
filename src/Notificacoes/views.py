@@ -22,7 +22,7 @@ class NotificacoesList(ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['unread_count'] = Notificacao.objects.filter(estado=1).count()
+        context['unread_count'] = Notificacao.objects.filter(user = self.request.user, estado=1).count()
         return context
         
 class NotificacoesUpdate(UpdateView):
