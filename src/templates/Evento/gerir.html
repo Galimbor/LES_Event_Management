@@ -4,6 +4,20 @@
 
 {% block content %}
     {% load static %}
+    <div class="column">
+        <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
+          <ul>
+              <li> <a href="{% url 'Evento:eventos-gerir'  %}">Gerir eventos</a> </li>
+            <li class="is-active">
+              <a href="#" aria-current="page">
+                <span class="has-text-weight-bold">{{ evento.nome }}</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>    
+
+
     <div>
         <div class="section">
             <div class="columns">

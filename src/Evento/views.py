@@ -297,6 +297,8 @@ def create_logistic(request, event_id):
         new_logista = Logistica(nome=f'logistica-{evento.id}', eventoid=evento)
         new_logista.save()
 
+    messages.warning(request, 'Para a logística ser validada é necessário fazer um pedido de pelo menos um espaço.')
+
     context = {
         'evento': evento,
     }
@@ -442,12 +444,30 @@ def edit_event(request, event_id):
                 resposta.conteudo = hora_f
                 resposta.save()
 
-        horario.save()
-        evento.estado = 'Pendente'
-        evento.save()
-        messages.success(request, 'Evento alterado com sucesso')
+                        # Check if the date makes sense here1
 
-        return redirect('Evento:meus-eventos')
+        datetime_str = f'{request.POST.get("14")} {request.POST.get("16")}'
+        datetime_evento_i = datetime. strptime(datetime_str, '%Y-%m-%d %H:%M')
+        datetime_str_f = f'{request.POST.get("15")} {request.POST.get("17")}'
+        datetime_evento_f = datetime. strptime(datetime_str_f, '%Y-%m-%d %H:%M')
+
+        
+
+        if datetime_evento_f >= datetime_evento_i and datetime.now() <= datetime_evento_i:
+            horario.save()
+            evento.estado = 'Pendente'
+            evento.save()
+            messages.success(request, 'Evento alterado com sucesso')
+
+            return redirect('Evento:meus-eventos')
+        if int(request.POST.get('12')) <= 0:
+            messages.error(request, 'Números de participantes inválido, favor tentar novamente')
+            return redirect('Evento:edit-event', event_id)
+        else:
+            messages.error(request, 'Datas inválidas, favor tentar novamente')
+            return redirect('Evento:edit-event', event_id)
+
+        
 
     context = {
         'evento': evento,
@@ -736,7 +756,7 @@ def view_logisticas(request, event_id):
     logistica_servico = Tiposervico.objects.filter(logisticaid=logistica)
     logistica_espaco = Tipoespaco.objects.filter(logisticaid=logistica)
 
-    messages.warning('Caso não há um pedido para um espaço ou um espaço não seja atribuído o evento voltará para o estado "pendente".')
+    messages.warning(request, 'Caso não haja um pedido para um espaço ou um espaço não seja atribuído o evento voltará para o estado "pendente".')
 
     context = {
         'equipamentos': logistica_equipamento,

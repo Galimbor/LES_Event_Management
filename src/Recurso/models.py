@@ -70,7 +70,7 @@ class Servico(models.Model):
 
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     Nome = models.CharField(db_column='Nome', max_length=255, unique=True)  # Field name made lowercase.
-    Descricao = models.CharField(db_column='Descricao', max_length=255)
+    Descricao = models.CharField(db_column='Descricao', max_length=255, blank=True, null=True)
     unidadeorganicaid = models.ForeignKey('Unidadeorganica', models.DO_NOTHING, db_column='UnidadeOrganicaID',
                                           blank=True, null=True)  # Field name made lowercase.
 

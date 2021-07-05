@@ -450,6 +450,8 @@ def espaco_update(request, my_id):
         error = form.errors
         if error.get("__all__"):
             messages.error(request, error.get("__all__"))
+        if error.get("capacidade"):
+            messages.error(request, error.get("capacidade"))
     context = {
         'form': form,
         'form2': form2,
@@ -614,7 +616,7 @@ def componente_delete(request, my_id):
     elif obj.unidade_organicaid is not None:
         return redirect('Recurso:unidade-organica-delete', obj.unidade_organicaid.id)
     else:
-        return redirect('Recurso:campus-delete', obj.campusid)
+        return redirect('Recurso:campus-delete', obj.campusid.id)
 
 
 # ------------------- EMPRESAS ------------------
@@ -806,7 +808,7 @@ def unidadeorganica_update(request, my_id):
     form = UnidadeOrganicaForm(request.POST or None, instance=obj)
     print(form.fields)
     if form.is_valid():
-        componente = Componente.objects.get(unidadeorganicaid=my_id)
+        componente = Componente.objects.get(unidade_organicaid=my_id)
         componente.Nome = request.POST.get("Nome")
         form.save()
         componente.save()
