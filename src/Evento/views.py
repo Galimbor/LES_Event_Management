@@ -14,6 +14,9 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.utils import timezone
 from datetime import datetime
+from Notificacoes.models import Notificacao
+from django.contrib.auth import get_user_model
+
 
 def ajax_finalizar_logistica(request):
     if request.method == "POST":
@@ -254,6 +257,25 @@ def validar_evento(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = "Validado"
     evento.save()
+    if evento.gcpid is not None:
+        user_id = evento.gcpid
+        user = User.objects.get(gcpid_id=user_id)
+    elif evento.proponente_internoid is not None:
+        user_id = evento.proponente_internoid
+        user = User.objects.get(proponente_internoid=user_id)
+
+    elif evento.proponente_externoid is not None:
+        user_id = evento.proponente_externoid
+        user = User.objects.get(proponente_externoid=user_id)
+    else:
+        user = None
+
+    UserD = get_user_model()
+    users = UserD.objects.filter(email=user.email)
+    
+    
+    Notificacao.objects.create(user=users[0], titulo='Evento Validado', descricao='Seu evento foi validado com sucesso!', tipo='APLICATION')
+
 
     messages.success(request, 'Evento validado com sucesso.')
     return redirect("Evento:eventos-gerir")
@@ -481,6 +503,8 @@ def edit_event(request, event_id):
 def create_event(request, type_id, type_evento):
     user = get_user(request)
     tipo = get_user_type(request)
+
+
     id_gcp = user[0].gcpid
     id_prop_i = user[0].proponente_internoid
     id_ext_i = user[0].proponente_externoid
@@ -553,6 +577,7 @@ def create_event(request, type_id, type_evento):
         evento.estado = "Pendente"
         evento.proponente_internoid = id_prop_i
         evento.proponente_externoid = id_ext_i
+        evento.gcpid = id_gcp
         evento.horario = horario
         tipo_evento = Tipoevento.objects.get(id=type_evento)
         evento.tipoeventoid = tipo_evento
@@ -570,6 +595,16 @@ def create_event(request, type_id, type_evento):
         resposta_estado.save()
         resposta_inscritos = Resposta(conteudo=0, campoid_id=23, eventoid=evento)
         resposta_inscritos.save()
+
+        # Notify all gcp users
+        users_custom = User.objects.all()
+        users = []
+        UserD = get_user_model()
+        for uc in users_custom:
+            if uc.gcpid is not None:
+                user_django = UserD.objects.get(email=uc.email)
+
+
         # Redirect to eventos page
         return redirect('Evento:meus-eventos')
 

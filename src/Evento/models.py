@@ -4,7 +4,7 @@ from django.db import models
 # from GestorTemplates.models import Formulario
 # from GestorTemplates.models import Formulario
 from Neglected.models import Timedate
-from Utilizadores.models import ProponenteInterno, ProponenteExterno
+from Utilizadores.models import Gcp, ProponenteInterno, ProponenteExterno
 
 
 
@@ -52,6 +52,9 @@ class Evento(models.Model):
                                      null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     proponente_externoid = models.ForeignKey(ProponenteExterno, models.DO_NOTHING,
                                              db_column='Proponente ExternoID', blank=True,
+                                     null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    gcpid = models.ForeignKey(Gcp, models.DO_NOTHING,
+                                             db_column='GcpID', blank=True,
                                      null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     horario = models.ForeignKey(Timedate, models.DO_NOTHING, db_column='Horario')  # Field name made lowercase.
     inscritos = models.IntegerField(db_column='Num_participantes')
