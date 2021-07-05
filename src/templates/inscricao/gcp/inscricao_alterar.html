@@ -12,9 +12,15 @@
           <div class="column">
             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
               <ul>
+                  {% if not fix %}
                   <li><a href="{% url 'Evento:eventos'  %}">Eventos</a></li>
                   <li><a href="{% url 'Evento:gerir' event_id=evento.id %}">Gerir evento</a></li>
                   <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id %}"> Inscrições no evento</a></li>
+                  {% else %}
+                    <li><a href="{% url 'Evento:meus-eventos'  %}">Meus eventos</a></li>
+                  <li><a href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id%}"> Inscrições no evento</a></li>
+
+                  {% endif %}
                 <li class="is-active">
                   <a href="#" aria-current="page">
                     <span class="has-text-weight-bold">Alterar inscrição</span>
@@ -100,10 +106,15 @@
 
         <div class="field is-grouped">
           <div class="control">
-              <input class="button is-link" type='Submit' value='Submit'>
+              <input class="button is-link" type='Submit' value='Submeter'>
           </div>
             <div class="control">
-                <a class="button is-link" href="{% url 'Inscricao:part_list_inscricao' %}"> Voltar atrás </a>
+                {% if not fix %}
+                <a class="button is-link" href="{% url 'Inscricao:prop_list_inscricao' eventoid=evento.id %}"> Voltar atrás </a>
+                {% else %}
+                <a class="button is-link" href="{% url 'Inscricao:prop_list_inscricao_FIX' eventoid=evento.id %}"> Voltar atrás </a>
+                {% endif %}
+
             </div>
         </div>
         </form>

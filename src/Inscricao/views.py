@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from GestorTemplates.models import Tipoformulario, Formulario, CampoFormulario, Campo, Resposta, EventoFormulario
+from Notificacoes.models import Notificacao
 from Utilizadores.models import User
 from .forms import InscricaoForm, InscricaoUpdateForm, InscricaoCheckinUpdateForm
 from Evento.models import Evento
@@ -11,9 +12,9 @@ from .models import Inscricao
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
-
 from datetime import date, datetime
 from Feedback.models import Feedback
+from django.contrib.auth import get_user_model
 # -------- Views associadas ao perfl de PARTICIPANTES -----------------------------------------------------
 
 # TODO : fazer uma outra versão para utilizadores autenticados
@@ -50,7 +51,7 @@ def CriarInscricao(request, eventoid):
 
     else :
         formularioEvento = EventoFormulario.objects.filter(eventoid=evento.id,
-                                                           formularioid__tipoFormularioid__categoria=1)
+                                                           formularioid__tipoformularioid__categoria=1)
 
         formularioInscricao = formularioEvento[0].formularioid
 
@@ -217,7 +218,7 @@ class PartConsultarInscricoes(ListView):
                 eventoDataFinal = inscricao.eventoid.horario.datafinal
                 eventoHoraFinal = inscricao.eventoid.horario.horafinal
                 eventFinalDate = datetime.combine(eventoDataFinal,eventoHoraFinal)
-                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoformularioid__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() :
+                if eventFinalDate < today and EventoFormulario.objects.filter(eventoid=inscricao.eventoid, formularioid__tipoformularioid__categoria=2).exists() and not Feedback.objects.filter(eventoid=inscricao.eventoid, userid=realuser).exists() and Inscricao.objects.filter(eventoid=inscricao.eventoid, userid=realuser)[0].checkin :
                     inscricao.hasFeedback = True
             return queryset
         else:
@@ -573,7 +574,14 @@ def updateEstado(request, id):
         inscricao.estado = request.POST.get("selectedEstado")
         # print(f"Updated inscricao is {inscricao.estado}")
         inscricao.save()
+
+        UserD = get_user_model()
+        users = UserD.objects.filter(email=inscricao.userid.email)
+        Notificacao.objects.create(user=users[0], titulo='Estado Inscrição alterado!',
+                                   descricao='O estado da sua inscrição foi alterado ! Verifique na sua tabela de inscrições.',
+                                   tipo='APLICATION')
         messages.success(request, "Alterou o estado da inscrição com successo.")
+
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 
 
@@ -591,6 +599,12 @@ def doCheckin(request, id):
             check = "Check in"
         else  :
             check = "Check out"
+
+            UserD = get_user_model()
+            users = UserD.objects.filter(email=inscricao.userid.email)
+            Notificacao.objects.create(user=users[0], titulo=f'{check} Inscrição alterado!',
+                                       descricao=f'{check} realizado na sua inscrição ! ',
+                                       tipo='APLICATION')
         messages.success(request, f"{check} realizado com successo.")
         return JsonResponse({'status': 'ok', 'message':'guardado com sucesso'}, status=200)
 

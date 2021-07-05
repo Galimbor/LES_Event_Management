@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('allProp/<int:eventoid>', listFeedbackProp.as_view(), name='list_feedback_prop'),
     path('viewProp/<int:feedbackid>', viewFeedbackProp, name='view_feedback_prop'),
-    path('statistics/<int:eventoid>', viewStatisticsProp, name='view_feedback_statistics_prop'),
+    path('statisticsProp/<int:eventoid>', viewStatisticsProp, name='view_feedback_statistics_prop'),
     path('deleteProp/<int:feedbackid>', deleteFeedbackProp, name='delete_feedback_prop'),
 
 ]

@@ -161,7 +161,7 @@ def home_view(request):
 
 # Show all the events that has the final validation.
 def eventos(request):
-    events = Evento.objects.filter(estado='Aceite')
+
 
     if request.user.is_anonymous:
         events = Evento.objects.filter(estado='Aceite', visibilidade="Público")
