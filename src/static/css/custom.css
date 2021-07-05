@@ -113,10 +113,7 @@ select {
         padding: .5rem 1.5rem !important;
         font-weight: bold;
     }
-  
-    .is-danger {
-        padding: 1.5rem !important;
-    }
+
     
     .title span {
         opacity: 60%;

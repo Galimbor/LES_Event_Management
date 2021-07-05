@@ -8,31 +8,35 @@
     <div>
         <div class="section">
             <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
-                        <ul>
-                            <li><a href="{% url 'home' %}">Página inicial</a></li>
-                            <li><a href="{% url 'Recurso:componentes' %}">Componentes</a></li>
-                            <li class="is-active">
-                                <a href="#" aria-current="page">
+                <ul>
+                    <li><a href="{% url 'home' %}">Página inicial</a></li>
+                    <li><a href="{% url 'Recurso:componentes' %}">Componentes</a></li>
+                    <li class="is-active">
+                        <a href="#" aria-current="page">
                                             <span class="has-text-weight-bold">
                                                 Universidade
                                             </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
             <div class="columns is-align-items-center">
                 <div class="column">
                     <h1 class="title has-text-centered">{{ obj.Nome }}</h1>
                     <div class="event-group">
                         <span class="span-header">Localização:</span>
-                        <p class="event-body long-text">{{ obj.localizacao }} </p>
+                        <p class="event-body long-text">
+                            {% if obj.localizacao is not None %}
+                                {{ obj.localizacao }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
-                    <div class="control">
-                        <a class="button is-link" href="{% url 'Recurso:componentes' %}"> Voltar
-                            atrás </a>
-                    </div>
+            <div class="control">
+                <a class="button is-link" href="{% url 'Recurso:componentes' %}"> Voltar
+                    atrás </a>
+            </div>
         </div>
     </div>
 
