@@ -31,6 +31,22 @@ def ajax_finalizar_logistica(request):
         equipamentos = Tipodeequipamento.objects.filter(logisticaid=logistica)
         servicos = Tiposervico.objects.filter(logisticaid=logistica)
 
+        if evento.gcpid is not None:
+            user_id = evento.gcpid
+            user = User.objects.get(gcpid_id=user_id)
+        elif evento.proponente_internoid is not None:
+            user_id = evento.proponente_internoid
+            user = User.objects.get(proponente_internoid=user_id)
+
+        elif evento.proponente_externoid is not None:
+            user_id = evento.proponente_externoid
+            user = User.objects.get(proponente_externoid=user_id)
+        else:
+            user = None
+
+        UserD = get_user_model()
+        users = UserD.objects.filter(email=user.email)
+
 
         for resp in resposta_estado:
             if resp.eventoid == evento:
@@ -51,11 +67,16 @@ def ajax_finalizar_logistica(request):
 
                     messages.warning(request, 'Logística recusada, o evento voltou para o estado inicial')
 
+                    Notificacao.objects.create(user=users[0], titulo='Logistica recusada', descricao='Seu pedido de logistica foi recusado devido ao nao ter nenhum espaco atribuido. Seu evento se encontra no estado inicial.', tipo='APLICATION')
+
                 else:
                     evento.estado = "Logistica Validada"
                     evento.save()
                     resposta.conteudo = "Logistica Validada"
                     resposta.save()
+
+                    Notificacao.objects.create(user=users[0], titulo='Logistica validada!', descricao='Seu pedido de logistica foi validado! Seu evento se encontra no estado "Logistica Validada". Para continuar com o processo favor submeter seu evento para a fase final.', tipo='APLICATION')
+
                     messages.success(request, 'Logistica finalizada com sucesso.')
 
 
@@ -206,13 +227,29 @@ def associar_feedback(request, event_id, form_id):
 
     evento.estado = 'Aceite'
     evento.save()
+
+    if evento.gcpid is not None:
+        user_id = evento.gcpid
+        user = User.objects.get(gcpid_id=user_id)
+    elif evento.proponente_internoid is not None:
+        user_id = evento.proponente_internoid
+        user = User.objects.get(proponente_internoid=user_id)
+
+    elif evento.proponente_externoid is not None:
+        user_id = evento.proponente_externoid
+        user = User.objects.get(proponente_externoid=user_id)
+    else:
+        user = None
+
+    UserD = get_user_model()
+    users = UserD.objects.filter(email=user.email)
+    
+    
+    Notificacao.objects.create(user=users[0], titulo='Evento Aceite!', descricao='Seu evento foi aceite e ja se encontra no estado final. Poderá fazer a gestão de inscritos e dos formulários de feedback.', tipo='APLICATION')
+
+
     messages.success(request, 'Formulários associados e evento aceite com sucesso.')
-    return redirect('Evento:eventos-gerir')
 
-
-    context = {
-        'evento': evento,
-    }
     return redirect("Evento:eventos-gerir")
 
 
@@ -285,6 +322,25 @@ def recusar_evento(request, event_id):
     evento.estado = "Recusado"
     evento.save()
 
+    if evento.gcpid is not None:
+        user_id = evento.gcpid
+        user = User.objects.get(gcpid_id=user_id)
+    elif evento.proponente_internoid is not None:
+        user_id = evento.proponente_internoid
+        user = User.objects.get(proponente_internoid=user_id)
+
+    elif evento.proponente_externoid is not None:
+        user_id = evento.proponente_externoid
+        user = User.objects.get(proponente_externoid=user_id)
+    else:
+        user = None
+
+    UserD = get_user_model()
+    users = UserD.objects.filter(email=user.email)
+    
+    
+    Notificacao.objects.create(user=users[0], titulo='Evento Recusado', descricao='Seu evento foi recusado. Favor entrar em contacto com gcp@example.com', tipo='APLICATION')
+
     messages.success(request, 'O evento foi recusado.')
     return redirect("Evento:eventos-gerir")
 
@@ -350,6 +406,16 @@ def submit_logistic(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Logistica Pendente'
     evento.save()
+
+    # Notify all gcp users
+    users_custom = User.objects.all()
+    UserD = get_user_model()
+    for uc in users_custom:
+        if uc.gcpid is not None:
+            user_django = UserD.objects.filter(email=uc.email)
+            Notificacao.objects.create(user=user_django[0], titulo='Evento com logistica pendente!', descricao='Há um novo pedido de logistica para um evento. Este evento se encontra no estado "Logistica Pendente".', tipo='APLICATION')
+
+
     messages.success(request, 'Logistica submetida com sucesso. Favor aguardar a resposta do GCP')
     return redirect('Evento:meus-eventos')
 
@@ -358,6 +424,16 @@ def submeter_event(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Submetido'
     evento.save()
+
+    # Notify all gcp users
+    users_custom = User.objects.all()
+    UserD = get_user_model()
+    for uc in users_custom:
+        if uc.gcpid is not None:
+            user_django = UserD.objects.filter(email=uc.email)
+            Notificacao.objects.create(user=user_django[0], titulo='Evento submetido!', descricao='Há um evento com o estado "Submetido".', tipo='APLICATION')
+
+
     messages.success(request, 'Evento submetido com sucesso. Favor aguardar a resposta final do GCP')
     return redirect('Evento:meus-eventos')
 
@@ -366,6 +442,7 @@ def aceitar_event(request, event_id):
     evento = Evento.objects.get(id=event_id)
     evento.estado = 'Aceite'
     evento.save()
+
     messages.success(request, 'Evento aceite com sucesso.')
     return redirect('Evento:eventos-gerir')
 
@@ -598,11 +675,12 @@ def create_event(request, type_id, type_evento):
 
         # Notify all gcp users
         users_custom = User.objects.all()
-        users = []
         UserD = get_user_model()
         for uc in users_custom:
             if uc.gcpid is not None:
-                user_django = UserD.objects.get(email=uc.email)
+                user_django = UserD.objects.filter(email=uc.email)
+                Notificacao.objects.create(user=user_django[0], titulo='Evento Pendente', descricao='Há um novo evento pendente.', tipo='APLICATION')
+                
 
 
         # Redirect to eventos page
