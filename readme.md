@@ -79,11 +79,7 @@ python manage.py shell
 ```python 
 pip freeze > requirements.txt
 ```
-
-## Contributing
-- Artur Rodrigues
-- Jean Morelli
-- Ricardo Correria
+This project is an MCTS implementation on the TIC-TAC-TOE game using JAVA, developed for the subject of Artifical Inteligente belonging to the bachelors degree of Informatic Engineering.This project is an MCTS implementation on the TIC-TAC-TOE game using JAVA, developed for the subject of Artifical Inteligente belonging to the bachelors degree of Informatic Engineering.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
